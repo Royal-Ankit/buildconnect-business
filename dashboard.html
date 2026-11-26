@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Business panel - NIRMAZA</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script>
+<style>
+  :root { --primary:#1769AA; --dark:#103B63; --light:#F4F7FA; --success:#20A477; --accent:#F5A623; --text:#1b2a3a; --muted:#5d6b7a; --line:#dde5ee; --danger:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, Roboto, "Segoe UI", Arial, sans-serif; background: var(--light); color: var(--text); }
+  a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  header { background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+  .bar { max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .logo { font-weight:800; font-size:26px; color:var(--primary); letter-spacing:-.5px; } .logo span { color:var(--accent); }
+  main { max-width:1200px; margin:0 auto; padding:20px; }
+  .state { display:none; }
+  .top { background: linear-gradient(130deg,#103B63,#1769AA); color:#fff; border-radius:20px; padding:24px; margin-bottom:16px; display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; align-items:center; }
+  .top h1 { margin:0 0 4px; font-size:24px; } .top p { margin:0; opacity:.9; font-size:14px; }
+  .pill { display:inline-block; font-size:12px; font-weight:700; padding:4px 12px; border-radius:14px; }
+  .p-approved { background:#e6f6f0; color:#0b5d43; } .p-pending { background:#fff1dd; color:#7a4a00; } .p-rejected, .p-suspended { background:#fdecea; color:#8a1c13; }
+  .tabs { display:flex; gap:8px; margin-bottom:16px; overflow-x:auto; }
+  .tab { flex:1; min-width:max-content; text-align:center; padding:11px 16px; border-radius:12px; border:1.5px solid var(--line); background:#fff; font-weight:700; color:var(--dark); cursor:pointer; font-size:15px; }
+  .tab.on { background:var(--primary); color:#fff; border-color:var(--primary); }
+  .tab .dot { display:inline-block; min-width:20px; padding:0 6px; border-radius:10px; background:var(--accent); color:#3d2a00; font-size:12px; margin-left:6px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:20px; margin-bottom:14px; box-shadow:0 2px 10px rgba(16,59,99,.05); }
+  .card h3 { margin:0 0 6px; color:var(--dark); font-size:18px; }
+  .sub { margin:0 0 6px; color:var(--muted); font-size:14px; } .meta { color:var(--muted); font-size:13px; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:14px; }
+  .stat { background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px; text-align:center; cursor:pointer; }
+  .stat b { display:block; font-size:30px; color:var(--primary); } .stat small { color:var(--muted); font-size:13px; }
+  .btn { border:none; background:var(--primary); color:#fff; font-size:15px; font-weight:700; padding:11px 20px; border-radius:11px; cursor:pointer; display:inline-block; }
+  .btn:disabled { opacity:.6; cursor:wait; }
+  .btn.ghost { background:#fff; color:var(--primary); border:1.5px solid var(--primary); }
+  .btn.danger { background:#fff; color:var(--danger); border:1.5px solid var(--danger); }
+  .seg { border:1.5px solid var(--line); background:#fff; padding:6px 14px; border-radius:20px; font-size:13px; cursor:pointer; font-weight:600; color:var(--dark); margin-right:6px; }
+  .seg.on { background:var(--primary); color:#fff; border-color:var(--primary); }
+  .req h4 { margin:0 0 4px; font-size:17px; color:var(--dark); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:6px 18px; margin:12px 0; font-size:14px; } .grid2 div span { color:var(--muted); display:block; font-size:12px; }
+  .details { background:var(--light); border-radius:12px; padding:12px; font-size:14px; white-space:pre-wrap; margin:8px 0; }
+  .who { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; background:#eaf3fb; border-radius:12px; padding:10px 14px; margin:10px 0; }
+  .who a { border:1.5px solid var(--primary); border-radius:10px; padding:6px 12px; font-size:14px; margin-left:6px; background:#fff; }
+  .qform { border-top:1px solid var(--line); margin-top:12px; padding-top:12px; }
+  label.l { display:block; font-weight:600; font-size:13px; margin:10px 0 5px; color:var(--dark); }
+  input[type=text], input[type=number], input[type=tel], textarea, select { width:100%; padding:10px 12px; border:1px solid #c8d3df; border-radius:10px; font-size:15px; background:#fff; font-family:inherit; }
+  textarea { min-height:74px; resize:vertical; } input:focus, textarea:focus { outline:2px solid var(--primary); border-color:var(--primary); }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+  .conv { color:var(--success); font-size:13px; font-weight:600; min-height:18px; margin-top:4px; }
+  .err { color:var(--danger); font-size:13px; margin-top:6px; min-height:0; }
+  .badge { display:inline-block; font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px; margin-left:6px; }
+  .b-submitted { background:#eaf3fb; color:var(--primary); } .b-accepted { background:#e6f6f0; color:#0b5d43; } .b-rejected, .b-withdrawn { background:#eceff3; color:#4a5663; }
+  .mine { background:#f3f9f5; border:1px dashed var(--success); border-radius:12px; padding:10px 14px; margin-top:10px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .mine .pr { font-size:20px; font-weight:800; color:#0b5d43; }
+  .empty { text-align:center; padding:30px 10px; }
+  .inline { display:flex; align-items:center; gap:8px; font-size:14px; margin-top:12px; } .inline input { width:18px; height:18px; }
+  .b-new, .b-pending_review { background:#eaf3fb; color:var(--primary); } .b-contact_shared, .b-in_progress { background:#e6f6f0; color:#0b5d43; } .b-completed { background:#eceff3; color:#4a5663; } .b-cancelled { background:#fdecea; color:#8a1c13; }
+  .b-rejected.rq { background:#fdecea; color:#8a1c13; }
+  .head { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; cursor:pointer; }
+  .banner { border-radius:12px; padding:10px 14px; font-size:14px; margin:10px 0; background:#fff7e6; border:1px solid #f3d9a4; color:#6b4a00; }
+  .rej { background:var(--light); border-radius:12px; padding:12px; margin-top:10px; }
+  .tl { margin:10px 0 0; padding:0; list-style:none; font-size:13px; } .tl li { padding:4px 0 4px 14px; border-left:2px solid var(--line); color:var(--muted); } .tl b { color:var(--dark); }
+  .item { display:flex; gap:12px; align-items:center; border-top:1px solid var(--line); padding:10px 0; font-size:14px; } .item:first-child { border-top:none; }
+  .item .th { width:64px; height:48px; border-radius:8px; background:#e9eef4 center/cover no-repeat; flex:none; } .item .g { flex:1; } .item b { color:var(--dark); }
+  .toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; color:#fff; padding:11px 18px; border-radius:10px; font-size:14px; opacity:0; transition:.25s; pointer-events:none; z-index:20; } .toast.show { opacity:1; }
+  @media (max-width:760px) { main { padding:14px; } .stats { grid-template-columns:1fr 1fr; } .grid2, .two { grid-template-columns:1fr; } .top h1 { font-size:20px; } }
+</style>
+</head>
+<body>
+<header><div class="bar"><a class="logo" href="index.html">NIR<span>MAZA</span></a><a href="index.html">&larr; Back to home</a></div></header>
+
+<main>
+  <div class="card state" id="msg"><div class="empty">
+    <h3 id="msgTitle" style="margin-bottom:6px"></h3><p class="sub" id="msgText"></p><div id="msgActs" style="margin-top:12px"></div>
+  </div></div>
+
+  <div id="app" class="state">
+    <div class="top"><div><h1 id="bizName"></h1><p id="bizMeta"></p></div><span class="pill" id="bizStatus"></span></div>
+    <div class="tabs">
+      <button class="tab on" data-t="overview" type="button">Overview</button>
+      <button class="tab" data-t="requirements" type="button">Requirements<span class="dot" id="dotReqm" style="display:none"></span></button>
+      <button class="tab" data-t="requests" type="button">Quote requests<span class="dot" id="dotReq" style="display:none"></span></button>
+      <button class="tab" data-t="quotes" type="button">My quotes</button>
+      <button class="tab" data-t="portfolio" type="button">Portfolio &amp; products</button>
+      <button class="tab" data-t="interior" id="tabInt" type="button" style="display:none">Interior profile</button>
+      <button class="tab" data-t="listing" type="button">My listing</button>
+    </div>
+
+    <section id="t-overview">
+      <div class="stats">
+        <div class="stat" data-go="requirements"><b id="sReq">0</b><small>New requirements</small></div>
+        <div class="stat" data-go="requirements"><b id="sAct">0</b><small>Active projects</small></div>
+        <div class="stat" data-go="requests"><b id="sNew">0</b><small>Quote requests open</small></div>
+        <div class="stat" data-go="quotes"><b id="sWait">0</b><small>Quotes waiting</small></div>
+      </div>
+      <div class="card"><h3>How to win more projects</h3>
+        <ul style="margin:6px 0 0;padding-left:20px;font-size:14px;line-height:1.7">
+          <li>Reply quickly. Accept or reject new requirements as soon as you can.</li>
+          <li>Add photos of your best projects under <b>Portfolio &amp; products</b>. Customers trust vendors who show their work.</li>
+          <li>Write what your price includes (labour, material, GST, timeline).</li>
+          <li>Keep "projects running" and "accepting new projects" up to date in <b>My listing</b>.</li>
+        </ul></div>
+    </section>
+
+    <section id="t-requirements" class="state">
+      <div class="card"><h3>Requirements sent to you</h3>
+        <p class="sub">Customers who chose your business sent these directly to you. Only you can see them. Accept the ones you can do. The customer's phone and email are shared with you, and yours with them, as soon as you accept.</p>
+        <button class="seg on" data-rf="all" type="button">All</button><button class="seg" data-rf="new" type="button">New</button><button class="seg" data-rf="active" type="button">Accepted / active</button><button class="seg" data-rf="completed" type="button">Completed</button><button class="seg" data-rf="rejected" type="button">Rejected</button></div>
+      <div id="rqList"></div>
+    </section>
+
+    <section id="t-portfolio" class="state">
+      <form class="card" id="pfForm" novalidate>
+        <h3>Add a past project</h3><p class="sub">Customers see these on your public profile. Photos are shrunk automatically.</p>
+        <label class="l" for="pfTitle">Project title *</label><input id="pfTitle" type="text" maxlength="120" placeholder="e.g. 3-floor villa, Gomti Nagar">
+        <div class="two"><div><label class="l" for="pfLoc">Location</label><input id="pfLoc" type="text" maxlength="120" placeholder="e.g. Lucknow"></div><div><label class="l" for="pfYear">Year completed</label><input id="pfYear" type="number" min="1980" max="2100" placeholder="e.g. 2024"></div></div>
+        <div class="two"><div><label class="l" for="pfArea">Project size</label><div style="display:flex;gap:8px"><input id="pfArea" type="number" min="0" step="any" placeholder="e.g. 2400"><select id="pfUnit" style="max-width:110px"><option value="sqft">sq.ft</option><option value="sqm">sq.m</option></select></div><div class="conv" id="pfConv"></div></div>
+          <div><label class="l" for="pfImg">Photos <span style="font-weight:400;color:var(--muted)">(up to 6)</span></label><input id="pfImg" type="file" accept="image/*" multiple></div></div>
+        <div id="pfCarp" style="display:none">
+          <div class="two"><div><label class="l" for="pfCat">Project category</label><select id="pfCat"><option value="">Select (optional)</option><option>Residential</option><option>Commercial</option><option>Office</option><option>Kitchen</option><option>Bedroom</option><option>Living room</option><option>Doors and windows</option><option>Full house</option><option>Other</option></select></div>
+            <div><label class="l" for="pfFur">Furniture type</label><input id="pfFur" type="text" maxlength="80" placeholder="e.g. Wardrobe, TV unit, Dining set"></div></div>
+          <div class="two"><div><label class="l" for="pfMat">Material used</label><input id="pfMat" type="text" maxlength="80" placeholder="e.g. Plywood with laminate"></div>
+            <div><label class="l" for="pfCost">Project cost (&#8377;, optional)</label><input id="pfCost" type="number" min="0" step="any"></div></div>
+          <label class="l" for="pfBefore">Before photos <span style="font-weight:400;color:var(--muted)">(optional, up to 3; the photos above are the "after" photos)</span></label><input id="pfBefore" type="file" accept="image/*" multiple>
+        </div>
+        <label class="l" for="pfDesc">Short description</label><textarea id="pfDesc" maxlength="600" placeholder="What you built or designed, materials used, special features"></textarea>
+        <div class="err" id="pfErr"></div><button class="btn" id="pfSave" type="submit" style="margin-top:12px">Add project</button>
+      </form>
+      <div class="card" id="brandCard" style="display:none"><h3>Business logo and cover image</h3>
+        <p class="sub">Optional. The logo is a small square picture. The cover is a wide picture of your workshop or your best work. Uploading a new one replaces the old one.</p>
+        <div class="two"><div><label class="l" for="brLogo">Business logo</label><input id="brLogo" type="file" accept="image/*"></div>
+          <div><label class="l" for="brCover">Workshop / cover image</label><input id="brCover" type="file" accept="image/*"></div></div>
+        <div class="err" id="brErr"></div><div id="brNow" class="sub"></div><button class="btn" id="brSave" type="button" style="margin-top:10px">Save pictures</button></div>
+      <div class="card"><h3>Your portfolio</h3><div id="pfList"></div></div>
+      <form class="card" id="prForm" novalidate>
+        <h3>Add a product or service</h3><p class="sub">For suppliers and vendors with a price list, for example "Birla cement 50 kg - &#8377;380 per bag".</p>
+        <div class="two"><div><label class="l" for="prName">Name *</label><input id="prName" type="text" maxlength="120"></div><div><label class="l" for="prPrice">Price (optional)</label><input id="prPrice" type="text" maxlength="60" placeholder="e.g. &#8377;380 per bag"></div></div>
+        <label class="l" for="prDet">Details</label><textarea id="prDet" maxlength="500" style="min-height:60px"></textarea>
+        <div class="err" id="prErr"></div><button class="btn" id="prSave" type="submit" style="margin-top:12px">Add</button>
+      </form>
+      <div class="card"><h3>Your products and services</h3><div id="prList"></div></div>
+    </section>
+
+    <section id="t-requests" class="state">
+      <div class="card"><h3>Open quote requests matching your service and districts</h3>
+        <p class="sub">Customers who asked for free quotes from many vendors. Send your price and the customer sees it straight away. Their phone and email are shared with you only if they accept your quote.</p>
+        <button class="seg on" data-f="new" type="button">Not quoted yet</button><button class="seg" data-f="all" type="button">All open requests</button></div>
+      <div id="reqList"></div>
+    </section>
+
+    <section id="t-quotes" class="state"><div id="quoteList"></div></section>
+
+    <section id="t-interior" class="state">
+      <div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Interior Designer profile</h3><a class="btn" href="interior-register.html">Edit my profile</a></div>
+        <div style="display:flex;justify-content:space-between;margin-top:12px"><b>Profile completion</b><b id="iPct">0%</b></div><div style="height:10px;background:#e9eef4;border-radius:6px;overflow:hidden;margin-top:6px"><i id="iBar" style="display:block;height:100%;width:0;background:var(--success)"></i></div>
+        <p class="meta" id="iTip" style="margin:10px 0 0"></p></div>
+      <div id="iCards" class="grid2"></div>
+    </section>
+    <section id="t-listing" class="state">
+      <div class="card"><h3>Your listing</h3><div class="grid2" id="lstInfo"></div>
+        <p class="meta">To change your business name, registration ID, GST number or districts, please contact NIRMAZA support.</p></div>
+      <form class="card" id="lstForm" novalidate>
+        <h3>Keep your details fresh</h3>
+        <label class="inline" style="margin-top:0"><input type="checkbox" id="lAccept"> I am accepting new projects</label>
+        <div class="two">
+          <div><label class="l" for="lRun">Projects running now</label><input id="lRun" type="number" min="0"></div>
+          <div><label class="l" for="lDone">Projects completed</label><input id="lDone" type="number" min="0"></div>
+        </div>
+        <div class="two">
+          <div><label class="l" for="lPhone">Mobile number (shared with customers only after you accept)</label><input id="lPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digits"></div>
+          <div><label class="l" for="lEmail">Email (optional)</label><input id="lEmail" type="text" maxlength="120" placeholder="you@example.com"></div>
+        </div>
+        <label class="l" for="lAddr">Office address (optional, also shared only after you accept)</label><input id="lAddr" type="text" maxlength="200">
+        <div class="two">
+          <div><label class="l" for="lHours">Working hours</label><input id="lHours" type="text" maxlength="80" placeholder="e.g. Mon-Sat, 9 am - 7 pm"></div>
+          <div><label class="l" for="lWa">WhatsApp number</label><input id="lWa" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digits"></div>
+        </div>
+        <label class="l" for="lAbout">About your business</label><textarea id="lAbout" maxlength="1000"></textarea>
+        <div class="err" id="lErr"></div>
+        <button class="btn" id="lSave" type="submit" style="margin-top:14px">Save changes</button>
+      </form>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="interior-common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var cfg = window.BUILDCONNECT_CONFIG || {};
+  var FT_PER_M = 10.7639;
+  var client = null, session = null, biz = null, categories = [], districts = [], requests = [], quotes = [], reqFilter = 'new', reqm = [], contact = null, portfolio = [], products = [], rqFilter = 'all';
+  var PT = { new_build: 'New construction', renovation: 'Renovation / upgrade', interior: 'Interior work', repair: 'Repair / maintenance', supply: 'Buy materials', installation: 'New installation', design_only: 'Design / drawings only', other: 'Something else' };
+  var PROP = { house: 'House / villa', apartment: 'Apartment / flat', shop: 'Shop', office: 'Office', factory: 'Factory / warehouse', land: 'Plot / land', other: 'Other' };
+  var TL = { immediately: 'Immediately', within_1_month: 'Within 1 month', '1_3_months': 'In 1 to 3 months', '3_6_months': 'In 3 to 6 months', just_exploring: 'Just exploring prices' };
+  var STAT = { submitted: 'Waiting', accepted: 'Won', rejected: 'Not selected', withdrawn: 'Withdrawn' };
+
+  function getClient() {
+    if (client) return client;
+    var ok = cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && String(cfg.SUPABASE_ANON_KEY).indexOf('PASTE') !== 0;
+    if (!ok || !window.supabase) return null;
+    client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY); return client;
+  }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function r2(n) { return Math.round(n * 100) / 100; }
+  function fmt(n) { return Number(r2(n)).toLocaleString('en-IN', { maximumFractionDigits: 2 }); }
+  function inr(n) { return '₹' + fmt(n); }
+  function nameOf(list, id) { var r = list.filter(function (x) { return x.id === id; })[0]; return r ? r.name : ''; }
+  function toast(m) { var t = $('toast'); t.textContent = m; t.classList.add('show'); setTimeout(function () { t.classList.remove('show'); }, 2600); }
+  function showMsg(title, text, actsHtml) {
+    $('app').style.display = 'none'; $('msg').style.display = 'block';
+    $('msgTitle').textContent = title; $('msgText').textContent = text; $('msgActs').innerHTML = actsHtml || '';
+  }
+  function friendly(m) {
+    m = String(m || '').toLowerCase();
+    if (m.indexOf('request_not_open') !== -1) return 'This request is no longer open.';
+    if (m.indexOf('quote_locked') !== -1) return 'This quote has already been decided and cannot be changed.';
+    if (m.indexOf('bad_about') !== -1) return 'Please write at least 30 characters about your business.';
+    if (m.indexOf('bad_whatsapp') !== -1) return 'WhatsApp number must be a valid 10-digit Indian mobile number.';
+    if (m.indexOf('add_phone_first') !== -1) return 'Please add your mobile number under My listing first, so the customer can reach you. Then accept again.';
+    if (m.indexOf('bad_state') !== -1) return 'This requirement has already moved on. Please refresh.';
+    if (m.indexOf('too_many_items') !== -1) return 'You have reached the limit. Please delete an old item first.';
+    if (m.indexOf('bad_numbers') !== -1) return 'Project numbers cannot be negative.';
+    if (m.indexOf('not_allowed') !== -1 || m.indexOf('row-level security') !== -1) return 'You are not allowed to do that. Please log in again.';
+    if (m.indexOf('failed to fetch') !== -1 || m.indexOf('network') !== -1) return 'Could not connect. Please check your internet and try again.';
+    return 'Something went wrong: ' + m;
+  }
+
+  /* ---- tabs ---- */
+  function tab(name) {
+    ['overview', 'requirements', 'requests', 'quotes', 'portfolio', 'interior', 'listing'].forEach(function (t) { $('t-' + t).style.display = t === name ? 'block' : 'none'; });
+    document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-t') === name); });
+  }
+  document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { tab(b.getAttribute('data-t')); }); });
+  document.querySelectorAll('.stat').forEach(function (b) { b.addEventListener('click', function () { tab(b.getAttribute('data-go')); }); });
+  document.querySelectorAll('.seg[data-f]').forEach(function (b) {
+    b.addEventListener('click', function () { reqFilter = b.getAttribute('data-f'); document.querySelectorAll('.seg[data-f]').forEach(function (x) { x.classList.toggle('on', x === b); }); renderRequests(); });
+  });
+
+  /* ---- data ---- */
+  function quoteFor(enqId) { return quotes.filter(function (q) { return q.enquiry_id === enqId && q.status !== 'withdrawn'; })[0]; }
+  function one(x) { return Array.isArray(x) ? x[0] : x; }
+  function isInterior() { var c = categories.filter(function (x) { return x.id === biz.category_id; })[0]; return !!c && c.slug === 'interior-designer'; }
+  function renderInteriorTab() {
+    if (!biz || !isInterior() || !window.INT) return;
+    $('tabInt').style.display = 'inline-block';
+    var comp = INT.completion(biz, portfolio), x = biz.interior_extra || {}, projects = portfolio.filter(function (r) { return !(r.details && r.details.kind); }), docs = x.documents || {}, certs = x.certificates || [];
+    $('iPct').textContent = comp.pct + '%'; $('iBar').style.width = comp.pct + '%';
+    var todo = comp.parts.filter(function (q) { return !q.done; })[0]; $('iTip').textContent = todo ? todo.tip : 'Your profile is complete. Keep your projects and prices up to date.';
+    var st = function (i) { return comp.parts[i].done ? '<span class="badge ok">Completed</span>' : '<span class="badge no">Pending</span>'; };
+    var newEnq = reqm.filter(function (q) { return q.status === 'new'; }).length;
+    var cards = [
+      ['Business Profile', st(0), esc(biz.business_name) + (biz.experience_years != null ? ' &middot; ' + biz.experience_years + ' yrs' : ''), 'interior-register.html?step=1'],
+      ['Services & Specializations', st(1), (biz.specializations || []).length + ' services selected', 'interior-register.html?step=2'],
+      ['Design Styles & Expertise', st(2), ((x.styles || []).length + (x.software || []).length) + ' styles and software chosen', 'interior-register.html?step=3'],
+      ['Project Execution Details', st(3), (biz.projects_completed != null ? biz.projects_completed + ' projects completed' : 'Not added yet'), 'interior-register.html?step=4'],
+      ['Pricing & Packages', st(4), x.hide_prices ? 'Hidden from customers (quote on request)' : (Object.keys(x.prices || {}).length + ' prices shown'), 'interior-register.html?step=5'],
+      ['Portfolio & Previous Projects', st(5), projects.length + ' project' + (projects.length === 1 ? '' : 's'), 'interior-register.html?step=6'],
+      ['Documents & Certificates', '', (Object.keys(docs).length + certs.length) + ' file(s) uploaded', 'interior-register.html?step=6'],
+      ['Enquiries', newEnq ? '<span class="badge ok">' + newEnq + ' new</span>' : '', reqm.length + ' requirement(s) received', null],
+      ['Reviews & Ratings', '', 'No reviews yet. Reviews will appear after customers finish work with you.', null],
+      ['Additional Information', st(6), 'Warranty, payment terms, working hours', 'interior-register.html?step=7']
+    ];
+    $('iCards').innerHTML = cards.map(function (c, i) { return '<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><b>' + c[0] + '</b>' + c[1] + '</div><div class="meta" style="margin:8px 0 12px">' + c[2] + '</div>' + (c[3] ? '<a class="btn ghost" href="' + c[3] + '">Edit</a>' : (c[0] === 'Enquiries' ? '<button class="btn ghost" type="button" data-gotab="requirements">View enquiries</button>' : '')) + '</div>'; }).join('');
+    $('iCards').querySelectorAll('[data-gotab]').forEach(function (b) { b.onclick = function () { tab(b.getAttribute('data-gotab')); }; });
+  }
+  async function reload() {
+    var sb = getClient();
+    var r = await Promise.all([
+      sb.from('enquiries').select('*').eq('status', 'open').order('created_at', { ascending: false }),
+      sb.from('quotations').select('id,enquiry_id,price,terms,status,created_at,enquiries(title,district_id,status,enquiry_contacts(contact_name,phone,whatsapp_ok))').eq('provider_id', biz.id).order('created_at', { ascending: false }),
+      sb.from('requirements').select('*,requirement_contacts(contact_name,phone,email,whatsapp_ok),requirement_events(status,actor,note,created_at)').eq('provider_id', biz.id).order('created_at', { ascending: false }),
+      sb.from('provider_portfolio').select('*').eq('provider_id', biz.id).order('created_at', { ascending: false }),
+      sb.from('provider_products').select('*').eq('provider_id', biz.id).order('created_at', { ascending: false })
+    ]);
+    for (var i = 0; i < 5; i++) if (r[i].error) throw r[i].error;
+    requests = r[0].data || []; quotes = r[1].data || []; reqm = r[2].data || []; portfolio = r[3].data || []; products = r[4].data || [];
+    renderAll();
+  }
+  function renderAll() {
+    var fresh = requests.filter(function (e) { return !quoteFor(e.id); }).length, newReq = reqm.filter(function (x) { return x.status === 'new'; }).length;
+    $('sNew').textContent = fresh; $('sWait').textContent = quotes.filter(function (q) { return q.status === 'submitted'; }).length;
+    $('sReq').textContent = newReq; $('sAct').textContent = reqm.filter(function (x) { return x.status === 'contact_shared' || x.status === 'in_progress'; }).length;
+    $('dotReq').style.display = fresh ? 'inline-block' : 'none'; $('dotReq').textContent = fresh;
+    $('dotReqm').style.display = newReq ? 'inline-block' : 'none'; $('dotReqm').textContent = newReq;
+    renderReqm(); renderRequests(); renderQuotes(); renderPortfolio(); renderInteriorTab();
+  }
+
+  /* ---- requests ---- */
+  function renderRequests() {
+    var box = $('reqList'); box.innerHTML = '';
+    var list = requests.filter(function (e) { return reqFilter === 'all' || !quoteFor(e.id); });
+    if (!list.length) { box.innerHTML = '<div class="card empty"><h3>' + (reqFilter === 'new' ? 'No new requests right now' : 'No open requests') + '</h3><p class="sub">New customer requests for your service and districts will appear here.</p></div>'; return; }
+    list.forEach(function (e) {
+      var q = quoteFor(e.id), el = document.createElement('div'); el.className = 'card req';
+      var h = '<h4>' + esc(e.title) + '</h4><div class="meta">' + esc(nameOf(districts, e.district_id)) + (e.locality ? ', ' + esc(e.locality) : '') + (e.pincode ? ' - ' + esc(e.pincode) : '') + ' &middot; posted ' + new Date(e.created_at).toLocaleDateString('en-IN') + '</div>';
+      h += '<div class="grid2">';
+      h += '<div><span>Type of work</span>' + esc(PT[e.project_type] || '-') + '</div>';
+      if (e.property_type) h += '<div><span>Property</span>' + esc(PROP[e.property_type] || '-') + '</div>';
+      if (e.area_sqft) h += '<div><span>Area</span>' + fmt(e.area_sqft) + ' sq.ft (' + fmt(e.area_sqft / FT_PER_M) + ' sq.m)</div>';
+      if (e.capacity_kw) h += '<div><span>System size</span>' + fmt(e.capacity_kw) + ' kW</div>';
+      h += '<div><span>Customer budget</span>' + (e.budget_min || e.budget_max ? (e.budget_min ? inr(e.budget_min) : '') + (e.budget_min && e.budget_max ? ' - ' : e.budget_max ? 'up to ' : '') + (e.budget_max ? inr(e.budget_max) : '') : 'Not shared') + '</div>';
+      h += '<div><span>Wants to start</span>' + esc(TL[e.timeline] || '-') + '</div></div>';
+      if (e.work_details) h += '<div class="details">' + esc(e.work_details) + '</div>';
+      h += '<div class="banner">&#128274; The customer\'s phone and email are shared with you only if they accept your quote.</div>';
+      h += '<div class="qwrap"></div>';
+      el.innerHTML = h; box.appendChild(el);
+      drawQuoteArea(el.querySelector('.qwrap'), e, q, false);
+    });
+  }
+  function drawQuoteArea(wrap, e, q, editing) {
+    if (q && !editing) {
+      wrap.innerHTML = '<div class="mine"><div><div class="meta">Your quote<span class="badge b-' + esc(q.status) + '">' + esc(STAT[q.status] || q.status) + '</span></div><div class="pr">' + inr(q.price) + '</div><div class="meta">' + esc(q.terms || '') + '</div></div>' +
+        (q.status === 'submitted' ? '<div><button class="btn ghost" data-a="edit" type="button">Change</button> <button class="btn danger" data-a="wd" type="button">Withdraw</button></div>' : '') + '</div>';
+      var ed = wrap.querySelector('[data-a=edit]'), wd = wrap.querySelector('[data-a=wd]');
+      if (ed) ed.onclick = function () { drawQuoteArea(wrap, e, q, true); };
+      if (wd) wd.onclick = async function () {
+        if (!confirm('Withdraw your quote? The customer will no longer see it.')) return;
+        wd.disabled = true; var u = await getClient().from('quotations').update({ status: 'withdrawn' }).eq('id', q.id);
+        if (u.error) { toast(friendly(u.error.message)); wd.disabled = false; return; } toast('Quote withdrawn'); reload();
+      };
+      return;
+    }
+    wrap.innerHTML = '<form class="qform" novalidate><div class="two"><div><label class="l">Your price (&#8377;)</label><input type="number" min="1" step="any" class="qp" placeholder="Total price for this work" value="' + (q ? esc(q.price) : '') + '"><div class="conv"></div></div>' +
+      '<div><label class="l">What is included? (optional)</label><textarea class="qt" maxlength="500" placeholder="e.g. Labour and material, 6 months, GST extra">' + (q ? esc(q.terms || '') : '') + '</textarea></div></div>' +
+      '<div class="err"></div><button class="btn" type="submit">' + (q ? 'Update quote' : 'Send quote') + '</button>' + (q ? ' <button class="btn ghost" data-a="cancel" type="button">Cancel</button>' : '') + '</form>';
+    var f = wrap.querySelector('form'), p = f.querySelector('.qp'), cv = f.querySelector('.conv'), er = f.querySelector('.err');
+    function lakh(n) { return n >= 1e7 ? inr(n / 1e7).replace(/[\d,.]+$/, '') : ''; }
+    p.addEventListener('input', function () { var v = Number(p.value); cv.textContent = v >= 1e5 ? '= ₹' + r2(v >= 1e7 ? v / 1e7 : v / 1e5) + (v >= 1e7 ? ' crore' : ' lakh') : ''; });
+    var cn = f.querySelector('[data-a=cancel]'); if (cn) cn.onclick = function () { drawQuoteArea(wrap, e, q, false); };
+    f.addEventListener('submit', async function (ev) {
+      ev.preventDefault(); er.textContent = '';
+      var price = Number(p.value), terms = f.querySelector('.qt').value.trim();
+      if (!(price > 0) || price > 1e10) { er.textContent = 'Enter your price in rupees.'; return; }
+      var btn = f.querySelector('button[type=submit]'); btn.disabled = true;
+      var res = q ? await getClient().from('quotations').update({ price: price, terms: terms || null }).eq('id', q.id)
+                  : await getClient().from('quotations').insert({ enquiry_id: e.id, provider_id: biz.id, price: price, terms: terms || null, status: 'submitted' });
+      if (res.error) { er.textContent = friendly(res.error.message); btn.disabled = false; return; }
+      toast(q ? 'Quote updated' : 'Quote sent'); reload();
+    });
+  }
+
+  /* ---- my quotes ---- */
+  function renderQuotes() {
+    var box = $('quoteList'); box.innerHTML = '';
+    if (!quotes.length) { box.innerHTML = '<div class="card empty"><h3>No quotes yet</h3><p class="sub">When you send a quote it will be listed here.</p><button class="btn" id="goReq" type="button">See new requests</button></div>'; $('goReq').onclick = function () { tab('requests'); }; return; }
+    quotes.forEach(function (q) {
+      var en = q.enquiries, el = document.createElement('div'); el.className = 'card';
+      var h = '<h4 style="margin:0 0 4px;color:var(--dark)">' + esc(en ? en.title : 'Request closed') + '<span class="badge b-' + esc(q.status) + '">' + esc(STAT[q.status] || q.status) + '</span></h4>' +
+        '<div class="meta">Sent ' + new Date(q.created_at).toLocaleDateString('en-IN') + (en ? ' &middot; ' + esc(nameOf(districts, en.district_id)) : '') + '</div>' +
+        '<div style="font-size:22px;font-weight:800;color:#0b5d43;margin-top:6px">' + inr(q.price) + '</div><div class="meta">' + esc(q.terms || '') + '</div>';
+      var ec = en ? one(en.enquiry_contacts) : null;
+      if (q.status === 'accepted' && ec && ec.phone) h += '<div class="who"><div><b>You won this project</b><div class="meta">' + esc(ec.contact_name || 'Customer') + ' &middot; +91 ' + esc(ec.phone) + '</div></div><div><a href="tel:+91' + esc(ec.phone) + '">Call</a>' + (ec.whatsapp_ok ? '<a target="_blank" rel="noopener" href="https://wa.me/91' + esc(ec.phone) + '">WhatsApp</a>' : '') + '</div></div>';
+      else if (q.status === 'submitted') h += '<div class="meta" style="margin-top:6px">Waiting for the customer to decide. You can change or withdraw it under New requests.</div>';
+      el.innerHTML = h; box.appendChild(el);
+    });
+  }
+
+  /* ---- requirements sent directly to this vendor ---- */
+  var LABEL = { new: 'New Requirement', pending_review: 'Pending Review', accepted: 'Accepted', rejected: 'Rejected', contact_shared: 'Contact Details Shared', in_progress: 'Work in Progress', completed: 'Completed', cancelled: 'Cancelled' };
+  var REASONS = ['Not available right now', 'Outside my service area', 'Project size does not suit me', 'Budget is too low', 'Other'];
+  var openIds = {};
+  function rqMatch(x) {
+    if (rqFilter === 'new') return x.status === 'new' || x.status === 'pending_review';
+    if (rqFilter === 'active') return x.status === 'contact_shared' || x.status === 'in_progress';
+    if (rqFilter === 'completed') return x.status === 'completed';
+    if (rqFilter === 'rejected') return x.status === 'rejected' || x.status === 'cancelled';
+    return true;
+  }
+  document.querySelectorAll('.seg[data-rf]').forEach(function (b) {
+    b.addEventListener('click', function () { rqFilter = b.getAttribute('data-rf'); document.querySelectorAll('.seg[data-rf]').forEach(function (x) { x.classList.toggle('on', x === b); }); renderReqm(); });
+  });
+  function renderReqm() {
+    var box = $('rqList'); box.innerHTML = '';
+    var list = reqm.filter(rqMatch);
+    if (!list.length) { box.innerHTML = '<div class="card empty"><h3>' + (reqm.length ? 'Nothing in this view' : 'No requirements yet') + '</h3><p class="sub">' + (reqm.length ? 'Try another filter.' : 'When a customer sends a requirement to your business it will appear here. Keep your profile and portfolio up to date to attract more.') + '</p></div>'; return; }
+    list.forEach(function (x) {
+      var cc = one(x.requirement_contacts), ev = (x.requirement_events || []).slice().sort(function (a, b) { return new Date(a.created_at) - new Date(b.created_at); });
+      var el = document.createElement('div'); el.className = 'card req';
+      var h = '<div class="head"><div><h4>' + esc(x.title) + '<span class="badge b-' + esc(x.status) + '">' + esc(LABEL[x.status] || x.status) + '</span></h4><div class="meta">' + esc(nameOf(districts, x.district_id)) + (x.locality ? ', ' + esc(x.locality) : '') + ' &middot; ' + new Date(x.created_at).toLocaleDateString('en-IN') +
+        (x.area_sqft ? ' &middot; ' + fmt(x.area_sqft) + ' sq.ft (' + fmt(x.area_sqft / FT_PER_M) + ' sq.m)' : '') + '</div></div><span class="meta">' + (openIds[x.id] ? 'Hide ▴' : 'Review ▾') + '</span></div>';
+      if (openIds[x.id]) {
+        h += '<div class="grid2"><div><span>Type of work</span>' + esc(PT[x.project_type] || '-') + '</div>' + (x.property_type ? '<div><span>Property</span>' + esc(PROP[x.property_type] || '-') + '</div>' : '') +
+          (x.capacity_kw ? '<div><span>System size</span>' + fmt(x.capacity_kw) + ' kW</div>' : '') +
+          '<div><span>Location</span>' + esc(nameOf(districts, x.district_id)) + (x.locality ? ', ' + esc(x.locality) : '') + (x.pincode ? ' - ' + esc(x.pincode) : '') + '</div>' +
+          '<div><span>Customer budget</span>' + (x.budget_min || x.budget_max ? (x.budget_min ? inr(x.budget_min) : '') + (x.budget_min && x.budget_max ? ' - ' : x.budget_max ? 'up to ' : '') + (x.budget_max ? inr(x.budget_max) : '') : 'Not shared') + '</div>' +
+          '<div><span>Wants to start</span>' + esc(TL[x.timeline] || '-') + '</div></div><div class="details">' + esc(x.work_details) + '</div>';
+        if (cc) {
+          var msg = encodeURIComponent('Hello ' + cc.contact_name + ', I am ' + biz.business_name + ' from NIRMAZA. I accepted your requirement: ' + x.title);
+          h += '<div class="who"><div><b>' + esc(cc.contact_name) + '</b><div class="meta">+91 ' + esc(cc.phone) + (cc.email ? ' &middot; ' + esc(cc.email) : '') + '</div></div><div><a href="tel:+91' + esc(cc.phone) + '">Call</a>' +
+            (cc.whatsapp_ok ? '<a target="_blank" rel="noopener" href="https://wa.me/91' + esc(cc.phone) + '?text=' + msg + '">WhatsApp</a>' : '') + (cc.email ? '<a href="mailto:' + esc(cc.email) + '">Email</a>' : '') + '</div></div>';
+        } else if (x.status === 'new' || x.status === 'pending_review') h += '<div class="banner">&#128274; Customer contact details are hidden until you accept this requirement.</div>';
+        if (x.status === 'rejected' && x.reject_reason) h += '<div class="meta">Your reason: ' + esc(x.reject_reason) + '</div>';
+        var acts = '';
+        if (x.status === 'new' || x.status === 'pending_review') acts = '<button class="btn" data-a="accept" type="button">Accept requirement</button> <button class="btn danger" data-a="reject" type="button">Reject</button><div class="rej" style="display:none"><label class="l" style="margin-top:0">Reason</label><select class="rs">' + REASONS.map(function (r) { return '<option>' + esc(r) + '</option>'; }).join('') + '</select><textarea class="rt" maxlength="200" placeholder="Add a note for the customer (optional)" style="margin-top:8px;min-height:56px"></textarea><div style="margin-top:8px"><button class="btn danger" data-a="reject2" type="button">Confirm rejection</button> <button class="btn ghost" data-a="back" type="button">Back</button></div></div>';
+        else if (x.status === 'contact_shared') acts = '<button class="btn" data-a="in_progress" type="button">Start work</button> <button class="btn ghost" data-a="completed" type="button">Mark completed</button>';
+        else if (x.status === 'in_progress') acts = '<button class="btn" data-a="completed" type="button">Mark completed</button>';
+        if (acts) h += '<div style="margin-top:10px">' + acts + '</div>';
+        h += '<ul class="tl">' + ev.map(function (e) { return '<li><b>' + esc(LABEL[e.status] || e.status) + '</b> &middot; ' + new Date(e.created_at).toLocaleDateString('en-IN') + ' &middot; ' + esc(e.actor === 'vendor' ? 'you' : e.actor === 'customer' ? 'customer' : 'NIRMAZA') + (e.note ? ' &middot; ' + esc(e.note) : '') + '</li>'; }).join('') + '</ul>';
+      }
+      el.innerHTML = h; box.appendChild(el);
+      el.querySelector('.head').onclick = async function () {
+        openIds[x.id] = !openIds[x.id];
+        if (openIds[x.id] && x.status === 'new') { await getClient().rpc('mark_requirement_viewed', { p_id: x.id }); x.status = 'pending_review'; renderAll(); } else renderReqm();
+      };
+      el.querySelectorAll('button[data-a]').forEach(function (b) {
+        b.onclick = async function () {
+          var a = b.getAttribute('data-a'), rej = el.querySelector('.rej'), res;
+          if (a === 'reject') { rej.style.display = 'block'; return; } if (a === 'back') { rej.style.display = 'none'; return; }
+          if (a === 'accept' && !confirm('Accept this requirement? Your contact details will be shared with the customer, and theirs with you.')) return;
+          b.disabled = true;
+          if (a === 'accept') res = await getClient().rpc('respond_requirement', { p_id: x.id, p_accept: true, p_reason: null });
+          else if (a === 'reject2') { var note = el.querySelector('.rt').value.trim(); res = await getClient().rpc('respond_requirement', { p_id: x.id, p_accept: false, p_reason: el.querySelector('.rs').value + (note ? ' - ' + note : '') }); }
+          else res = await getClient().rpc('update_requirement_status', { p_id: x.id, p_status: a, p_note: null });
+          if (res.error) { toast(friendly(res.error.message)); b.disabled = false; return; }
+          toast(a === 'accept' ? 'Accepted. Contact details shared.' : a === 'reject2' ? 'Requirement rejected' : 'Updated'); reload();
+        };
+      });
+    });
+  }
+
+  /* ---- portfolio and products ---- */
+  function imgUrl(path) { return (cfg.SUPABASE_URL || '') + '/storage/v1/object/public/portfolio/' + encodeURI(path); }
+  function compress(file, max) {
+    return new Promise(function (res, rej) {
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var s = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
+        c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        c.toBlob(function (b) { b ? res(b) : rej(new Error('Could not process this photo')); }, 'image/jpeg', 0.82);
+      };
+      img.onerror = function () { rej(new Error('Could not read this photo. Please choose a JPG or PNG.')); }; img.src = url;
+    });
+  }
+  function isCarp() { var c = categories.filter(function (x) { return x.id === biz.category_id; })[0]; return !!c && c.slug === 'carpenter'; }
+  function brandRow(kind) { return portfolio.filter(function (x) { return x.details && x.details.kind === kind; })[0]; }
+  function renderBrand() {
+    $('pfCarp').style.display = isCarp() ? 'block' : 'none'; $('brandCard').style.display = isCarp() ? 'block' : 'none';
+    var l = brandRow('logo'), c = brandRow('cover');
+    $('brNow').textContent = 'Now: logo ' + (l ? 'added' : 'not added') + ', cover ' + (c ? 'added' : 'not added') + '.';
+  }
+  $('brSave').addEventListener('click', async function () {
+    $('brErr').textContent = ''; var btn = $('brSave'), sb = getClient();
+    var todo = [['logo', $('brLogo').files[0], 600], ['cover', $('brCover').files[0], 1600]].filter(function (a) { return a[1]; });
+    if (!todo.length) { $('brErr').textContent = 'Choose a picture first.'; return; }
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      for (var i = 0; i < todo.length; i++) {
+        var kind = todo[i][0], blob = await compress(todo[i][1], todo[i][2]), pth = session.user.id + '/' + kind + '-' + Date.now() + '.jpg';
+        var up = await sb.storage.from('portfolio').upload(pth, blob, { contentType: 'image/jpeg' }); if (up.error) throw up.error;
+        var old = brandRow(kind);
+        var ins = await sb.from('provider_portfolio').insert({ provider_id: biz.id, title: kind === 'logo' ? 'Business logo' : 'Cover image', image_path: pth, details: { kind: kind } }); if (ins.error) throw ins.error;
+        if (old) { await sb.from('provider_portfolio').delete().eq('id', old.id); try { await sb.storage.from('portfolio').remove([old.image_path]); } catch (e) { } }
+      }
+      $('brLogo').value = ''; $('brCover').value = ''; toast('Pictures saved'); reload();
+    } catch (e) { $('brErr').textContent = friendly(e.message); } finally { btn.disabled = false; btn.textContent = 'Save pictures'; }
+  });
+  function renderPortfolio() {
+    renderBrand();
+    $('pfList').innerHTML = portfolio.length ? '' : '<p class="sub">No projects added yet.</p>';
+    portfolio.filter(function (x) { return !(x.details && x.details.kind); }).forEach(function (x) {
+      var el = document.createElement('div'); el.className = 'item'; var dd = x.details || {};
+      el.innerHTML = '<div class="th"' + (x.image_path ? ' style="background-image:url(\'' + esc(imgUrl(x.image_path)) + '\')"' : '') + '></div><div class="g"><b>' + esc(x.title) + '</b><div class="meta">' + esc([dd.category, dd.furniture_type, dd.material, dd.cost ? '\u20B9' + dd.cost : '', x.location, x.year, x.area_sqft ? fmt(x.area_sqft) + ' sq.ft (' + fmt(x.area_sqft / FT_PER_M) + ' sq.m)' : ''].filter(Boolean).join(' · ')) + '</div></div><button class="btn danger" type="button">Delete</button>';
+      el.querySelector('button').onclick = async function () {
+        if (!confirm('Delete this project from your profile?')) return;
+        var r = await getClient().from('provider_portfolio').delete().eq('id', x.id); if (r.error) { toast(friendly(r.error.message)); return; }
+        var allp = [x.image_path].concat(x.extra_images || [], (x.details && x.details.before) || []).filter(Boolean); if (allp.length) { try { await getClient().storage.from('portfolio').remove(allp); } catch (e) { } }
+        toast('Deleted'); reload();
+      };
+      $('pfList').appendChild(el);
+    });
+    $('prList').innerHTML = products.length ? '' : '<p class="sub">No products or services added yet.</p>';
+    products.forEach(function (x) {
+      var el = document.createElement('div'); el.className = 'item';
+      el.innerHTML = '<div class="g"><b>' + esc(x.name) + '</b> <span style="color:var(--success);font-weight:700">' + esc(x.price_text || '') + '</span><div class="meta">' + esc(x.details || '') + '</div></div><button class="btn danger" type="button">Delete</button>';
+      el.querySelector('button').onclick = async function () {
+        if (!confirm('Delete this item?')) return;
+        var r = await getClient().from('provider_products').delete().eq('id', x.id); if (r.error) { toast(friendly(r.error.message)); return; } toast('Deleted'); reload();
+      };
+      $('prList').appendChild(el);
+    });
+  }
+  function pfConv() { var v = Number($('pfArea').value); $('pfConv').textContent = !(v > 0) ? '' : $('pfUnit').value === 'sqft' ? '= ' + fmt(v / FT_PER_M) + ' sq.m' : '= ' + fmt(v * FT_PER_M) + ' sq.ft'; }
+  $('pfArea').addEventListener('input', pfConv); $('pfUnit').addEventListener('change', pfConv);
+  $('pfForm').addEventListener('submit', async function (ev) {
+    ev.preventDefault(); $('pfErr').textContent = '';
+    var title = $('pfTitle').value.trim(), yr = $('pfYear').value ? Number($('pfYear').value) : null, ar = $('pfArea').value ? Number($('pfArea').value) : null, files = Array.prototype.slice.call($('pfImg').files, 0, 6);
+    if (title.length < 3) { $('pfErr').textContent = 'Please enter a project title.'; return; }
+    if (yr !== null && (yr < 1980 || yr > 2100)) { $('pfErr').textContent = 'Enter a valid year.'; return; }
+    if (ar !== null && !(ar > 0)) { $('pfErr').textContent = 'Enter a valid size or leave it empty.'; return; }
+    var btn = $('pfSave'); btn.disabled = true; btn.textContent = 'Saving...'; var path = null;
+    try {
+      var more = [];
+      for (var fi = 0; fi < files.length; fi++) {
+        var blob = await compress(files[fi], 1280), pth = session.user.id + '/' + Date.now() + '-' + fi + '.jpg';
+        var up = await getClient().storage.from('portfolio').upload(pth, blob, { contentType: 'image/jpeg' }); if (up.error) throw up.error;
+        if (fi === 0) path = pth; else more.push(pth);
+      }
+      var row = { provider_id: biz.id, title: title, description: $('pfDesc').value.trim() || null, location: $('pfLoc').value.trim() || null, year: yr, area_sqft: ar === null ? null : r2($('pfUnit').value === 'sqft' ? ar : ar * FT_PER_M), image_path: path };
+      if (more.length) row.extra_images = more;
+      if (isCarp()) {
+        var dt = {}, bf = Array.prototype.slice.call($('pfBefore').files, 0, 3), bp = [];
+        for (var bi = 0; bi < bf.length; bi++) {
+          var bb = await compress(bf[bi], 1280), bpth = session.user.id + '/' + Date.now() + '-b' + bi + '.jpg';
+          var bu = await getClient().storage.from('portfolio').upload(bpth, bb, { contentType: 'image/jpeg' }); if (bu.error) throw bu.error; bp.push(bpth);
+        }
+        if ($('pfCat').value) dt.category = $('pfCat').value;
+        if ($('pfFur').value.trim()) dt.furniture_type = $('pfFur').value.trim();
+        if ($('pfMat').value.trim()) dt.material = $('pfMat').value.trim();
+        if ($('pfCost').value && Number($('pfCost').value) > 0) dt.cost = Number($('pfCost').value);
+        if (bp.length) dt.before = bp;
+        if (Object.keys(dt).length) row.details = dt;
+      }
+      var r = await getClient().from('provider_portfolio').insert(row); if (r.error) throw r.error;
+      $('pfForm').reset(); $('pfConv').textContent = ''; toast('Project added'); reload();
+    } catch (e) { $('pfErr').textContent = friendly(e.message); } finally { btn.disabled = false; btn.textContent = 'Add project'; }
+  });
+  $('prForm').addEventListener('submit', async function (ev) {
+    ev.preventDefault(); $('prErr').textContent = '';
+    var name = $('prName').value.trim(); if (name.length < 2) { $('prErr').textContent = 'Please enter a name.'; return; }
+    var btn = $('prSave'); btn.disabled = true;
+    var r = await getClient().from('provider_products').insert({ provider_id: biz.id, name: name, details: $('prDet').value.trim() || null, price_text: $('prPrice').value.trim() || null });
+    btn.disabled = false; if (r.error) { $('prErr').textContent = friendly(r.error.message); return; }
+    $('prForm').reset(); toast('Added'); reload();
+  });
+
+  /* ---- listing ---- */
+  function fillListing() {
+    $('bizName').textContent = biz.business_name;
+    $('bizMeta').textContent = nameOf(categories, biz.category_id) + ' · ' + nameOf(districts, biz.district_id);
+    var cc = categories.filter(function (c) { return c.id === biz.category_id; })[0]; if (cc && cc.slug === 'elevator' && !document.getElementById('elevLink')) $('bizMeta').insertAdjacentHTML('afterend', '<p id="elevLink" style="margin:8px 0 0"><a href="elevator-products.html" style="color:#fff;text-decoration:underline;font-weight:700">My Elevator Products: add and manage your lift models &rarr;</a></p>');
+    $('bizStatus').textContent = biz.status === 'approved' ? 'Live' : biz.status; $('bizStatus').className = 'pill p-' + biz.status;
+    $('lstInfo').innerHTML = [['Business', biz.business_name], ['Category', nameOf(categories, biz.category_id)], ['Main district', nameOf(districts, biz.district_id)], ['Phone', '+91 ' + ((contact && contact.phone) || '')], ['Experience', (biz.experience_years || 0) + ' years']].map(function (x) { return '<div><span>' + esc(x[0]) + '</span>' + esc(x[1]) + '</div>'; }).join('');
+    $('lAccept').checked = biz.accepting_new_projects !== false; $('lRun').value = biz.projects_running || 0; $('lDone').value = biz.projects_completed || 0;
+    $('lHours').value = biz.working_hours || ''; $('lWa').value = (contact && contact.whatsapp) || ''; $('lPhone').value = (contact && contact.phone) || ''; $('lEmail').value = (contact && contact.email) || ''; $('lAddr').value = (contact && contact.address) || ''; $('lAbout').value = biz.description || '';
+  }
+  $('lstForm').addEventListener('submit', async function (ev) {
+    ev.preventDefault(); $('lErr').textContent = '';
+    var run = Number($('lRun').value), done = Number($('lDone').value), wa = $('lWa').value.replace(/\D/g, ''), about = $('lAbout').value.trim();
+    if (!(run >= 0) || !(done >= 0) || run % 1 || done % 1) { $('lErr').textContent = 'Project numbers must be whole numbers, 0 or more.'; return; }
+    if (wa && !/^[6-9]\d{9}$/.test(wa)) { $('lErr').textContent = 'WhatsApp must be a valid 10-digit mobile number, or leave it empty.'; return; }
+    if (about.length < 30) { $('lErr').textContent = 'Please write at least 30 characters about your business.'; return; }
+    var ph = $('lPhone').value.replace(/\D/g, ''), em = $('lEmail').value.trim(), ad = $('lAddr').value.trim();
+    if (!/^[6-9]\d{9}$/.test(ph)) { $('lErr').textContent = 'Enter your 10-digit mobile number. Customers use it to reach you after you accept.'; return; }
+    if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { $('lErr').textContent = 'Enter a valid email address or leave it empty.'; return; }
+    var btn = $('lSave'); btn.disabled = true;
+    var cu = await getClient().from('provider_contacts').upsert({ provider_id: biz.id, phone: ph, whatsapp: wa || null, email: em || null, address: ad || null }, { onConflict: 'provider_id' });
+    if (cu.error) { btn.disabled = false; $('lErr').textContent = friendly(cu.error.message); return; }
+    contact = { provider_id: biz.id, phone: ph, whatsapp: wa || null, email: em || null, address: ad || null };
+    var r = await getClient().rpc('update_my_listing', { p_accepting: $('lAccept').checked, p_running: run, p_completed: done, p_hours: $('lHours').value.trim(), p_whatsapp: wa, p_about: about });
+    btn.disabled = false;
+    if (r.error) { $('lErr').textContent = friendly(r.error.message); return; }
+    biz.accepting_new_projects = $('lAccept').checked; biz.projects_running = run; biz.projects_completed = done; biz.working_hours = $('lHours').value.trim(); if (contact) contact.whatsapp = wa || null; biz.description = about;
+    toast('Saved');
+  });
+
+  /* ---- start up ---- */
+  async function init() {
+    var sb = getClient();
+    if (!sb) { showMsg('Site not fully set up', 'Missing database key. Please tell the site owner.'); return; }
+    var s = await sb.auth.getSession(); session = s.data && s.data.session;
+    if (!session) { showMsg('Please log in first', 'Log in to see your business panel.', '<a class="btn" href="login.html">Log in</a>'); return; }
+    var r = await Promise.all([
+      sb.from('provider_profiles').select('*').eq('user_id', session.user.id).maybeSingle(),
+      sb.from('categories').select('id,name,slug').order('sort_order'),
+      sb.from('districts').select('id,name').order('name')
+    ]);
+    biz = r[0].data;
+    if (biz) { var cr = await sb.from('provider_contacts').select('*').eq('provider_id', biz.id).maybeSingle(); contact = cr.data; } categories = r[1].data || []; districts = r[2].data || [];
+    if (!biz) { showMsg('You have not listed a business yet', 'Add your business details to start receiving customer requests.', '<a class="btn" href="business.html">List your business</a>'); return; }
+    fillListing();
+    if (biz.status !== 'approved') {
+      var t = { pending: ['Your listing is under review', 'We are checking your details. Once approved, customer requests will appear here.'], rejected: ['Your listing needs changes', 'We could not approve your listing yet. Please contact NIRMAZA support.'], suspended: ['Your listing is paused', 'Please contact NIRMAZA support.'] }[biz.status] || ['Listing not active', 'Please contact NIRMAZA support.'];
+      showMsg(t[0], t[1], (isInterior() ? '<a class="btn" href="interior-register.html">Complete my interior profile</a> ' : '') + '<a class="btn ghost" href="index.html">Go to home page</a>'); return;
+    }
+    $('msg').style.display = 'none'; $('app').style.display = 'block'; tab('overview');
+    await reload();
+    if (new URLSearchParams(location.search).get('tab')) tab(new URLSearchParams(location.search).get('tab'));
+  }
+  init().catch(function (e) { showMsg('Something went wrong', e && e.message ? e.message : String(e)); });
+})();
+</script>
+</body>
+</html>

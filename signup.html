@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign up - NIRMAZA</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script>
+<style>
+  :root { --primary:#1769AA; --dark:#103B63; --light:#F4F7FA; --success:#20A477; --accent:#F5A623; --text:#1b2a3a; --muted:#5d6b7a; --line:#dde5ee; --danger:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, Roboto, "Segoe UI", Arial, sans-serif; background: var(--light); color: var(--text); }
+  a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  header { background:#fff; border-bottom:1px solid var(--line); }
+  .bar { max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; }
+  .logo { font-weight:800; font-size:26px; color:var(--primary); letter-spacing:-.5px; }
+  .logo span { color:var(--accent); }
+
+  .wrap { max-width:1000px; margin:30px auto; padding:0 20px; display:grid; grid-template-columns: 1fr 1.1fr; gap:28px; align-items:start; }
+  .side { background: linear-gradient(130deg,#103B63,#1769AA); color:#fff; border-radius:20px; padding:34px; }
+  .side h1 { margin:0 0 10px; font-size:28px; line-height:1.2; }
+  .side p { margin:0 0 20px; opacity:.9; }
+  .side li { margin:12px 0; list-style:none; padding-left:30px; position:relative; }
+  .side li::before { content:"\2713"; position:absolute; left:0; top:0; width:22px; height:22px; border-radius:50%; background:var(--accent); color:#3d2a00; display:grid; place-items:center; font-weight:800; font-size:13px; }
+  .side ul { padding:0; margin:0; }
+
+  .card { background:#fff; border:1px solid var(--line); border-radius:20px; padding:30px; box-shadow:0 2px 10px rgba(16,59,99,.06); }
+  .card h2 { margin:0 0 4px; color:var(--dark); font-size:24px; }
+  .sub { margin:0 0 18px; color:var(--muted); font-size:14px; }
+  label.lbl { display:block; font-weight:600; font-size:14px; margin:14px 0 6px; color:var(--dark); }
+  .field { position:relative; }
+  input[type=text], input[type=email], input[type=password], input[type=tel] { width:100%; padding:12px 14px; border:1px solid #c8d3df; border-radius:10px; font-size:16px; background:#fff; }
+  input:focus { outline:2px solid var(--primary); border-color:var(--primary); }
+  input.bad { border-color:var(--danger); }
+  .phone-row { display:flex; }
+  .prefix { padding:12px 12px; border:1px solid #c8d3df; border-right:none; border-radius:10px 0 0 10px; background:var(--light); color:var(--muted); font-size:16px; }
+  .phone-row input { border-radius:0 10px 10px 0; }
+  .eye { position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--primary); font-weight:600; cursor:pointer; font-size:13px; padding:6px; }
+  .err { color:var(--danger); font-size:13px; margin-top:5px; min-height:0; }
+  .hint { color:var(--muted); font-size:12px; margin-top:4px; }
+
+  .roles { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .role input { position:absolute; opacity:0; pointer-events:none; }
+  .role { position:relative; }
+  .role span { display:block; border:1.5px solid var(--line); border-radius:12px; padding:12px 8px; text-align:center; cursor:pointer; font-size:13px; font-weight:600; color:var(--dark); background:#fff; }
+  .role span em { display:block; font-style:normal; font-size:24px; margin-bottom:4px; }
+  .role input:checked + span { border-color:var(--primary); background:#eaf3fb; box-shadow:0 0 0 2px rgba(23,105,170,.2); }
+  .role input:focus-visible + span { outline:2px solid var(--primary); }
+
+  .terms { display:flex; gap:10px; align-items:flex-start; margin-top:16px; font-size:14px; color:var(--muted); }
+  .terms input { margin-top:3px; width:18px; height:18px; }
+  .btn { width:100%; margin-top:20px; border:none; background:var(--primary); color:#fff; font-size:17px; font-weight:700; padding:14px; border-radius:12px; cursor:pointer; }
+  .btn:disabled { opacity:.6; cursor:wait; }
+  .box { margin-top:16px; padding:12px 14px; border-radius:10px; font-size:14px; display:none; background:#fdecea; color:#8a1c13; }
+  .login-line { text-align:center; margin-top:18px; font-size:14px; color:var(--muted); }
+
+  .done { display:none; text-align:center; padding:20px 6px; }
+  .done .tick { width:70px; height:70px; border-radius:50%; background:#e6f6f0; color:var(--success); font-size:38px; display:grid; place-items:center; margin:0 auto 14px; }
+  .done h2 { margin-bottom:8px; }
+  .done p { color:var(--muted); }
+  .btn-link { display:inline-block; margin-top:14px; background:var(--primary); color:#fff; padding:12px 22px; border-radius:10px; }
+
+  #toast { position:fixed; left:50%; bottom:30px; transform:translateX(-50%) translateY(30px); background:#111; color:#fff; padding:12px 20px; border-radius:10px; opacity:0; transition:.25s; font-size:14px; pointer-events:none; }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width: 820px) {
+    .wrap { grid-template-columns:1fr; margin:16px auto; }
+    .side { padding:22px; }
+    .side h1 { font-size:22px; }
+    .card { padding:22px; }
+  }
+</style>
+</head>
+<body>
+
+<header><div class="bar">
+  <a class="logo" href="index.html">NIR<span>MAZA</span></a>
+  <a href="index.html">&larr; Back to home</a>
+</div></header>
+
+<div class="wrap">
+  <aside class="side">
+    <h1>Join NIRMAZA</h1>
+    <p>Everything for construction in one place, across Uttar Pradesh.</p>
+    <ul>
+      <li><b>Customers:</b> find trusted professionals and compare quotes</li>
+      <li><b>Professionals:</b> get enquiries from people near you</li>
+      <li><b>Suppliers:</b> sell cement, steel, tiles and more online</li>
+      <li>Free to join during our pilot</li>
+    </ul>
+  </aside>
+
+  <section class="card">
+    <form id="form" novalidate>
+      <h2>Create your account</h2>
+      <p class="sub">It takes less than a minute.</p>
+
+      <label class="lbl">I am a</label>
+      <div class="roles">
+        <label class="role"><input type="radio" name="role" value="customer" checked><span><em>&#127968;</em>Customer</span></label>
+        <label class="role"><input type="radio" name="role" value="provider"><span><em>&#128119;</em>Service provider</span></label>
+        <label class="role"><input type="radio" name="role" value="supplier"><span><em>&#128230;</em>Material supplier</span></label>
+      </div>
+
+      <label class="lbl" for="name">Full name</label>
+      <input id="name" type="text" autocomplete="name" placeholder="Your full name">
+      <div class="err" id="e-name"></div>
+
+      <label class="lbl" for="phone">Mobile number</label>
+      <div class="phone-row"><span class="prefix">+91</span><input id="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" maxlength="18"></div>
+      <div class="err" id="e-phone"></div>
+
+      <label class="lbl" for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+      <div class="err" id="e-email"></div>
+
+      <label class="lbl" for="pw">Password</label>
+      <div class="field"><input id="pw" type="password" autocomplete="new-password" placeholder="At least 6 characters"><button type="button" class="eye" data-for="pw">Show</button></div>
+      <div class="err" id="e-pw"></div>
+
+      <label class="lbl" for="pw2">Confirm password</label>
+      <div class="field"><input id="pw2" type="password" autocomplete="new-password" placeholder="Type the password again"><button type="button" class="eye" data-for="pw2">Show</button></div>
+      <div class="err" id="e-pw2"></div>
+
+      <label class="terms"><input id="terms" type="checkbox"><span>I agree to the NIRMAZA terms of use and privacy policy.</span></label>
+      <div class="err" id="e-terms"></div>
+
+      <button class="btn" id="submit" type="submit">Create account</button>
+      <div class="box error" id="formError"></div>
+      <div class="login-line">Already have an account? <a href="login.html" id="toLogin">Log in</a></div>
+    </form>
+
+    <div class="done" id="done">
+      <div class="tick">&#10003;</div>
+      <h2 id="doneTitle">Account created!</h2>
+      <p id="doneText"></p>
+      <a class="btn-link" href="index.html">Go to home page</a>
+    </div>
+  </section>
+</div>
+
+<div id="toast"></div>
+
+<!-- Your Supabase address and public key live in config.js -->
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  var cfg = window.BUILDCONNECT_CONFIG || {};
+  var client = null;
+
+  function getClient() {
+    if (client) return client;
+    var ready = cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && String(cfg.SUPABASE_ANON_KEY).indexOf('PASTE') !== 0;
+    if (!ready || !window.supabase) return null;
+    client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    return client;
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  (function () { var n = new URLSearchParams(location.search).get('next'); if (n) $('toLogin').href = 'login.html?next=' + encodeURIComponent(n); })();
+
+  // Pre-select the role if the link says ?role=provider or ?role=supplier
+  var wanted = new URLSearchParams(location.search).get('role') || (BC_APPS.me === 'business' ? 'provider' : null);
+  if (wanted) {
+    var radio = document.querySelector('input[name=role][value="' + wanted + '"]');
+    if (radio) radio.checked = true;
+  }
+
+  // Show / hide password
+  document.querySelectorAll('.eye').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var input = $(b.getAttribute('data-for'));
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      b.textContent = show ? 'Hide' : 'Show';
+    });
+  });
+
+  function cleanPhone(raw) {
+    var d = String(raw).replace(/\D/g, '');
+    if (d.length === 12 && d.indexOf('91') === 0) d = d.slice(2);
+    if (d.length === 11 && d.charAt(0) === '0') d = d.slice(1);
+    return d;
+  }
+
+  function setErr(field, msg) {
+    $('e-' + field).textContent = msg || '';
+    var input = $(field);
+    if (input && input.tagName === 'INPUT' && input.type !== 'checkbox') input.classList.toggle('bad', !!msg);
+  }
+
+  function friendly(message) {
+    var m = String(message || '').toLowerCase();
+    if (m.indexOf('already registered') !== -1 || m.indexOf('already been registered') !== -1) return 'This email is already registered. Please log in instead.';
+    if (m.indexOf('rate limit') !== -1) return 'Too many attempts. Please wait a few minutes and try again.';
+    if (m.indexOf('password') !== -1) return 'Please choose a stronger password (at least 6 characters).';
+    if (m.indexOf('valid email') !== -1 || m.indexOf('invalid email') !== -1) return 'Please enter a valid email address.';
+    if (m.indexOf('failed to fetch') !== -1 || m.indexOf('network') !== -1) return 'Could not connect. Please check your internet and try again.';
+    return 'Something went wrong: ' + message;
+  }
+
+  $('form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    $('formError').className = 'box error';
+    $('formError').style.display = 'none';
+
+    var name = $('name').value.trim();
+    var phone = cleanPhone($('phone').value);
+    var email = $('email').value.trim();
+    var pw = $('pw').value;
+    var pw2 = $('pw2').value;
+    var role = document.querySelector('input[name=role]:checked').value;
+
+    var ok = true;
+    setErr('name', name.length < 2 ? 'Please enter your full name.' : ''); if (name.length < 2) ok = false;
+    var phoneOk = /^[6-9]\d{9}$/.test(phone);
+    setErr('phone', phoneOk ? '' : 'Enter a valid 10-digit Indian mobile number.'); if (!phoneOk) ok = false;
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setErr('email', emailOk ? '' : 'Enter a valid email address.'); if (!emailOk) ok = false;
+    setErr('pw', pw.length < 6 ? 'Password must be at least 6 characters.' : ''); if (pw.length < 6) ok = false;
+    setErr('pw2', pw2 !== pw ? 'Passwords do not match.' : ''); if (pw2 !== pw) ok = false;
+    setErr('terms', $('terms').checked ? '' : 'Please accept the terms to continue.'); if (!$('terms').checked) ok = false;
+    if (!ok) { var firstBad = document.querySelector('.err:not(:empty)'); if (firstBad) firstBad.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+
+    var sb = getClient();
+    if (!sb) {
+      $('formError').textContent = 'The site is not fully set up yet (missing database key). Please tell the site owner.';
+      $('formError').style.display = 'block';
+      return;
+    }
+
+    var btn = $('submit');
+    btn.disabled = true; btn.textContent = 'Creating account...';
+    try {
+      var result = await sb.auth.signUp({
+        email: email,
+        password: pw,
+        options: { data: { full_name: name, phone: phone, role: role } }
+      });
+      if (result.error) throw result.error;
+
+      var user = result.data && result.data.user;
+      if (user && user.identities && user.identities.length === 0) {
+        throw new Error('already registered');
+      }
+
+      $('form').style.display = 'none';
+      $('done').style.display = 'block';
+      if (result.data.session) {
+        $('doneTitle').textContent = 'Welcome to NIRMAZA!';
+        $('doneText').textContent = 'Your account is ready and you are signed in.' + (role !== 'customer' ? ' Next, add your business details.' : '');
+        if (role !== 'customer') { var l = document.querySelector('#done .btn-link'); l.href = BC.url('business.html'); l.textContent = 'List your business now'; if (BC_APPS.me === 'customer' && BC_APPS.business) { $('doneText').textContent = 'Your account is ready. Business owners use the NIRMAZA Business app: open it and log in with the same email and password.'; l.href = BC_APPS.business.replace(/\/+$/, '') + '/login.html?next=business.html'; l.textContent = 'Open NIRMAZA Business'; } }
+        var nx = new URLSearchParams(location.search).get('next');
+        if (nx && /^[a-z0-9_-]+\.html(\?[A-Za-z0-9_=&%.-]*)?$/i.test(nx)) { var l2 = document.querySelector('#done .btn-link'); l2.href = BC.url(nx); l2.textContent = 'Continue'; }
+      } else {
+        $('doneTitle').textContent = 'Check your email';
+        $('doneText').textContent = 'We sent a confirmation link to ' + email + '. Click it to activate your account.';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      $('formError').textContent = friendly(err.message);
+      $('formError').style.display = 'block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Create account';
+    }
+  });
+})();
+</script>
+</body>
+</html>

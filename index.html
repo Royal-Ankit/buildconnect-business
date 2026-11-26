@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIRMAZA Business - Building Better Living</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script>
+<link rel="stylesheet" href="plumbing.css">
+<style>
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-bottom:16px; }
+  .tile { background:#fff; border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:8px; }
+  .tile h3 { margin:0; color:var(--dark); font-size:18px; } .tile p { margin:0; color:var(--muted); font-size:14px; flex:1; }
+  .tile a.btn { text-decoration:none; text-align:center; display:block; }
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; } .steps div { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; } .steps b { color:var(--dark); display:block; margin-bottom:4px; }
+  .top { display:flex; gap:10px; align-items:center; } .top a { font-weight:700; color:var(--primary); text-decoration:none; } .acct { display:none; }
+  .hero a.btn { display:inline-block; text-decoration:none; margin:14px 10px 0 0; } .hero .alt { background:rgba(255,255,255,.18); }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="logo" href="index.html">Build<span>Connect</span> <small style="font-size:14px;color:var(--muted);font-weight:600">Business</small></a>
+  <div class="top"><span id="hello" class="acct"></span><a id="loginLink" href="login.html">Login</a><a id="logoutLink" class="acct" href="#">Logout</a></div>
+</div></header>
+<main>
+  <section class="hero">
+    <div style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-size:13px;opacity:.9;margin-bottom:6px">NIRMAZA Business &middot; Building Better Living</div>
+    <h1>Grow your business with NIRMAZA</h1>
+    <p>Get customer requirements from your district. Show your real projects, set your own prices, and share contact details only after you accept a requirement.</p>
+    <div id="guest"><a class="btn" href="signup.html?role=provider" style="background:#f59e0b;color:#222">List my business free</a><a class="btn alt" href="login.html?next=dashboard.html">I already have an account</a></div>
+  </section>
+
+  <div class="grid">
+    <div class="tile"><h3>My dashboard</h3><p>See new requirements, accept or reject them, send quotes and track your work.</p><a class="btn" href="dashboard.html">Open dashboard</a></div>
+    <div class="tile"><h3>List or edit my business</h3><p>Add your services, experience, prices and service areas. Every field is optional.</p><a class="btn ghost" href="business.html">My business details</a></div>
+    <div class="tile"><h3>Interior designers</h3><p>A 7-step profile with portfolio, before and after pictures, styles and pricing. Skip any step.</p><a class="btn ghost" href="interior-register.html">Interior designer profile</a></div>
+    <div class="tile"><h3>Elevator products</h3><p>Add your lifts and models with specifications for customers to compare.</p><a class="btn ghost" href="elevator-products.html">My elevator products</a></div>
+  </div>
+
+  <section class="card"><h3>How it works</h3>
+    <div class="steps">
+      <div><b>1. List your business</b>Create a free account and add what you do. Add more details whenever you like.</div>
+      <div><b>2. Receive requirements</b>Customers choose you and send their requirement. You decide to accept or reject.</div>
+      <div><b>3. Get connected</b>After you accept, you and the customer see each other's contact details.</div>
+    </div>
+  </section>
+
+  <section class="card" style="text-align:center"><h3>Looking for a service instead?</h3><p class="sub">Find architects, contractors, interior designers, carpenters and more.</p><a class="btn ghost" data-app="customer" href="#" style="display:inline-block;text-decoration:none">Open the NIRMAZA customer app</a></section>
+</main>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  var cfg = window.BUILDCONNECT_CONFIG || {}, $ = function (i) { return document.getElementById(i); };
+  var ok = cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && String(cfg.SUPABASE_ANON_KEY).indexOf('PASTE') !== 0;
+  if (!ok || !window.supabase) return;
+  var sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  function show(session) {
+    var u = session && session.user;
+    $('guest').style.display = u ? 'none' : ''; $('loginLink').style.display = u ? 'none' : ''; $('logoutLink').style.display = u ? '' : 'none'; $('hello').style.display = u ? '' : 'none';
+    if (u) $('hello').textContent = 'Hi, ' + (((u.user_metadata && u.user_metadata.full_name) || u.email || '').split(' ')[0]);
+  }
+  sb.auth.getSession().then(function (r) { show(r.data.session); });
+  sb.auth.onAuthStateChange(function (e, s) { show(s); });
+  $('logoutLink').addEventListener('click', function (e) { e.preventDefault(); sb.auth.signOut(); });
+})();
+</script>
+</body>
+</html>

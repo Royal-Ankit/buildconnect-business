@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interior Designer profile - NIRMAZA</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script>
+<style>
+  :root { --primary:#1769AA; --dark:#103B63; --light:#F4F7FA; --success:#20A477; --accent:#F5A623; --text:#1b2a3a; --muted:#5d6b7a; --line:#dde5ee; --danger:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, Roboto, "Segoe UI", Arial, sans-serif; background: var(--light); color: var(--text); }
+  a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  header { background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+  .bar { max-width:1000px; margin:0 auto; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; }
+  .logo { font-weight:800; font-size:26px; color:var(--primary); letter-spacing:-.5px; } .logo span { color:var(--accent); }
+  main { max-width:1000px; margin:0 auto; padding:20px; }
+  .hero { background: linear-gradient(130deg,#103B63,#1769AA); color:#fff; border-radius:20px; padding:24px 28px; margin-bottom:16px; }
+  .hero h1 { margin:0 0 6px; font-size:26px; } .hero p { margin:0; opacity:.92; font-size:15px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:24px; margin-bottom:16px; box-shadow:0 2px 10px rgba(16,59,99,.05); }
+  .card h3 { margin:0 0 4px; color:var(--dark); font-size:19px; } .card h4 { margin:22px 0 4px; color:var(--dark); font-size:15px; }
+  .sub { margin:0 0 6px; color:var(--muted); font-size:14px; }
+  .f { margin-top:16px; } .f > label { display:block; font-weight:600; font-size:14px; margin-bottom:6px; color:var(--dark); }
+  .opt { font-weight:400; color:var(--muted); font-size:13px; }
+  input[type=text], input[type=number], input[type=tel], input[type=url], input[type=email], select, textarea { width:100%; padding:11px 13px; border:1px solid #c8d3df; border-radius:10px; font-size:16px; background:#fff; font-family:inherit; }
+  textarea { min-height:90px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:2px solid var(--primary); border-color:var(--primary); }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; } .three { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0 16px; }
+  .hint { color:var(--muted); font-size:12.5px; margin-top:5px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { position:relative; } .chip input { position:absolute; opacity:0; pointer-events:none; }
+  .chip span { display:inline-block; border:1.5px solid var(--line); border-radius:20px; padding:8px 14px; font-size:14px; cursor:pointer; background:#fff; color:var(--dark); }
+  .chip input:checked + span { background:#eaf3fb; border-color:var(--primary); color:var(--primary); font-weight:600; }
+  .chip input:focus-visible + span { outline:2px solid var(--primary); }
+  .btn { border:none; background:var(--primary); color:#fff; font-size:16px; font-weight:700; padding:12px 22px; border-radius:12px; cursor:pointer; }
+  .btn.ghost { background:#eaf3fb; color:var(--primary); } .btn.line { background:#fff; color:var(--dark); border:1.5px solid var(--line); } .btn.sm { padding:8px 14px; font-size:14px; } .btn.red { background:#fdecea; color:#8a1c13; }
+  .btn:disabled { opacity:.6; cursor:wait; }
+  .nav { display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; align-items:center; } .nav .sp { flex:1; }
+  .steps { display:flex; gap:6px; flex-wrap:wrap; margin:0 0 14px; }
+  .stp { border:1.5px solid var(--line); background:#fff; border-radius:20px; padding:7px 13px; font-size:13.5px; font-weight:600; color:var(--dark); cursor:pointer; }
+  .stp.on { background:var(--primary); color:#fff; border-color:var(--primary); } .stp.ok::before { content:"\2713 "; color:var(--success); } .stp.on.ok::before { color:#fff; }
+  .meter { height:10px; background:#e3ebf3; border-radius:6px; overflow:hidden; margin:8px 0; } .meter i { display:block; height:100%; background:var(--success); width:0; transition:width .3s; }
+  .tips { font-size:13.5px; color:var(--muted); } .tips b { color:var(--dark); }
+  .note { background:#fff7e6; border:1px solid #f3d9a4; color:#6b4a00; border-radius:12px; padding:12px 14px; font-size:14px; margin-bottom:14px; }
+  .box { margin-top:14px; padding:12px 14px; border-radius:10px; font-size:14px; display:none; } .box.err { background:#fdecea; color:#8a1c13; } .box.ok { background:#e6f6f0; color:#0b5d43; }
+  .state { display:none; } .center { text-align:center; padding:30px 10px; }
+  .tick { width:70px; height:70px; border-radius:50%; background:#e6f6f0; color:var(--success); font-size:38px; display:grid; place-items:center; margin:0 auto 14px; }
+  /* portfolio */
+  .pl { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px; margin-top:12px; }
+  .pj { border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff; } .pj .im { aspect-ratio:4/3; background:#e9eef4 center/cover no-repeat; display:grid; place-items:center; color:var(--muted); font-size:13px; }
+  .pj .tx { padding:10px 12px; font-size:13.5px; } .pj b { display:block; color:var(--dark); } .pj .row { display:flex; gap:6px; padding:0 12px 12px; }
+  .meta { color:var(--muted); font-size:12.5px; }
+  .grp { margin-top:16px; border:1px dashed #b9c8d8; border-radius:14px; padding:14px; background:#fafcfe; } .grp h5 { margin:0 0 2px; color:var(--dark); font-size:14.5px; }
+  .th { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+  .it { width:112px; } .it .pic { width:112px; height:84px; border-radius:10px; background:#e9eef4 center/cover no-repeat; position:relative; border:2px solid transparent; } .it .pic.cv { border-color:var(--accent); }
+  .it .tag { position:absolute; left:4px; top:4px; background:var(--accent); color:#3a2700; font-size:10.5px; font-weight:800; padding:2px 6px; border-radius:6px; }
+  .it .ctl { display:flex; gap:3px; margin-top:4px; } .it .ctl button { flex:1; border:1px solid var(--line); background:#fff; border-radius:7px; padding:4px 0; cursor:pointer; font-size:13px; }
+  .it .ctl button:hover { background:#eaf3fb; }
+  .pbar { height:8px; background:#e3ebf3; border-radius:5px; overflow:hidden; margin-top:10px; display:none; } .pbar i { display:block; height:100%; background:var(--primary); width:0; }
+  .doc { display:flex; justify-content:space-between; gap:10px; align-items:center; border-top:1px solid var(--line); padding:9px 0; font-size:14px; } .doc:first-child { border-top:none; }
+  .brand { display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:8px; } .brand .lg { width:84px; height:84px; border-radius:16px; background:#e9eef4 center/cover no-repeat; border:1px solid var(--line); } .brand .cv { width:190px; height:84px; border-radius:12px; background:#e9eef4 center/cover no-repeat; border:1px solid var(--line); }
+  @media (max-width:700px) { main { padding:14px; } .two, .three { grid-template-columns:1fr; } .card { padding:18px; } .hero h1 { font-size:21px; } .nav .btn { flex:1 1 45%; } }
+</style>
+</head>
+<body>
+<header><div class="bar"><a class="logo" href="index.html">NIR<span>MAZA</span></a><a href="dashboard.html">&larr; My business</a></div></header>
+<main>
+  <section class="hero"><h1>Interior Designer profile</h1><p>Every question is optional. Fill what you can, skip the rest, and come back any time. Your work is saved when you press Save.</p></section>
+
+  <div id="gate" class="card state center"><h3>Please log in first</h3><p class="sub">Log in or create an account to set up your interior design profile.</p><a class="btn" style="display:inline-block;color:#fff" href="login.html?next=interior-register.html">Log in</a></div>
+  <div id="msg" class="card state center"><h3 id="mTitle"></h3><p class="sub" id="mText"></p><a class="btn" style="display:inline-block;color:#fff" href="dashboard.html">Go to my business</a></div>
+
+  <div id="app" class="state">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h3 style="margin:0">Profile completion</h3><b id="pct" style="color:var(--success);font-size:20px">0%</b></div>
+      <div class="meter"><i id="bar"></i></div>
+      <div class="tips" id="tipLine"></div>
+      <div id="stat" class="hint"></div>
+    </div>
+    <div class="steps" id="steps"></div>
+    <div id="warn" class="note" style="display:none"></div>
+    <div id="stepBody"></div>
+    <div id="msgBox" class="box"></div>
+    <div class="nav" id="nav"></div>
+  </div>
+
+  <div id="done" class="card state center"><div class="tick">&#10003;</div><h3 id="dTitle">Your profile is saved</h3><p class="sub" id="dText"></p><p class="sub" id="dTips"></p>
+    <a class="btn" style="display:inline-block;color:#fff" href="dashboard.html">Go to my business</a> <button class="btn line" id="again" type="button">Keep editing</button></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="interior-common.js"></script>
+<script>
+(function () {
+  'use strict';
+  var INT = window.INT, cfg = window.BUILDCONNECT_CONFIG || {}, client = null, session = null, profile = null;
+  var cat = null, districts = [], biz = null, extra = {}, contacts = {}, portfolio = [], touched = {}, step = 1, busy = false, warned = false;
+  var BASE = INT.PUBLIC_BASE(cfg);
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function getClient() {
+    if (client) return client;
+    var ok = cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && String(cfg.SUPABASE_ANON_KEY).indexOf('PASTE') !== 0;
+    if (!ok || !window.supabase) return null;
+    client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY); return client;
+  }
+  function show(id) { ['gate', 'msg', 'app', 'done'].forEach(function (x) { $(x).style.display = x === id ? 'block' : 'none'; }); }
+  function say(text, kind) { var b = $('msgBox'); if (!text) { b.style.display = 'none'; return; } b.className = 'box ' + (kind || 'err'); b.textContent = text; b.style.display = 'block'; }
+
+  /* ---------- the seven steps: every field is optional ---------- */
+  // col = real column of provider_profiles; priv = private contact (never public); otherwise saved in interior_extra
+  var STEPS = [
+    { t: 'Business & Contact', f: [
+      { k: 'name', col: 'business_name', l: 'Business / Studio name', t: 'text', max: 120 },
+      { k: 'owner', col: 'contact_name', l: 'Owner / Lead interior designer name', t: 'text', max: 80 },
+      { k: 'kind', l: 'Business type', t: 'select', o: INT.BUSINESS_KINDS },
+      { k: 'est', col: 'year_established', l: 'Year of establishment', t: 'number', int: 1, min: 1900, max: new Date().getFullYear() },
+      { k: 'exp', col: 'experience_years', l: 'Total years of experience', t: 'number', int: 1, min: 0, max: 80 },
+      { k: 'designers', l: 'Number of designers in the team', t: 'number', int: 1, min: 0, max: 5000 },
+      { k: 'employees', col: 'team_size', l: 'Total employees', t: 'number', int: 1, min: 0, max: 100000 },
+      { k: 'address', col: 'address', priv: 'address', l: 'Office address', t: 'text', max: 200, wide: 1 },
+      { k: 'district', col: 'district_id', l: 'City / District', t: 'district' },
+      { k: 'state', l: 'State', t: 'text', max: 60 },
+      { k: 'pincode', col: 'pincode', l: 'PIN code', t: 'text', pin: 1 },
+      { k: 'areas', col: 'service_district_ids', l: 'Service locations (choose all districts you work in)', t: 'districts', wide: 1 },
+      { k: 'phone', priv: 'phone', l: 'Business contact number', t: 'tel', hint: 'Kept private. Customers see it only after you accept their requirement.' },
+      { k: 'altphone', priv: 'whatsapp', l: 'Alternative contact number', t: 'tel', hint: 'Kept private.' },
+      { k: 'email', priv: 'email', l: 'Business email', t: 'email', hint: 'Kept private.' },
+      { k: 'website', col: 'website', l: 'Website URL', t: 'url' },
+      { k: 'instagram', l: 'Instagram profile link', t: 'url' },
+      { k: 'facebook', l: 'Facebook page link', t: 'url' },
+      { k: 'social', l: 'Other social media links', t: 'text', max: 300 }
+    ] },
+    { t: 'Services', f: [{ k: 'services', col: 'specializations', t: 'groups', o: INT.SERVICE_GROUPS, l: 'Choose every service you offer' }] },
+    { t: 'Design styles & software', f: [
+      { k: 'styles', l: 'Interior design styles', t: 'chips', o: INT.STYLES, wide: 1 },
+      { k: 'style_other', l: 'Other style (if you chose Other)', t: 'text', max: 80 },
+      { k: 'software', l: 'Software & technical expertise', t: 'chips', o: INT.SOFTWARE, wide: 1 },
+      { k: 'software_more', l: 'Other software and technical skills', t: 'text', max: 200, wide: 1 }
+    ] },
+    { t: 'Execution & capacity', f: [
+      { k: 'service_types', l: 'Type of service offered', t: 'chips', o: INT.SERVICE_TYPES, wide: 1 },
+      { k: 'projtypes', col: 'work_segments', l: 'Project types', t: 'chips', o: INT.PROJECT_TYPES, wide: 1 },
+      { k: 'completed', col: 'projects_completed', l: 'Total projects completed', t: 'number', int: 1, min: 0, max: 100000 },
+      { k: 'running', col: 'projects_running', l: 'Currently ongoing projects', t: 'number', int: 1, min: 0, max: 100000 },
+      { k: 'max_parallel', l: 'Maximum projects handled at the same time', t: 'number', int: 1, min: 0, max: 100000 },
+      { k: 'budget_min', l: 'Minimum project budget (₹)', t: 'number', min: 0 },
+      { k: 'budget_max', l: 'Maximum project budget (₹)', t: 'number', min: 0 },
+      { k: 'avg_time', l: 'Average project completion time', t: 'text', max: 60, ph: 'e.g. 45 to 60 days for a 2 BHK' },
+      { k: 'workforce', l: 'Available workforce (people)', t: 'number', int: 1, min: 0, max: 100000 },
+      { k: 'supervisors', l: 'Number of site supervisors', t: 'number', int: 1, min: 0, max: 100000 },
+      { k: 'capabilities', l: 'Additional capabilities', t: 'chips', o: INT.CAPABILITIES, wide: 1 }
+    ], note: 'Number of designers is in Step 1, and the districts you serve are chosen in Step 1.' },
+    { t: 'Pricing & packages', f: [
+      { k: 'pricing_methods', l: 'Pricing methods', t: 'chips', o: INT.PRICING_METHODS, wide: 1 },
+      { k: 'p_design_fee', pr: 'start_design_fee', l: 'Starting design fee (₹)', t: 'number', min: 0 },
+      { k: 'p_design_sqft', pr: 'design_per_sqft', l: 'Design charges per sq.ft (₹)', t: 'number', min: 0 },
+      { k: 'p_exec_sqft', pr: 'exec_per_sqft', l: 'Starting execution cost per sq.ft (₹)', t: 'number', min: 0 },
+      { k: 'p_consult', pr: 'consultation', l: 'Consultation charges (₹)', t: 'number', min: 0 },
+      { k: 'p_visit', pr: 'site_visit', l: 'Site visit charges (₹)', t: 'number', min: 0 },
+      { k: 'p_2d', pr: 'design_2d', l: '2D design charges (₹)', t: 'number', min: 0 },
+      { k: 'p_3d', pr: 'design_3d', l: '3D design charges (₹)', t: 'number', min: 0 },
+      { k: 'p_turnkey', pr: 'turnkey_start', l: 'Turnkey project starting price (₹)', t: 'number', min: 0 },
+      { k: 'price_pref', l: 'Pricing preference', t: 'chips', o: INT.PRICE_PREFS, wide: 1 },
+      { k: 'gst', l: 'GST', t: 'select', o: ['GST included', 'GST excluded'] },
+      { k: 'hide_prices', t: 'check', l: 'Hide my prices on my public profile. I will give a quotation after I receive an enquiry.', wide: 1 }
+    ], note: 'Minimum and maximum project budget are in Step 4.' },
+    { t: 'Portfolio & documents', f: [], portfolio: 1 },
+    { t: 'Additional information', f: [
+      { k: 'free_site_visit', l: 'Free site visit available?', t: 'yn' },
+      { k: 'online_consult', l: 'Online consultation available?', t: 'yn' },
+      { k: 'onsite_supervision', l: 'On-site supervision available?', t: 'yn' },
+      { k: 'urgent', l: 'Urgent project availability', t: 'yn' },
+      { k: 'warranty', l: 'Warranty / workmanship guarantee', t: 'text', max: 150, ph: 'e.g. 1 year on workmanship' },
+      { k: 'payment_terms', l: 'Payment terms', t: 'text', max: 200, ph: 'e.g. 30% advance, 50% during work, 20% on handover' },
+      { k: 'languages', col: 'languages', l: 'Languages supported', t: 'chips', o: INT.LANGUAGES, wide: 1 },
+      { k: 'days', l: 'Working days', t: 'chips', o: INT.DAYS, wide: 1 },
+      { k: 'hours', col: 'working_hours', l: 'Business hours', t: 'text', max: 60, ph: 'e.g. 10 am to 7 pm' },
+      { k: 'facilities', l: 'Additional facilities', t: 'chips', o: INT.FACILITIES, wide: 1 },
+      { k: 'about', col: 'description', l: 'About your business', t: 'textarea', max: 1500, wide: 1 },
+      { k: 'more', l: 'Additional business information', t: 'textarea', max: 1000, wide: 1 },
+      { k: 'accepting', col: 'accepting_new_projects', t: 'check', l: 'I am taking new projects right now', wide: 1, dflt: true }
+    ], brand: 1 }
+  ];
+  var ALLF = []; STEPS.forEach(function (s, i) { s.f.forEach(function (f) { f.step = i + 1; ALLF.push(f); }); });
+
+  /* ---------- build the form ---------- */
+  function fieldHtml(f) {
+    var id = 'f_' + f.k, h = '<div class="f"><label for="' + id + '">' + esc(f.l) + ' <span class="opt">(optional)</span></label>', ph = f.ph ? ' placeholder="' + esc(f.ph) + '"' : '';
+    if (f.t === 'select') h += '<select id="' + id + '" data-k="' + f.k + '"><option value="">Select</option>' + f.o.map(function (o) { return '<option>' + esc(o) + '</option>'; }).join('') + '</select>';
+    else if (f.t === 'yn') h += '<select id="' + id + '" data-k="' + f.k + '"><option value="">Not stated</option><option>Yes</option><option>No</option></select>';
+    else if (f.t === 'district') h += '<select id="' + id + '" data-k="' + f.k + '"><option value="">Select district</option>' + districts.map(function (d) { return '<option value="' + d.id + '">' + esc(d.name) + '</option>'; }).join('') + '</select>';
+    else if (f.t === 'textarea') h += '<textarea id="' + id + '" data-k="' + f.k + '" maxlength="' + f.max + '"></textarea>';
+    else if (f.t === 'chips' || f.t === 'districts') {
+      var opts = f.t === 'districts' ? districts.map(function (d) { return [String(d.id), d.name]; }) : f.o.map(function (o) { return [o, o]; });
+      h += '<div class="chips" data-ck="' + f.k + '">' + opts.map(function (o) { return '<label class="chip"><input type="checkbox" value="' + esc(o[0]) + '"><span>' + esc(o[1]) + '</span></label>'; }).join('') + '</div>';
+    } else if (f.t === 'check') return '<div class="f"><label class="chip" style="display:inline-block"><input type="checkbox" data-k="' + f.k + '"><span>' + esc(f.l) + '</span></label></div>';
+    else h += '<input id="' + id + '" data-k="' + f.k + '" type="' + (f.t === 'number' ? 'number' : f.t) + '"' + (f.t === 'number' ? ' step="' + (f.int ? 1 : 'any') + '" min="' + (f.min != null ? f.min : 0) + '"' : '') + (f.max && f.t !== 'number' ? ' maxlength="' + f.max + '"' : '') + ph + '>';
+    if (f.hint) h += '<div class="hint">' + esc(f.hint) + '</div>';
+    return h + '</div>';
+  }
+  function stepHtml(i) {
+    var s = STEPS[i], h = '<div class="card step" data-s="' + (i + 1) + '" style="display:none"><h3>Step ' + (i + 1) + ' of 7 &middot; ' + esc(s.t) + '</h3><p class="sub">Everything on this page is optional. Use <b>Skip for now</b> if you prefer.</p>';
+    if (s.note) h += '<div class="hint">' + esc(s.note) + '</div>';
+    var wide = [], grid = [];
+    s.f.forEach(function (f) { if (f.t === 'groups') return; (f.wide || f.t === 'textarea' ? wide : grid).push(f); });
+    if (grid.length) {
+      h += '<div class="two">' + grid.map(fieldHtml).join('') + '</div>';
+    }
+    s.f.forEach(function (f) {
+      if (f.t === 'groups') f.o.forEach(function (g) { h += '<h4>' + esc(g[0]) + '</h4><div class="chips" data-ck="' + f.k + '" data-group="1">' + g[1].map(function (o) { return '<label class="chip"><input type="checkbox" value="' + esc(o) + '"><span>' + esc(o) + '</span></label>'; }).join('') + '</div>'; });
+    });
+    h += wide.map(fieldHtml).join('');
+    if (s.portfolio) h += '<div id="portArea"></div>';
+    if (s.brand) h += '<h4>Logo and cover picture</h4><div class="sub">A logo and a cover picture make your public profile look professional.</div><div class="brand"><div class="lg" id="lgPrev"></div><div><label class="btn ghost sm" style="display:inline-block;cursor:pointer">Choose logo<input id="lgFile" type="file" accept="image/jpeg,image/png,image/webp" hidden></label></div><div class="cv" id="cvPrev"></div><div><label class="btn ghost sm" style="display:inline-block;cursor:pointer">Choose cover<input id="cvFile" type="file" accept="image/jpeg,image/png,image/webp" hidden></label></div></div><div class="hint" id="brandMsg"></div>';
+    return h + '</div>';
+  }
+  function chipsGet(k) {
+    var out = []; document.querySelectorAll('[data-ck="' + k + '"] input:checked').forEach(function (i) { out.push(i.value); }); return out;
+  }
+  function chipsSet(k, arr) { var set = {}; (arr || []).forEach(function (v) { set[String(v)] = 1; }); document.querySelectorAll('[data-ck="' + k + '"] input').forEach(function (i) { i.checked = !!set[i.value]; }); }
+
+  /* ---------- read and write the form ---------- */
+  function readField(f) {
+    if (f.t === 'chips' || f.t === 'districts' || f.t === 'groups') return chipsGet(f.k);
+    var el = document.querySelector('[data-k="' + f.k + '"]'); if (!el) return undefined;
+    if (f.t === 'check') return el.checked;
+    return el.value.trim();
+  }
+  function writeField(f, v) {
+    if (f.t === 'chips' || f.t === 'districts' || f.t === 'groups') { chipsSet(f.k, v); return; }
+    var el = document.querySelector('[data-k="' + f.k + '"]'); if (!el) return;
+    if (f.t === 'check') el.checked = !!v; else el.value = v == null ? '' : v;
+  }
+  function currentValue(f) {   // value as stored in the database today
+    if (f.pr) return (extra.prices || {})[f.pr];
+    if (f.priv) return contacts[f.priv];
+    if (f.col) { var v = biz ? biz[f.col] : undefined; if (f.t === 'districts') return (v || []).map(String); return v; }
+    return extra[f.k];
+  }
+  function fillAll() {
+    ALLF.forEach(function (f) {
+      var v = currentValue(f);
+      if (f.t === 'districts') v = (v || []).map(String);
+      if (f.k === 'name' && v && String(v).indexOf('name not given') !== -1) v = '';
+      if (f.k === 'phone' && !v && profile && profile.phone) v = profile.phone;
+      if (f.k === 'owner' && !v && profile && profile.full_name) v = profile.full_name;
+      if (f.k === 'accepting') v = v == null ? true : v;
+      if (f.k === 'hide_prices') v = extra.hide_prices === true;
+      if (v !== undefined && v !== null) writeField(f, f.t === 'number' && v !== '' ? String(v) : v);
+    });
+  }
+  document.addEventListener('input', function (e) { var el = e.target.closest ? e.target.closest('[data-k],[data-ck]') : null; if (el) touched[el.getAttribute('data-k') || el.getAttribute('data-ck')] = 1; });
+  document.addEventListener('change', function (e) { var el = e.target.closest ? e.target.closest('[data-k],[data-ck]') : null; if (el) touched[el.getAttribute('data-k') || el.getAttribute('data-ck')] = 1; });
+
+  var PHONE = /^[6-9]\d{9}$/;
+  function cleanPhone(s) { s = String(s || '').replace(/[\s\-()]/g, ''); if (s.indexOf('+91') === 0) s = s.slice(3); else if (s.length === 12 && s.indexOf('91') === 0) s = s.slice(2); return s; }
+  function collect() {   // returns {errors, row, ex, ct}
+    var errors = [], row = {}, ex = {}, ct = {}, prices = {};
+    ALLF.forEach(function (f) {
+      var v = readField(f); if (v === undefined) return;
+      var empty = (Array.isArray(v) ? v.length === 0 : (v === '' || v === false && f.t !== 'check'));
+      if (f.t === 'check') empty = false;
+      if (empty && !touched[f.k]) return;       // a blank never wipes what is already saved, unless the person changed that box
+      var val = v;
+      if (f.t === 'number' && v !== '') { val = Number(v); if (isNaN(val) || val < (f.min != null ? f.min : 0) || (f.int && val % 1 !== 0) || (f.max != null && val > f.max)) { errors.push(f.l + ': please enter a valid number.'); return; } }
+      if (f.t === 'number' && v === '') val = null;
+      if (f.t === 'url' && v && !/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(v)) { errors.push(f.l + ': start with http:// or https://'); return; }
+      if (f.t === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { errors.push(f.l + ': this email does not look right.'); return; }
+      if (f.t === 'tel' && v) { val = cleanPhone(v); if (!PHONE.test(val)) { errors.push(f.l + ': enter a 10-digit Indian mobile number.'); return; } }
+      if (f.pin && v && !/^[1-9][0-9]{5}$/.test(v)) { errors.push('PIN code must be 6 digits.'); return; }
+      if (f.t === 'district') val = v ? Number(v) : null;
+      if (f.t === 'districts') val = v.map(Number);
+      if (f.t === 'text' || f.t === 'textarea' || f.t === 'url' || f.t === 'email') val = v === '' ? null : v;
+      if (f.t === 'select' || f.t === 'yn') val = v === '' ? null : (f.t === 'yn' ? v === 'Yes' : v);
+      if (f.pr) { if (val != null) prices[f.pr] = val; else prices[f.pr] = null; return; }
+      if (f.priv) { ct[f.priv] = val; }
+      if (f.col) row[f.col] = val;
+      else if (!f.priv) ex[f.k] = val;
+      if (f.priv === 'address') row.address = val;
+    });
+    if (Object.keys(prices).length) { ex.prices = Object.assign({}, extra.prices || {}, prices); Object.keys(ex.prices).forEach(function (k) { if (ex.prices[k] == null) delete ex.prices[k]; }); }
+    if (ex.budget_min != null && ex.budget_max != null && ex.budget_min > ex.budget_max) errors.push('Minimum project budget cannot be more than the maximum.');
+    return { errors: errors, row: row, ex: ex, ct: ct };
+  }
+
+  /* ---------- save ---------- */
+  async function ensureProvider(sb) {
+    if (biz) return biz.id;
+    var r = await sb.from('provider_profiles').insert({ user_id: session.user.id, category_id: cat.id, business_name: 'Interior Designer (name not given)', status: 'pending', interior_extra: { draft: true } }).select('*').single();
+    if (r.error && /interior_extra/.test(String(r.error.message))) r = await sb.from('provider_profiles').insert({ user_id: session.user.id, category_id: cat.id, business_name: 'Interior Designer (name not given)', status: 'pending' }).select('*').single();
+    if (r.error) throw r.error;
+    biz = r.data; extra = biz.interior_extra || {};
+    var k = await sb.from('provider_kyc').upsert({ provider_id: biz.id, gst_exempt: false, verified: false }, { onConflict: 'provider_id' });   // best effort
+    if (profile && profile.role === 'customer') { try { await sb.from('profiles').update({ role: 'provider' }).eq('id', session.user.id); } catch (x) { } }
+    return biz.id;
+  }
+  function friendly(m) {
+    m = String(m || '').toLowerCase();
+    if (m.indexOf('district_id') !== -1 && m.indexOf('null') !== -1) return 'Please choose your city / district once. (The site owner can remove this need by running interior.sql.)';
+    if (m.indexOf('pp_pincode_chk') !== -1) return 'The PIN code is not valid.';
+    if (m.indexOf('row-level security') !== -1) return 'You are not allowed to change this profile right now.';
+    if (m.indexOf('failed to fetch') !== -1 || m.indexOf('network') !== -1) return 'Could not connect. Please check your internet and try again.';
+    if (m.indexOf('too_many_items') !== -1) return 'You have reached the limit for pictures or projects.';
+    return 'Something went wrong: ' + m;
+  }
+  async function save(finish) {
+    var sb = getClient(), c = collect();
+    if (c.errors.length) { say(c.errors[0], 'err'); return false; }
+    say('');
+    try {
+      var id = await ensureProvider(sb);
+      var row = Object.assign({}, c.row);
+      if (row.business_name === null || row.business_name === '') delete row.business_name;
+      if (row.contact_name === '') delete row.contact_name;
+      var mergedExtra = Object.assign({}, extra, c.ex, { draft: !finish });
+      if (finish) mergedExtra.finished = true;
+      row.interior_extra = mergedExtra;
+      if (Object.keys(c.ex).length || true) {
+        var up = await sb.from('provider_profiles').update(row).eq('id', id).select('*').single();
+        if (up.error && /interior_extra/.test(String(up.error.message))) {
+          delete row.interior_extra; up = await sb.from('provider_profiles').update(row).eq('id', id).select('*').single();
+          if (!up.error) { $('warn').textContent = 'Your basic details were saved, but the extra Interior Designer details could not be saved yet. Please ask the site owner to run interior.sql.'; $('warn').style.display = 'block'; }
+        }
+        if (up.error) throw up.error;
+        biz = up.data; extra = biz.interior_extra || mergedExtra;
+      }
+      // private contact numbers (never public)
+      var ctNow = Object.assign({}, contacts, c.ct);
+      if (ctNow.phone && PHONE.test(ctNow.phone)) {
+        var ctRow = { provider_id: id, phone: ctNow.phone, whatsapp: ctNow.whatsapp || null, email: ctNow.email || (session.user && session.user.email) || null, address: ctNow.address || null };
+        var cr = await sb.from('provider_contacts').upsert(ctRow, { onConflict: 'provider_id' });
+        if (cr.error) throw cr.error;
+        contacts = Object.assign(contacts, ctRow);
+      }
+      touched = {};
+      refresh();
+      return true;
+    } catch (e) { say(friendly(e && e.message), 'err'); return false; }
+  }
+
+  /* ---------- completion + steps bar ---------- */
+  function refresh() {
+    var comp = INT.completion(biz, portfolio);
+    $('pct').textContent = comp.pct + '%'; $('bar').style.width = comp.pct + '%';
+    var todo = comp.parts.filter(function (p) { return !p.done; })[0];
+    $('tipLine').innerHTML = todo ? '<b>Next:</b> ' + esc(todo.tip) : '<b>Great.</b> Every part of your profile is filled in.';
+    var st = biz ? (biz.status === 'approved' ? 'Your profile is live for customers.' : biz.status === 'pending' ? 'Waiting for NIRMAZA approval before customers can see it.' : 'Status: ' + biz.status) : 'Nothing is saved yet. Press Save when you are ready.';
+    $('stat').textContent = st;
+    var map = [0, 1, 2, 3, 4, 5, 6];
+    $('steps').innerHTML = STEPS.map(function (s, i) { return '<button type="button" class="stp' + (i + 1 === step ? ' on' : '') + (comp.parts[map[i]].done ? ' ok' : '') + '" data-go="' + (i + 1) + '">' + (i + 1) + '. ' + esc(s.t) + '</button>'; }).join('');
+    $('steps').querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { go(Number(b.getAttribute('data-go'))); }; });
+  }
+  function go(n) {
+    step = Math.max(1, Math.min(7, n)); say('');
+    document.querySelectorAll('.step').forEach(function (s) { s.style.display = Number(s.getAttribute('data-s')) === step ? 'block' : 'none'; });
+    var nav = $('nav');
+    nav.innerHTML = (step > 1 ? '<button class="btn line" type="button" id="bBack">Back</button>' : '') +
+      (step < 7 ? '<button class="btn line" type="button" id="bSkip">Skip for now</button>' : '') +
+      '<span class="sp"></span><button class="btn ghost" type="button" id="bDraft">Save as draft</button>' +
+      (step < 7 ? '<button class="btn" type="button" id="bNext">Save &amp; continue</button>' : '<button class="btn" type="button" id="bFinish">Finish</button>');
+    if ($('bBack')) $('bBack').onclick = function () { go(step - 1); };
+    if ($('bSkip')) $('bSkip').onclick = function () { go(step + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    $('bDraft').onclick = async function () { if (busy) return; lock(true); var ok = await save(false); lock(false); if (ok) say('Draft saved. You can come back and continue any time.', 'ok'); };
+    if ($('bNext')) $('bNext').onclick = async function () { if (busy) return; lock(true); var ok = await save(false); lock(false); if (ok) { go(step + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
+    if ($('bFinish')) $('bFinish').onclick = async function () { if (busy) return; lock(true); var ok = await save(true); lock(false); if (ok) finishScreen(); };
+    refresh();
+  }
+  function lock(b) { busy = b; document.querySelectorAll('#nav .btn').forEach(function (x) { x.disabled = b; }); }
+  function finishScreen() {
+    var comp = INT.completion(biz, portfolio), left = comp.parts.filter(function (p) { return !p.done; });
+    $('dTitle').textContent = biz.status === 'approved' ? 'Your profile is updated' : 'Your profile is saved and sent for approval';
+    $('dText').textContent = 'Profile completion: ' + comp.pct + '%. ' + (biz.status === 'approved' ? 'Customers can see your changes now.' : 'Customers can see it after NIRMAZA approves it.');
+    $('dTips').textContent = left.length ? 'To improve it: ' + left.slice(0, 3).map(function (p) { return p.tip; }).join(' ') : '';
+    show('done');
+  }
+  $('again').onclick = function () { show('app'); go(1); };
+
+  /* ---------- images ---------- */
+  var OKTYPE = { 'image/jpeg': 1, 'image/png': 1, 'image/webp': 1 };
+  function compress(file, max) {
+    return new Promise(function (res, rej) {
+      if (!OKTYPE[file.type]) return rej(new Error('Only JPG, PNG or WEBP pictures can be used.'));
+      if (file.size > 12 * 1024 * 1024) return rej(new Error('"' + file.name + '" is larger than 12 MB.'));
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var s = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
+        c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        c.toBlob(function (b) { b ? res(b) : rej(new Error('Could not process this picture.')); }, 'image/jpeg', 0.85);
+      };
+      img.onerror = function () { rej(new Error('Could not read "' + file.name + '".')); }; img.src = url;
+    });
+  }
+  function pubUrl(p) { return BASE + encodeURI(p); }
+
+  /* ---------- portfolio manager (Step 6) ---------- */
+  var GROUPS = [['gallery', 'Project pictures', 'The first picture is the cover. Use ★ to choose another cover, ◀ ▶ to reorder, ↻ to replace, × to remove.', 12],
+    ['before', 'Before pictures', 'Photos of the place before your work.', 4], ['after', 'After pictures', 'The same place after your work. Customers see Before and After side by side.', 4],
+    ['layouts', '2D layout pictures', 'Floor plans and drawings.', 4], ['renders', '3D design renders', '3D views and renders.', 6]];
+  var E = null;   // the project being edited
+  function projects() { return portfolio.filter(function (r) { return !(r.details && r.details.kind); }); }
+  function portHtml() {
+    var list = projects(), h = '<h4 style="margin-top:6px">Your projects <span class="opt">(' + list.length + ')</span></h4><div class="sub">Add your previous work. Customers love to see real projects.</div>';
+    h += '<div class="pl">' + list.map(function (r) {
+      var d = r.details || {};
+      return '<div class="pj"><div class="im" style="' + (r.image_path ? 'background-image:url(\'' + esc(pubUrl(r.image_path)) + '\')' : '') + '">' + (r.image_path ? '' : 'No picture') + '</div><div class="tx"><b>' + esc(r.title) + '</b><span class="meta">' + esc([d.category, r.year, r.location].filter(Boolean).join(' · ')) + '</span></div><div class="row"><button class="btn ghost sm" type="button" data-ep="' + r.id + '">Edit</button><button class="btn red sm" type="button" data-dp="' + r.id + '">Delete</button></div></div>';
+    }).join('') + '</div><div style="margin-top:12px"><button class="btn" type="button" id="addProj">+ Add a project</button></div><div id="editor"></div>';
+    h += '<h4>Documents &amp; certificates</h4><div class="sub">PDF files up to 5 MB. All optional.</div><div id="docArea"></div>';
+    return h;
+  }
+  function renderPort() {
+    $('portArea').innerHTML = portHtml();
+    $('addProj').onclick = function () { openEditor(null); };
+    $('portArea').querySelectorAll('[data-ep]').forEach(function (b) { b.onclick = function () { openEditor(projects().filter(function (r) { return r.id === b.getAttribute('data-ep'); })[0]); }; });
+    $('portArea').querySelectorAll('[data-dp]').forEach(function (b) { b.onclick = function () { delProject(b.getAttribute('data-dp')); }; });
+    renderDocs();
+    if (E) renderEditor();
+  }
+  function openEditor(r) {
+    var d = (r && r.details) || {}, mk = function (paths) { return (paths || []).map(function (p) { return { path: p, url: pubUrl(p) }; }); };
+    E = { id: r ? r.id : null, title: r ? r.title : '', desc: r ? (r.description || '') : '', loc: r ? (r.location || '') : '', year: r && r.year ? r.year : '', area: r && r.area_sqft ? r.area_sqft : '',
+      category: d.category || '', property: d.property_type || '', style: d.style || '', services: d.services || [], video: d.video || '',
+      g: { gallery: mk([r && r.image_path].concat((r && r.extra_images) || []).filter(Boolean)), before: mk(d.before), after: mk(d.after), layouts: mk(d.layouts), renders: mk(d.renders) }, removed: [] };
+    renderEditor(); $('editor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function sel(id, label, opts, val) { return '<div class="f"><label for="' + id + '">' + label + ' <span class="opt">(optional)</span></label><select id="' + id + '"><option value="">Select</option>' + opts.map(function (o) { return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></div>'; }
+  function renderEditor() {
+    var h = '<div class="card" style="margin-top:14px;background:#fbfdff"><h3>' + (E.id ? 'Edit project' : 'New project') + '</h3><div class="two">' +
+      '<div class="f"><label for="e_title">Project title <span class="opt">(optional)</span></label><input id="e_title" type="text" maxlength="120" value="' + esc(E.title) + '"></div>' + sel('e_cat', 'Project category', INT.PORT_CATEGORIES, E.category) +
+      sel('e_prop', 'Property type', INT.PROPERTY_TYPES, E.property) + sel('e_style', 'Design style', INT.STYLES, E.style) +
+      '<div class="f"><label for="e_loc">Project location</label><input id="e_loc" type="text" maxlength="120" value="' + esc(E.loc) + '"></div>' +
+      '<div class="f"><label for="e_year">Completion year</label><input id="e_year" type="number" min="1980" max="2100" value="' + esc(E.year) + '"></div>' +
+      '<div class="f"><label for="e_area">Project area (sq.ft)</label><input id="e_area" type="number" min="0" step="any" value="' + esc(E.area) + '"></div>' +
+      '<div class="f"><label for="e_video">Project video link (YouTube or any link)</label><input id="e_video" type="url" value="' + esc(E.video) + '"></div></div>' +
+      '<div class="f"><label for="e_desc">Short project description</label><textarea id="e_desc" maxlength="600">' + esc(E.desc) + '</textarea></div>' +
+      '<div class="f"><label>Services provided</label><div class="chips" id="e_srv">' + INT.PROJECT_SERVICES.map(function (o) { return '<label class="chip"><input type="checkbox" value="' + esc(o) + '"' + (E.services.indexOf(o) !== -1 ? ' checked' : '') + '><span>' + esc(o) + '</span></label>'; }).join('') + '</div></div>';
+    GROUPS.forEach(function (g) {
+      h += '<div class="grp"><h5>' + g[1] + ' <span class="opt">(up to ' + g[3] + ')</span></h5><div class="hint">' + g[2] + '</div><div class="th" id="th_' + g[0] + '"></div><div style="margin-top:10px"><label class="btn ghost sm" style="display:inline-block;cursor:pointer">+ Add pictures<input type="file" accept="image/jpeg,image/png,image/webp" multiple hidden data-add="' + g[0] + '"></label></div></div>';
+    });
+    h += '<div class="pbar" id="ebar"><i></i></div><div class="hint" id="eStat"></div><div class="nav"><button class="btn" type="button" id="eSave">Save project</button><button class="btn line" type="button" id="eCancel">Cancel</button></div></div>';
+    $('editor').innerHTML = h;
+    GROUPS.forEach(function (g) { drawGroup(g[0]); });
+    $('editor').querySelectorAll('[data-add]').forEach(function (i) { i.onchange = function () { addFiles(i.getAttribute('data-add'), i.files); i.value = ''; }; });
+    $('eCancel').onclick = function () { E = null; $('editor').innerHTML = ''; };
+    $('eSave').onclick = saveProject;
+  }
+  function pullEditorFields() {
+    E.title = $('e_title').value.trim(); E.category = $('e_cat').value; E.property = $('e_prop').value; E.style = $('e_style').value; E.loc = $('e_loc').value.trim();
+    E.year = $('e_year').value.trim(); E.area = $('e_area').value.trim(); E.video = $('e_video').value.trim(); E.desc = $('e_desc').value.trim();
+    E.services = []; $('e_srv').querySelectorAll('input:checked').forEach(function (i) { E.services.push(i.value); });
+  }
+  function drawGroup(key) {
+    var arr = E.g[key], box = $('th_' + key);
+    box.innerHTML = arr.map(function (it, i) {
+      return '<div class="it"><div class="pic' + (key === 'gallery' && i === 0 ? ' cv' : '') + '" style="background-image:url(\'' + esc(it.url) + '\')">' + (key === 'gallery' && i === 0 ? '<span class="tag">COVER</span>' : '') + '</div><div class="ctl">' +
+        (key === 'gallery' ? '<button type="button" title="Make cover" data-a="cover" data-i="' + i + '">&#9733;</button>' : '') + '<button type="button" title="Move left" data-a="left" data-i="' + i + '">&#9664;</button><button type="button" title="Move right" data-a="right" data-i="' + i + '">&#9654;</button><button type="button" title="Replace" data-a="rep" data-i="' + i + '">&#8635;</button><button type="button" title="Remove" data-a="del" data-i="' + i + '">&times;</button></div></div>';
+    }).join('') || '<span class="meta">No pictures yet.</span>';
+    box.querySelectorAll('[data-a]').forEach(function (b) {
+      b.onclick = function () {
+        var i = Number(b.getAttribute('data-i')), a = b.getAttribute('data-a');
+        if (a === 'left' && i > 0) { var t = arr[i]; arr[i] = arr[i - 1]; arr[i - 1] = t; }
+        if (a === 'right' && i < arr.length - 1) { var t2 = arr[i]; arr[i] = arr[i + 1]; arr[i + 1] = t2; }
+        if (a === 'cover' && i > 0) { var c = arr.splice(i, 1)[0]; arr.unshift(c); }
+        if (a === 'del') { var gone = arr.splice(i, 1)[0]; if (gone && gone.path) E.removed.push(gone.path); }
+        if (a === 'rep') { var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/jpeg,image/png,image/webp'; inp.onchange = function () { var f = inp.files[0]; if (!f) return; if (!OKTYPE[f.type]) return say('Only JPG, PNG or WEBP pictures can be used.', 'err'); if (arr[i].path) E.removed.push(arr[i].path); arr[i] = { file: f, url: URL.createObjectURL(f) }; drawGroup(key); }; inp.click(); return; }
+        drawGroup(key);
+      };
+    });
+  }
+  function addFiles(key, files) {
+    var max = GROUPS.filter(function (g) { return g[0] === key; })[0][3], arr = E.g[key], bad = '';
+    Array.prototype.slice.call(files).forEach(function (f) {
+      if (!OKTYPE[f.type]) { bad = '"' + f.name + '" is not a JPG, PNG or WEBP picture.'; return; }
+      if (f.size > 12 * 1024 * 1024) { bad = '"' + f.name + '" is larger than 12 MB.'; return; }
+      if (arr.length >= max) { bad = 'You can add up to ' + max + ' pictures here.'; return; }
+      arr.push({ file: f, url: URL.createObjectURL(f) });
+    });
+    say(bad, 'err'); drawGroup(key);
+  }
+  async function saveProject() {
+    if (busy) return; pullEditorFields();
+    var year = E.year === '' ? null : Number(E.year), area = E.area === '' ? null : Number(E.area);
+    if (year !== null && (isNaN(year) || year < 1980 || year > 2100 || year % 1 !== 0)) return say('Completion year must be between 1980 and 2100.', 'err');
+    if (area !== null && (isNaN(area) || area < 0)) return say('Project area must be a number.', 'err');
+    if (E.video && !/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(E.video)) return say('The video link must start with http:// or https://', 'err');
+    lock(true); say('');
+    var sb = getClient(), bar = $('ebar'), stat = $('eStat');
+    try {
+      var id = await ensureProvider(sb), todo = 0, did = 0;
+      GROUPS.forEach(function (g) { E.g[g[0]].forEach(function (it) { if (it.file) todo++; }); });
+      bar.style.display = todo ? 'block' : 'none';
+      var out = {};
+      for (var gi = 0; gi < GROUPS.length; gi++) {
+        var key = GROUPS[gi][0]; out[key] = [];
+        for (var i = 0; i < E.g[key].length; i++) {
+          var it = E.g[key][i];
+          if (it.file) {
+            stat.textContent = 'Uploading picture ' + (did + 1) + ' of ' + todo + '...';
+            var blob = await compress(it.file, 1600), pth = session.user.id + '/int-' + Date.now() + '-' + (did++) + '-' + Math.floor(Math.random() * 1000) + '.jpg';
+            var up = await sb.storage.from('portfolio').upload(pth, blob, { contentType: 'image/jpeg' }); if (up.error) throw up.error;
+            it.path = pth; delete it.file; bar.firstChild.style.width = Math.round(100 * did / todo) + '%';
+          }
+          out[key].push(it.path);
+        }
+      }
+      var gal = out.gallery;
+      var row = { provider_id: id, title: (E.title || E.category || 'Interior project').slice(0, 120), description: E.desc ? E.desc.slice(0, 600) : null, location: E.loc ? E.loc.slice(0, 120) : null, year: year, area_sqft: area,
+        image_path: gal[0] || null, extra_images: gal.slice(1),
+        details: { interior: true, category: E.category || null, property_type: E.property || null, style: E.style || null, services: E.services, before: out.before, after: out.after, layouts: out.layouts, renders: out.renders, video: E.video || null } };
+      if (row.title.length < 3) row.title = 'Interior project';
+      var r = E.id ? await sb.from('provider_portfolio').update(row).eq('id', E.id).select('*').single() : await sb.from('provider_portfolio').insert(row).select('*').single();
+      if (r.error) throw r.error;
+      if (E.removed.length) { try { await sb.storage.from('portfolio').remove(E.removed); } catch (x) { } }
+      var idx = portfolio.findIndex(function (q) { return q.id === r.data.id; }); if (idx >= 0) portfolio[idx] = r.data; else portfolio.unshift(r.data);
+      E = null; renderPort(); refresh(); say('Project saved.', 'ok');
+    } catch (e) { say(friendly(e && e.message), 'err'); }
+    lock(false); bar.style.display = 'none'; stat.textContent = '';
+  }
+  async function delProject(id) {
+    if (!confirm('Delete this project and its pictures? This cannot be undone.')) return;
+    var sb = getClient(), r = portfolio.filter(function (q) { return q.id === id; })[0]; if (!r) return;
+    var d = r.details || {}, files = [r.image_path].concat(r.extra_images || [], d.before || [], d.after || [], d.layouts || [], d.renders || []).filter(Boolean);
+    var x = await sb.from('provider_portfolio').delete().eq('id', id); if (x.error) return say(friendly(x.error.message), 'err');
+    if (files.length) { try { await sb.storage.from('portfolio').remove(files); } catch (e) { } }
+    portfolio = portfolio.filter(function (q) { return q.id !== id; }); if (E && E.id === id) E = null; renderPort(); refresh();
+  }
+
+  /* ---------- documents ---------- */
+  function renderDocs() {
+    var d = extra.documents || {}, certs = extra.certificates || [];
+    function row(label, key) { return '<div class="doc"><div><b>' + label + '</b><div class="meta">' + (d[key] ? 'Uploaded' : 'Not uploaded') + '</div></div><div>' + (d[key] ? '<a href="' + esc(pubUrl(d[key])) + '" target="_blank" rel="noopener">Open</a> ' : '') + '<label class="btn ghost sm" style="display:inline-block;cursor:pointer">' + (d[key] ? 'Replace' : 'Upload PDF') + '<input type="file" accept="application/pdf" hidden data-doc="' + key + '"></label>' + (d[key] ? ' <button class="btn red sm" type="button" data-rmdoc="' + key + '">Remove</button>' : '') + '</div></div>'; }
+    var h = row('Company profile (PDF)', 'company_profile') + row('Interior design portfolio (PDF)', 'portfolio_pdf');
+    h += '<div class="doc"><div><b>Certificates and other documents</b><div class="meta">Private: only you and the NIRMAZA admin can open these. They are used for verification.</div></div></div>';
+    h += certs.map(function (c, i) { return '<div class="doc"><div>' + esc(c.kind) + '<div class="meta">' + esc(c.name) + '</div></div><button class="btn red sm" type="button" data-rmcert="' + i + '">Remove</button></div>'; }).join('');
+    h += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center"><select id="certKind" style="max-width:260px">' + INT.CERT_KINDS.map(function (k) { return '<option>' + esc(k) + '</option>'; }).join('') + '</select><label class="btn ghost sm" style="display:inline-block;cursor:pointer">Upload PDF or picture<input id="certFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" hidden></label></div><div class="hint" id="docMsg"></div>';
+    $('docArea').innerHTML = h;
+    $('docArea').querySelectorAll('[data-doc]').forEach(function (i) { i.onchange = function () { uploadDoc(i.getAttribute('data-doc'), i.files[0]); i.value = ''; }; });
+    $('docArea').querySelectorAll('[data-rmdoc]').forEach(function (b) { b.onclick = function () { rmDoc(b.getAttribute('data-rmdoc')); }; });
+    $('docArea').querySelectorAll('[data-rmcert]').forEach(function (b) { b.onclick = function () { rmCert(Number(b.getAttribute('data-rmcert'))); }; });
+    $('certFile').onchange = function () { uploadCert($('certFile').files[0], $('certKind').value); $('certFile').value = ''; };
+  }
+  async function patchExtra(obj) {
+    var sb = getClient(), id = await ensureProvider(sb); extra = Object.assign({}, extra, obj);
+    var r = await sb.from('provider_profiles').update({ interior_extra: extra }).eq('id', id); if (r.error) throw r.error;
+  }
+  async function uploadDoc(key, f) {
+    if (!f) return; var m = $('docMsg');
+    if (f.type !== 'application/pdf') { m.textContent = 'Please choose a PDF file.'; return; }
+    if (f.size > 5 * 1024 * 1024) { m.textContent = 'The PDF must be smaller than 5 MB.'; return; }
+    try {
+      m.textContent = 'Uploading...'; var sb = getClient(); await ensureProvider(sb);
+      var pth = session.user.id + '/int-' + key + '-' + Date.now() + '.pdf', up = await sb.storage.from('portfolio').upload(pth, f, { contentType: 'application/pdf' }); if (up.error) throw up.error;
+      var old = (extra.documents || {})[key]; await patchExtra({ documents: Object.assign({}, extra.documents || {}, (function () { var o = {}; o[key] = pth; return o; })()) });
+      if (old) { try { await sb.storage.from('portfolio').remove([old]); } catch (x) { } }
+      renderDocs(); refresh(); $('docMsg').textContent = 'Uploaded.';
+    } catch (e) { m.textContent = friendly(e && e.message); }
+  }
+  async function rmDoc(key) {
+    try { var sb = getClient(), old = (extra.documents || {})[key], docs = Object.assign({}, extra.documents || {}); delete docs[key]; await patchExtra({ documents: docs }); if (old) { try { await sb.storage.from('portfolio').remove([old]); } catch (x) { } } renderDocs(); } catch (e) { $('docMsg').textContent = friendly(e && e.message); }
+  }
+  async function uploadCert(f, kind) {
+    if (!f) return; var m = $('docMsg'), isPdf = f.type === 'application/pdf';
+    if (!isPdf && !OKTYPE[f.type]) { m.textContent = 'Please choose a PDF, JPG, PNG or WEBP file.'; return; }
+    if (f.size > 5 * 1024 * 1024) { m.textContent = 'The file must be smaller than 5 MB.'; return; }
+    try {
+      m.textContent = 'Uploading...'; var sb = getClient(); await ensureProvider(sb);
+      var ext = isPdf ? 'pdf' : (f.type === 'image/png' ? 'png' : f.type === 'image/webp' ? 'webp' : 'jpg'), pth = session.user.id + '/cert-' + Date.now() + '.' + ext;
+      var up = await sb.storage.from('provider-docs').upload(pth, f, { contentType: f.type }); if (up.error) throw up.error;
+      await patchExtra({ certificates: (extra.certificates || []).concat([{ kind: kind, name: f.name.slice(0, 80), path: pth }]) });
+      renderDocs(); $('docMsg').textContent = 'Uploaded. It is private and will be checked by NIRMAZA.';
+    } catch (e) { m.textContent = /bucket/i.test(String(e && e.message)) ? 'Certificate upload is not ready yet. Please ask the site owner to run interior.sql.' : friendly(e && e.message); }
+  }
+  async function rmCert(i) {
+    try { var sb = getClient(), list = (extra.certificates || []).slice(), c = list.splice(i, 1)[0]; await patchExtra({ certificates: list }); if (c && c.path) { try { await sb.storage.from('provider-docs').remove([c.path]); } catch (x) { } } renderDocs(); } catch (e) { $('docMsg').textContent = friendly(e && e.message); }
+  }
+
+  /* ---------- logo and cover ---------- */
+  function brandRow(kind) { return portfolio.filter(function (x) { return x.details && x.details.kind === kind; })[0]; }
+  function drawBrand() {
+    var lg = brandRow('logo'), cv = brandRow('cover');
+    if ($('lgPrev')) $('lgPrev').style.backgroundImage = lg ? 'url(\'' + pubUrl(lg.image_path) + '\')' : '';
+    if ($('cvPrev')) $('cvPrev').style.backgroundImage = cv ? 'url(\'' + pubUrl(cv.image_path) + '\')' : '';
+  }
+  async function uploadBrand(kind, f) {
+    if (!f) return; var m = $('brandMsg');
+    try {
+      m.textContent = 'Uploading...'; var sb = getClient(), id = await ensureProvider(sb), blob = await compress(f, kind === 'logo' ? 600 : 1600);
+      var pth = session.user.id + '/' + kind + '-' + Date.now() + '.jpg', up = await sb.storage.from('portfolio').upload(pth, blob, { contentType: 'image/jpeg' }); if (up.error) throw up.error;
+      var old = brandRow(kind);
+      var ins = await sb.from('provider_portfolio').insert({ provider_id: id, title: kind === 'logo' ? 'Business logo' : 'Cover image', image_path: pth, details: { kind: kind } }).select('*').single(); if (ins.error) throw ins.error;
+      if (old) { await sb.from('provider_portfolio').delete().eq('id', old.id); try { await sb.storage.from('portfolio').remove([old.image_path]); } catch (x) { } portfolio = portfolio.filter(function (q) { return q.id !== old.id; }); }
+      portfolio.unshift(ins.data); drawBrand(); m.textContent = 'Saved.';
+    } catch (e) { m.textContent = friendly(e && e.message); }
+  }
+
+  /* ---------- start ---------- */
+  async function init() {
+    var sb = getClient(); if (!sb) { show('msg'); $('mTitle').textContent = 'The site is not fully set up yet'; $('mText').textContent = 'The database key is missing. Please tell the site owner.'; return; }
+    var s = await sb.auth.getSession(); session = s.data && s.data.session; if (!session) return show('gate');
+    var res = await Promise.all([
+      sb.from('categories').select('id,name,slug').eq('slug', INT.SLUG).maybeSingle(),
+      sb.from('districts').select('id,name').eq('active', true).order('name'),
+      sb.from('profiles').select('full_name,phone,role').eq('id', session.user.id).maybeSingle(),
+      sb.from('provider_profiles').select('*').eq('user_id', session.user.id).maybeSingle()
+    ]);
+    cat = res[0].data; districts = res[1].data || []; profile = res[2].data; biz = res[3].data;
+    if (!cat) { show('msg'); $('mTitle').textContent = 'Interior Designer is not set up yet'; $('mText').textContent = 'The Interior Designer category is missing. Please tell the site owner.'; return; }
+    if (biz && biz.category_id !== cat.id) { show('msg'); $('mTitle').textContent = 'You already have a different business listing'; $('mText').textContent = 'This account already has a business listed in another service. Use a different account for your interior design business.'; return; }
+    if (biz) {
+      extra = biz.interior_extra || {};
+      var more = await Promise.all([sb.from('provider_contacts').select('*').eq('provider_id', biz.id).maybeSingle(), sb.from('provider_portfolio').select('*').eq('provider_id', biz.id).order('created_at', { ascending: false })]);
+      contacts = more[0].data || {}; portfolio = more[1].data || [];
+    }
+    $('stepBody').innerHTML = STEPS.map(function (s, i) { return stepHtml(i); }).join('');
+    fillAll(); renderPort(); drawBrand();
+    $('lgFile').onchange = function () { uploadBrand('logo', $('lgFile').files[0]); $('lgFile').value = ''; };
+    $('cvFile').onchange = function () { uploadBrand('cover', $('cvFile').files[0]); $('cvFile').value = ''; };
+    show('app'); go(Number(new URLSearchParams(location.search).get('step')) || 1);
+  }
+  init().catch(function (e) { show('msg'); $('mTitle').textContent = 'Something went wrong'; $('mText').textContent = e && e.message ? e.message : String(e); });
+})();
+</script>
+</body>
+</html>

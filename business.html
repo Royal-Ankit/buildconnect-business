@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>List your business - NIRMAZA</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script>
+<style>
+  :root { --primary:#1769AA; --dark:#103B63; --light:#F4F7FA; --success:#20A477; --accent:#F5A623; --text:#1b2a3a; --muted:#5d6b7a; --line:#dde5ee; --danger:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, Roboto, "Segoe UI", Arial, sans-serif; background: var(--light); color: var(--text); }
+  a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  header { background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+  .bar { max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; }
+  .logo { font-weight:800; font-size:26px; color:var(--primary); letter-spacing:-.5px; }
+  .logo span { color:var(--accent); }
+  main { max-width:1200px; margin:0 auto; padding:20px; }
+
+  .hero { background: linear-gradient(130deg,#103B63,#1769AA); color:#fff; border-radius:20px; padding:28px; margin-bottom:18px; }
+  .hero h1 { margin:0 0 8px; font-size:28px; }
+  .hero p { margin:0 0 14px; opacity:.92; }
+  .ready { background:rgba(255,255,255,.12); border-radius:12px; padding:14px 16px; font-size:14px; }
+  .ready b { display:block; margin-bottom:6px; }
+  .ready ul { margin:0; padding-left:18px; columns:2; column-gap:24px; }
+
+  .card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:24px; margin-bottom:16px; box-shadow:0 2px 10px rgba(16,59,99,.05); }
+  .card h3 { margin:0 0 4px; color:var(--dark); font-size:19px; display:flex; align-items:center; gap:10px; }
+  .card h3 .n { width:28px; height:28px; border-radius:50%; background:var(--primary); color:#fff; display:grid; place-items:center; font-size:14px; flex:none; }
+  .sub { margin:0 0 6px; color:var(--muted); font-size:14px; }
+
+  .f { margin-top:16px; }
+  .f > label { display:block; font-weight:600; font-size:14px; margin-bottom:6px; color:var(--dark); }
+  .opt { font-weight:400; color:var(--muted); font-size:13px; }
+  .req::after { content:" *"; color:var(--danger); }
+  input[type=text], input[type=number], input[type=tel], input[type=url], select, textarea { width:100%; padding:11px 13px; border:1px solid #c8d3df; border-radius:10px; font-size:16px; background:#fff; font-family:inherit; }
+  textarea { min-height:90px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:2px solid var(--primary); border-color:var(--primary); }
+  .f.bad input, .f.bad select, .f.bad textarea { border-color:var(--danger); }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }
+  .l2 { display:block; font-size:12.5px; color:var(--muted); margin:6px 0 3px; }
+  .three { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0 16px; }
+  .hint { color:var(--muted); font-size:12.5px; margin-top:5px; }
+  .conv { color:var(--success); font-size:13px; margin-top:5px; font-weight:600; min-height:18px; }
+  .err { color:var(--danger); font-size:13px; margin-top:5px; }
+  .inline { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:14px; color:var(--muted); }
+  .inline input { width:18px; height:18px; }
+  .prefix-wrap { display:flex; }
+  .prefix { padding:11px 12px; border:1px solid #c8d3df; border-right:none; border-radius:10px 0 0 10px; background:var(--light); color:var(--muted); }
+  .prefix-wrap input { border-radius:0 10px 10px 0; }
+
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip input { position:absolute; opacity:0; pointer-events:none; }
+  .chip { position:relative; }
+  .chip span { display:inline-block; border:1.5px solid var(--line); border-radius:20px; padding:8px 14px; font-size:14px; cursor:pointer; background:#fff; color:var(--dark); }
+  .chip input:checked + span { background:#eaf3fb; border-color:var(--primary); color:var(--primary); font-weight:600; }
+  .chip input:focus-visible + span { outline:2px solid var(--primary); }
+  .f.bad .chips { outline:1px dashed var(--danger); outline-offset:4px; border-radius:10px; }
+
+  .unitbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:14px; font-size:14px; font-weight:600; color:var(--dark); }
+  .seg { border:1.5px solid var(--line); background:#fff; padding:8px 16px; border-radius:20px; font-size:14px; cursor:pointer; font-weight:600; color:var(--dark); }
+  .seg.on { background:var(--primary); color:#fff; border-color:var(--primary); }
+  .ruler { margin-top:18px; background:#f3f9f5; border:1px dashed var(--success); border-radius:12px; padding:14px; }
+  .ruler b { color:#0b5d43; display:block; margin-bottom:8px; font-size:14px; }
+  .ruler .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .ruler input { max-width:150px; }
+  .ruler small { color:var(--muted); display:block; margin-top:8px; }
+
+  .btn { border:none; background:var(--primary); color:#fff; font-size:17px; font-weight:700; padding:14px 26px; border-radius:12px; cursor:pointer; }
+  .btn:disabled { opacity:.6; cursor:wait; }
+  .btn-link { display:inline-block; background:var(--primary); color:#fff; padding:12px 22px; border-radius:10px; margin-top:12px; }
+  .box { margin-top:16px; padding:12px 14px; border-radius:10px; font-size:14px; display:none; background:#fdecea; color:#8a1c13; }
+  .note { background:#fff7e6; border:1px solid #f3d9a4; color:#6b4a00; border-radius:12px; padding:12px 14px; font-size:14px; margin-bottom:16px; }
+  .center { text-align:center; padding:30px 10px; }
+  .tick { width:70px; height:70px; border-radius:50%; background:#e6f6f0; color:var(--success); font-size:38px; display:grid; place-items:center; margin:0 auto 14px; }
+  .state { display:none; }
+
+  @media (max-width:700px) {
+    main { padding:14px; }
+    .hero { padding:20px; } .hero h1 { font-size:22px; }
+    .ready ul { columns:1; }
+    .two, .three { grid-template-columns:1fr; }
+    .card { padding:18px; }
+  }
+</style>
+</head>
+<body>
+
+<header><div class="bar">
+  <a class="logo" href="index.html">NIR<span>MAZA</span></a>
+  <a href="index.html">&larr; Back to home</a>
+</div></header>
+
+<main>
+  <section class="hero">
+    <h1>List your business on NIRMAZA</h1>
+    <p>Reach customers across Uttar Pradesh. Listing is free during our pilot.</p>
+    <div class="ready"><b>Keep these ready:</b>
+      <ul>
+        <li>Business registration ID (Udyam, CIN, Shop Act, LLP no.)</li>
+        <li>GST number, if you are registered</li>
+        <li>Licence number, if your trade needs one</li>
+        <li>Your rates and a list of recent projects</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Not logged in -->
+  <div class="card state" id="gate">
+    <div class="center">
+      <h3 style="justify-content:center">Please log in first</h3>
+      <p class="sub">You need a NIRMAZA account to list a business.</p>
+      <a class="btn-link" href="signup.html?role=provider">Create account</a>
+      &nbsp; <a class="btn-link" href="login.html" style="background:#eaf3fb;color:var(--primary)">Log in</a>
+      <p class="hint">After logging in, come back to this page by clicking <b>List your business</b> on the home page.</p>
+    </div>
+  </div>
+
+  <!-- Already listed -->
+  <div class="card state" id="status">
+    <div class="center">
+      <div class="tick" id="statusTick">&#9201;</div>
+      <h3 style="justify-content:center" id="statusTitle"></h3>
+      <p class="sub" id="statusText"></p>
+      <a class="btn-link" href="dashboard.html">Open business panel</a>
+    </div>
+  </div>
+
+  <!-- Thank you -->
+  <div class="card state" id="done">
+    <div class="center">
+      <div class="tick">&#10003;</div>
+      <h3 style="justify-content:center">Thank you! Your business has been submitted</h3>
+      <p class="sub">Our team will check your details. Your listing appears on NIRMAZA after it is approved. Your registration ID and GST number stay private and are only used for checking.</p>
+      <a class="btn-link" href="dashboard.html">Open business panel</a>
+    </div>
+  </div>
+
+  <form id="form" class="state" novalidate>
+    <div class="note" id="resumeNote" style="display:none">You already started a listing. Submitting again will replace those details.</div>
+
+    <!-- 1 -->
+    <section class="card">
+      <h3><span class="n">1</span>Business identity</h3>
+      <p class="sub">Registration details are private. They are only used to verify your business.</p>
+      <div class="f" id="f-bname"><label class="req" for="bname">Business name</label><input id="bname" type="text" maxlength="120" placeholder="e.g. Ravi Construction Pvt Ltd"><div class="err"></div></div>
+      <div class="two">
+        <div class="f" id="f-btype"><label class="req" for="btype">Type of business</label>
+          <select id="btype"><option value="">Select type</option>
+            <option value="individual">Individual / freelancer</option>
+            <option value="proprietorship">Proprietorship</option>
+            <option value="partnership">Partnership firm</option>
+            <option value="llp">LLP</option>
+            <option value="private_limited">Private Limited company</option>
+            <option value="public_limited">Public Limited company</option>
+            <option value="other">Other</option></select><div class="err"></div></div>
+        <div class="f" id="f-regid"><label for="regid">Business registration ID <span class="opt">(optional)</span></label><input id="regid" type="text" maxlength="40" placeholder="Udyam / CIN / Shop Act / LLP no."><div class="hint">Example: UDYAM-UP-00-0000001</div><div class="err"></div></div>
+      </div>
+      <div class="f" id="f-gst"><label for="gst">GST number <span class="opt">(optional)</span></label><input id="gst" type="text" maxlength="15" placeholder="15-character GSTIN, e.g. 09ABCDE1234F1Z5" style="text-transform:uppercase">
+        <label class="inline"><input type="checkbox" id="gstExempt"> I am not registered under GST (small business below the limit)</label>
+        <div class="hint">Your listing will show "GST not provided" if you tick this.</div><div class="err"></div></div>
+      <div class="two">
+        <div class="f" id="f-licence"><label id="lblLicence" for="licence">Licence / professional registration no.</label><input id="licence" type="text" maxlength="60" placeholder="If your trade needs one"><div class="err"></div></div>
+        <div class="f" id="f-yearEst"><label for="yearEst">Year business started</label><input id="yearEst" type="number" min="1950" max="2100" placeholder="e.g. 2014"><div class="err"></div></div>
+      </div>
+      <div class="f" id="f-team"><label for="team">Team size (number of people)</label><input id="team" type="number" min="1" max="100000" placeholder="e.g. 12"><div class="err"></div></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="card">
+      <h3><span class="n">2</span>What you offer</h3>
+      <div class="f" id="f-category"><label class="req" for="category">Main service category</label><select id="category"><option value="">Loading...</option></select><div class="err"></div></div>
+      <div class="f" id="f-spec"><label class="req">Specialization <span style="font-weight:400;color:var(--muted)">(choose all that apply)</span></label>
+        <div class="chips" id="specChips"><span class="hint">Choose a category first.</span></div>
+        <input id="specOther" type="text" maxlength="120" placeholder="Other specialization (optional)" style="margin-top:10px"><div class="err"></div></div>
+      <div class="f" id="f-seg"><label class="req">Type of work you take</label><div class="chips" id="segChips"></div><div class="err"></div></div>
+      <div class="f" id="f-about"><label class="req" for="about">About your business</label><textarea id="about" maxlength="1000" placeholder="Tell customers what you do best, your approach and what makes you different (at least 30 characters)."></textarea><div class="err"></div></div>
+    </section>
+
+    <!-- 3 -->
+    <section class="card">
+      <h3><span class="n">3</span>Experience and projects</h3>
+      <div class="three">
+        <div class="f" id="f-exp"><label for="exp">Years of experience <span class="opt">(optional)</span></label><input id="exp" type="number" min="0" max="80" placeholder="e.g. 8"><div class="err"></div></div>
+        <div class="f" id="f-done"><label for="done_n">Projects completed <span class="opt">(optional)</span></label><input id="done_n" type="number" min="0" placeholder="e.g. 45"><div class="err"></div></div>
+        <div class="f" id="f-running"><label for="running">Projects running now <span class="opt">(optional)</span></label><input id="running" type="number" min="0" placeholder="e.g. 3"><div class="err"></div></div>
+      </div>
+    </section>
+
+
+    <!-- Contractor extras: shown only when the category is Contractor -->
+    <section class="card" id="contrCard" style="display:none">
+      <h3><span class="n">+</span>Contractor details <span style="font-weight:400;font-size:14px;color:var(--muted)">(all optional)</span></h3>
+      <img src="contractor-1.jpg" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:12px;margin:4px 0 12px">
+      <p class="sub">The more you share, the easier it is for customers to trust and choose you. Skip anything that does not apply.</p>
+      <div class="f"><label>Type of contract you take</label><div class="chips" id="ctChips"></div></div>
+      <div class="f"><label>Team and workforce <span class="opt">(number of people)</span></label>
+        <div class="three">
+          <div><input id="wfEng" type="number" min="0" placeholder="Engineers"></div>
+          <div><input id="wfSup" type="number" min="0" placeholder="Supervisors"></div>
+          <div><input id="wfSkill" type="number" min="0" placeholder="Skilled workers (mason, bar-bender)"></div>
+        </div>
+        <div class="three" style="margin-top:8px">
+          <div><input id="wfLab" type="number" min="0" placeholder="Helpers / labour"></div>
+          <div><input id="capProj" type="number" min="0" placeholder="Sites you can run at once"></div>
+          <div><input id="capVal" type="number" min="0" step="any" placeholder="Largest project value (&#8377; lakh)"></div>
+        </div></div>
+      <div class="f"><label>Construction pricing by type of work <span class="opt">(optional, &#8377; per area unit chosen above)</span></label>
+        <div class="two">
+          <div><label class="l2" for="rt_grey">Grey structure (labour + material)</label><input id="rt_grey" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="rt_full">Complete construction (turnkey, with finishing)</label><input id="rt_full" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="rt_labour">Labour-only contract</label><input id="rt_labour" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="rt_reno">Renovation / repair</label><input id="rt_reno" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="rt_comm">Commercial / industrial building</label><input id="rt_comm" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="rt_fin">Finishing only (plaster, paint, flooring)</label><input id="rt_fin" type="number" min="0" step="any"></div>
+        </div></div>
+      <div class="f"><label>Equipment and machinery you own</label><div class="chips" id="eqChips"></div>
+        <input id="eqOther" type="text" maxlength="120" placeholder="Other equipment (optional)" style="margin-top:10px"></div>
+      <div class="f"><label>Quality and safety</label><div class="chips" id="qsChips"></div></div>
+      <div class="f"><label>Extra facilities you offer</label><div class="chips" id="faChips"></div></div>
+      <div class="f"><label for="ctNote">Typical time to finish a house <span class="opt">(optional)</span></label><input id="ctNote" type="text" maxlength="120" placeholder="e.g. 8-10 months for 2000 sq.ft"></div>
+    </section>
+
+    <!-- Carpenter extras: shown only when the category is Carpenter -->
+    <section class="card" id="carpCard" style="display:none">
+      <h3><span class="n">+</span>Carpenter details <span style="font-weight:400;font-size:14px;color:var(--muted)">(all optional)</span></h3>
+      <p class="sub">Your services were chosen above. Fill in what you like here; skip anything that does not apply.</p>
+      <div class="f"><label for="cpType">Type of carpenter business</label><select id="cpType"><option value="">Select (optional)</option></select></div>
+      <div class="f"><label for="cpWeb">Website / portfolio link</label><input id="cpWeb" type="text" maxlength="200" placeholder="e.g. https://instagram.com/yourpage"></div>
+      <div class="f"><label>Team and work capacity</label>
+        <div class="three">
+          <div><input id="cpTeam" type="number" min="0" placeholder="Carpenters in team"></div>
+          <div><input id="cpSkilled" type="number" min="0" placeholder="Skilled workers"></div>
+          <div><input id="cpDaily" type="text" maxlength="80" placeholder="Daily capacity, e.g. 2 wardrobes a week"></div>
+        </div>
+        <div class="two" style="margin-top:8px">
+          <div><input id="cpMin" type="text" maxlength="80" placeholder="Smallest job you take"></div>
+          <div><input id="cpMax" type="text" maxlength="80" placeholder="Largest job you take"></div>
+        </div>
+        <div class="chips" id="cpAvail" style="margin-top:10px"></div></div>
+      <div class="f"><label>Materials you work with</label><div class="chips" id="cpMat"></div></div>
+      <div class="f"><label>Pricing and labour charges <span class="opt">(optional)</span></label>
+        <div class="two">
+          <div><label class="l2" for="cr_item">Furniture making (&#8377; per item)</label><input id="cr_item" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_kit">Modular kitchen (&#8377; per area unit chosen above)</label><input id="cr_kit" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_ward">Wardrobe making (&#8377; per area unit)</label><input id="cr_ward" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_door">Door installation (&#8377; per door)</label><input id="cr_door" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_rep">Furniture repair (&#8377; per item)</label><input id="cr_rep" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_pol">Wood polishing (&#8377; per area unit)</label><input id="cr_pol" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_day">Carpenter labour (&#8377; per day)</label><input id="cr_day" type="number" min="0" step="any"></div>
+        </div>
+        <div class="chips" id="cpQuote" style="margin-top:10px"></div>
+        <div class="three" style="margin-top:10px">
+          <div><label class="l2" for="cr_min">Minimum service charge (&#8377;)</label><input id="cr_min" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_visit">Site visit charge (&#8377;)</label><input id="cr_visit" type="number" min="0" step="any"></div>
+          <div><label class="l2" for="cr_trans">Transport charge (&#8377;)</label><input id="cr_trans" type="number" min="0" step="any"></div>
+        </div>
+        <div class="two" style="margin-top:10px">
+          <div><label class="l2" for="cpMode">Material</label><select id="cpMode"><option value="">Select (optional)</option><option>Material included</option><option>Labour only</option><option>Both (customer can choose)</option></select></div>
+          <div><label class="l2" for="cpShow">Rates</label><select id="cpShow"><option value="public">Show my rates publicly</option><option value="hide">Hide rates (customers see "rates on request")</option></select></div>
+        </div></div>
+      <div class="f"><label>Tools and machinery</label><div class="chips" id="cpTools"></div>
+        <select id="cpOwn" style="margin-top:10px"><option value="">Equipment ownership (optional)</option><option>Own equipment</option><option>Rented equipment</option><option>Both</option></select></div>
+      <div class="f"><label>Additional facilities</label><div class="chips" id="cpFac"></div></div>
+      <div class="f"><label for="cpAch">Major achievements <span class="opt">(optional)</span></label><textarea id="cpAch" maxlength="600" rows="3"></textarea></div>
+      <div class="f"><label for="cpInfo">Anything else customers should know <span class="opt">(optional)</span></label><textarea id="cpInfo" maxlength="600" rows="3"></textarea></div>
+    </section>
+
+    <!-- Elevator company details: shown only when the category is Elevator -->
+    <section class="card" id="elevCard" style="display:none">
+      <h3><span class="n">+</span>Elevator company details <span style="font-weight:400;font-size:14px;color:var(--muted)">(all optional)</span></h3>
+      <p class="sub">After approval you can list every lift model with specifications, prices and photos under <b>My Elevator Products</b> in your business panel.</p>
+      <div class="f"><label>What kind of elevator business are you?</label><div class="chips" id="evType"></div></div>
+      <div class="two">
+        <div class="f"><label for="evBrand">Brand / manufacturer</label><input id="evBrand" type="text" maxlength="80" placeholder="e.g. the brand you sell or make"></div>
+        <div class="f"><label for="evWeb">Website</label><input id="evWeb" type="text" maxlength="200" placeholder="https://"></div>
+      </div>
+      <div class="two">
+        <div class="f"><label for="evDealer">Authorised dealer?</label><select id="evDealer"><option value="">Select (optional)</option><option>Yes</option><option>No</option></select></div>
+        <div class="f"><label for="evMfg">Own manufacturing unit?</label><select id="evMfg"><option value="">Select (optional)</option><option>Yes</option><option>No</option></select></div>
+        <div class="f"><label for="evInst">Own installation team?</label><select id="evInst"><option value="">Select (optional)</option><option>Yes</option><option>No</option></select></div>
+        <div class="f"><label for="evAfter">After-sales service available?</label><select id="evAfter"><option value="">Select (optional)</option><option>Yes</option><option>No</option></select></div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="card">
+      <h3><span class="n">4</span>Pricing and project size</h3>
+      <p class="sub" id="priceIntro">Choose a service category above to see the right pricing fields.</p>
+
+      <div id="areaUnitBar" class="unitbar" style="display:none">Enter areas and rates in:
+        <button type="button" class="seg on" data-u="sqft">sq.ft</button>
+        <button type="button" class="seg" data-u="sqm">sq.m</button>
+        <span class="hint" style="margin:0">The other unit is shown automatically under each box.</span>
+      </div>
+
+      <div id="priceBox" style="display:none">
+        <div class="two">
+          <div class="f" id="f-pmin"><label class="req" id="lblPmin" for="pmin">Lowest rate</label><input id="pmin" type="number" min="0" step="any"><div class="conv" id="c-pmin"></div><div class="err"></div></div>
+          <div class="f" id="f-pmax"><label class="req" id="lblPmax" for="pmax">Highest rate</label><input id="pmax" type="number" min="0" step="any"><div class="conv" id="c-pmax"></div><div class="err"></div></div>
+        </div>
+      </div>
+
+      <div id="sizeBox" style="display:none">
+        <div class="two">
+          <div class="f" id="f-minsize"><label id="lblMinsize" for="minsize">Smallest project you take</label><input id="minsize" type="number" min="0" step="any"><div class="conv" id="c-minsize"></div><div class="err"></div></div>
+          <div class="f" id="f-maxsize"><label id="lblMaxsize" for="maxsize">Largest project you have completed</label><input id="maxsize" type="number" min="0" step="any"><div class="conv" id="c-maxsize"></div><div class="err"></div></div>
+        </div>
+      </div>
+
+      <div id="matBox" style="display:none">
+        <div class="two">
+          <div class="f" id="f-minorder"><label for="minorder">Minimum order value (&#8377;)</label><input id="minorder" type="number" min="0" step="any" placeholder="e.g. 5000"><div class="err"></div></div>
+          <div class="f" id="f-delivery"><label class="req" for="delivery">Do you deliver to site?</label>
+            <select id="delivery"><option value="">Select</option><option value="yes">Yes, we deliver</option><option value="no">No, pickup only</option></select><div class="err"></div></div>
+        </div>
+      </div>
+
+      <div class="ruler">
+        <b>Sq.ft &#8644; Sq.m converter</b>
+        <div class="row">
+          <input id="rf" type="number" min="0" step="any" placeholder="Sq.ft"> <span>=</span> <input id="rm" type="number" min="0" step="any" placeholder="Sq.m">
+        </div>
+        <small>1 sq.m = 10.764 sq.ft &nbsp;&middot;&nbsp; 1 sq.ft = 0.0929 sq.m. Rates per sq.m are about 10.764 times the rate per sq.ft.</small>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="card">
+      <h3><span class="n">5</span>Location and service area</h3>
+      <div class="two">
+        <div class="f" id="f-district"><label class="req" for="district">Main office district</label><select id="district"><option value="">Loading...</option></select><div class="err"></div></div>
+        <div class="f" id="f-pincode"><label class="req" for="pincode">Pincode</label><input id="pincode" type="text" inputmode="numeric" maxlength="6" placeholder="6 digits"><div class="err"></div></div>
+      </div>
+      <div class="f" id="f-address"><label class="req" for="address">Office / shop address</label><input id="address" type="text" maxlength="200" placeholder="House or shop no., street, locality, city"><div class="err"></div></div>
+      <div class="f" id="f-areas"><label class="req">Districts where you work or deliver</label><div class="chips" id="areaChips"></div><div class="err"></div></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="card">
+      <h3><span class="n">6</span>Contact</h3>
+      <p class="sub">Your mobile, WhatsApp, email and address stay private. They are shared with a customer only after you accept that customer's requirement.</p>
+      <div class="two">
+        <div class="f" id="f-cname"><label class="req" for="cname">Contact person</label><input id="cname" type="text" maxlength="80"><div class="err"></div></div>
+        <div class="f" id="f-phone"><label class="req" for="phone">Mobile number</label><div class="prefix-wrap"><span class="prefix">+91</span><input id="phone" type="tel" inputmode="numeric" maxlength="18" placeholder="10-digit number"></div><div class="err"></div></div>
+      </div>
+      <div class="two">
+        <div class="f" id="f-wa"><label for="wa">WhatsApp number</label><div class="prefix-wrap"><span class="prefix">+91</span><input id="wa" type="tel" inputmode="numeric" maxlength="18" placeholder="If different"></div><div class="err"></div></div>
+        <div class="f" id="f-web"><label for="web">Website or social page</label><input id="web" type="url" maxlength="200" placeholder="https://"><div class="err"></div></div>
+      </div>
+      <div class="f" id="f-hours"><label for="hours">Working hours</label><input id="hours" type="text" maxlength="80" placeholder="e.g. Mon-Sat, 9 am - 7 pm"><div class="err"></div></div>
+    </section>
+
+    <!-- 7 -->
+    <section class="card">
+      <h3><span class="n">7</span>More details <span style="font-weight:400;font-size:14px;color:var(--muted)">(optional, helps customers trust you)</span></h3>
+      <div class="f" id="f-warranty"><label for="warranty">Warranty on your work (years)</label><input id="warranty" type="number" min="0" max="50" placeholder="e.g. 5"><div class="err"></div></div>
+      <div class="f"><label>Languages you speak</label><div class="chips" id="langChips"></div></div>
+      <div class="f"><label>Payment methods you accept</label><div class="chips" id="payChips"></div></div>
+      <label class="inline" style="margin-top:16px"><input type="checkbox" id="accepting" checked> I am accepting new projects right now</label>
+    </section>
+
+    <section class="card">
+      <div class="f" id="f-declare" style="margin-top:0"><label class="inline" style="margin:0"><input type="checkbox" id="declare"> <span>I confirm that these details are true. I understand NIRMAZA may verify them before my business is shown.</span></label><div class="err"></div></div>
+      <button class="btn" id="submit" type="submit" style="margin-top:18px">Submit for approval</button>
+      <div class="box" id="formError"></div>
+    </section>
+  </form>
+</main>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var cfg = window.BUILDCONNECT_CONFIG || {};
+  var FT_PER_M = 10.7639;          // 1 sq.m = 10.7639 sq.ft
+  var M_PER_FT = 1 / FT_PER_M;     // 1 sq.ft = 0.092903 sq.m
+  var AREA = 'per_sqft';
+
+  // What each category needs: pricing style, licence label and specialization choices
+  var CATS = {
+    'architect': { unit: AREA, price: 'Design / consultation fee', licence: { label: 'Council of Architecture (COA) registration no.', required: true },
+      spec: ['Residential planning', '2D / 3D elevation', 'Map approval support', 'Vastu consultation', 'Interior design', 'Landscape design', 'Structural design', 'Commercial buildings'] },
+    'contractor': { unit: AREA, price: 'Construction rate (labour + material)', licence: { label: 'Contractor licence / class (if any)' },
+      spec: ['Turnkey house construction', 'Labour contract', 'RCC / structure', 'Renovation and repair', 'Commercial buildings', 'Industrial sheds', 'Boundary and civil works', 'Government works',
+        'Residential villas and independent houses', 'Apartments and group housing', 'Foundation and basement work', 'Roads, drains and paving', 'Warehouses and PEB buildings', 'Schools and hospitals', 'Waterproofing and repair', 'Interior fit-out', 'Demolition and excavation'] },
+    'materials': { unit: 'min_order', licence: { label: 'Trade licence / dealer authorisation no. (if any)' },
+      spec: ['Cement', 'Steel / TMT', 'Bricks and blocks', 'Sand and aggregate', 'Tiles and marble', 'Paint', 'Electrical items', 'Plumbing material', 'Hardware', 'Ready-mix concrete'] },
+    'plumber': { unit: 'per_unit', price: 'Starting charge (per visit / per point)', licence: { label: 'Trade licence / certificate no. (if any)' },
+      spec: ['Complete House Plumbing', 'Bathroom Plumbing', 'Kitchen Plumbing', 'Water Tank Installation', 'Pipeline Installation', 'Leakage Repair', 'Commercial Plumbing', 'Drainage and sewer', 'Residential plumbing specialist', 'New construction plumbing specialist', 'Repair & maintenance specialist', 'Materials supplied by us'] },
+    'carpenter': { unit: AREA, price: 'Woodwork rate', licence: { label: 'Trade certificate no. (if any)' },
+      spec: ['Doors and windows', 'Modular kitchen', 'Wardrobes', 'Furniture', 'False ceiling and panelling', 'Repair work',
+        'Custom Furniture Making', 'Bed Making', 'Sofa Making', 'Dining Table Making', 'Study Table Making', 'Office Furniture', 'TV Units', 'Bookshelves', 'Shoe Racks', 'Modular Wardrobes', 'Sliding Wardrobes', 'Kitchen Cabinets', 'Wooden Doors', 'Wooden Windows', 'Door Frame Installation', 'Furniture Repair', 'Furniture Polishing', 'Wood Varnishing', 'Wooden Flooring', 'Wooden Wall Panelling', 'Wooden False Ceiling', 'Office Workstations', 'Reception Counters', 'Garden Furniture', 'Complete House Carpentry Work',
+        'Full House Furniture Work', 'Complete Modular Kitchen', 'Complete Bedroom Furniture', 'Complete Office Woodwork', 'Complete Interior Woodwork Package'] },
+    'painter': { unit: AREA, price: 'Painting rate (labour + paint)', licence: { label: 'Trade certificate no. (if any)' },
+      spec: ['Interior painting', 'Exterior painting', 'Texture and designer finish', 'Waterproofing', 'Wood polish', 'Putty and POP'] },
+    'solar': { unit: 'per_kw', price: 'Installed price per kW', licence: { label: 'MNRE / DISCOM empanelment no. (if any)' },
+      spec: ['Rooftop residential', 'Commercial / industrial', 'Solar water heater', 'Off-grid systems', 'Maintenance and AMC', 'Subsidy paperwork'] },
+    'wind-power': { unit: 'per_kw', price: 'Installed price per kW', licence: { label: 'Approval / empanelment no. (if any)' },
+      spec: ['Small wind turbines', 'Hybrid solar-wind', 'Site survey', 'Installation', 'Maintenance'] },
+    'interior-designer': { unit: AREA, price: 'Design rate (per area)', licence: { label: 'Professional registration no. (if any)' },
+      spec: ['Residential interiors', 'Modular kitchen', 'Wardrobes and storage', 'Living room and bedroom', 'Commercial interiors', 'Lighting design', 'Turnkey interiors'] },
+    'electrician': { unit: 'per_unit', price: 'Starting charge (per visit / per point)', licence: { label: 'Electrical licence / wireman permit no. (if any)' },
+      spec: ['House wiring', 'Rewiring and repair', 'Panels and MCB', 'Lighting and fans', 'Inverter and UPS', 'Earthing and safety', 'Commercial wiring'] },
+    'elevator': { unit: 'per_unit', price: 'Starting price per lift', licence: { label: 'Lift licence / manufacturer authorisation no.', required: false },
+      spec: ['Passenger lifts', 'Goods lifts', 'Home lifts', 'Hospital lifts', 'Modernisation', 'AMC and repair'] }
+  };
+  var CONTRACT_TYPES = ['Labour contract', 'Material + labour (turnkey)', 'Item-rate contract', 'Lump-sum contract', 'Cost-plus contract', 'Design and build', 'Annual maintenance contract'];
+  var EQUIP = ['Concrete mixer', 'Shuttering and centering', 'Scaffolding', 'Vibrator and bar-bending tools', 'Excavator / JCB', 'Tipper / tractor', 'Water pump and tanks', 'Cutting and welding machines', 'Tower lift / hoist', 'Surveying instruments'];
+  var QUALITY = ['Site engineer on every project', 'Material quality testing', 'Safety helmets and gear for workers', 'Worker insurance', 'ESI / PF registered', 'GST invoice and written agreement', 'ISO certified', 'Photo / video progress updates'];
+  var FACIL = ['Free site visit', 'Free estimate', 'Own architect / drawing team', 'Map approval help', 'Material supply', 'Interior and finishing', 'Post-handover support', 'Finance / bank loan help'];
+  var CP_TYPES = ['Individual Carpenter', 'Carpenter Team', 'Furniture Workshop', 'Modular Furniture Company', 'Interior Woodwork Contractor', 'Furniture Manufacturing Company', 'Proprietorship', 'Partnership Firm'];
+  var CP_AVAIL = ['Workshop available', 'Home service available', 'Site visit available'];
+  var CP_MAT = ['Solid Wood', 'Teak Wood', 'Sheesham Wood', 'Plywood', 'MDF Board', 'HDHMR Board', 'Particle Board', 'Blockboard', 'Laminated Boards', 'Veneer Sheets', 'Acrylic Finish', 'PVC Board', 'Aluminium Profiles'];
+  var CP_QUOTE = ['Custom woodwork: quotation on request', 'Full house carpentry: project basis'];
+  var CP_TOOLS = ['Circular Saw', 'Table Saw', 'Jigsaw', 'Electric Drill', 'Wood Router', 'Electric Planer', 'Orbital Sander', 'Nail Gun', 'Edge Banding Machine', 'CNC Wood Cutting Machine', 'Clamps and Measuring Tools'];
+  var CP_FAC = ['Free Site Inspection', 'On-site Furniture Installation', 'Material Procurement', 'Custom Furniture Designing', '3D Furniture Design', 'Measurement & Estimation', 'Delivery Available', 'Installation Warranty', 'Repair & Maintenance Support', 'Written Work Agreement'];
+  var SEGMENTS = ['Residential', 'Commercial', 'Industrial', 'Government', 'Institutional (school, hospital)', 'Agricultural'];
+  var LANGS = ['Hindi', 'English', 'Urdu', 'Bhojpuri', 'Awadhi'];
+  var PAYS = ['Cash', 'UPI', 'Bank transfer', 'Cheque', 'Card'];
+
+  var client = null, session = null, categories = [], districts = [];
+  var existingId = null, profile = null, areaUnit = 'sqft';
+
+  function getClient() {
+    if (client) return client;
+    var ready = cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && String(cfg.SUPABASE_ANON_KEY).indexOf('PASTE') !== 0;
+    if (!ready || !window.supabase) return null;
+    client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    return client;
+  }
+
+  /* ---------- small helpers ---------- */
+  function show(id) { ['gate', 'status', 'done', 'form'].forEach(function (s) { $(s).style.display = s === id ? 'block' : 'none'; }); window.scrollTo(0, 0); }
+  function round4(n) { return Math.round(n * 10000) / 10000; }
+  function round2(n) { return Math.round(n * 100) / 100; }
+  function fmt(n) { return Number(round2(n)).toLocaleString('en-IN', { maximumFractionDigits: 2 }); }
+  function num(id) { var v = $(id).value.trim(); return v === '' ? NaN : Number(v); }
+  function setErr(key, msg) {
+    var f = $('f-' + key); if (!f) return;
+    var e = f.querySelector('.err'); if (e) e.textContent = msg || '';
+    f.classList.toggle('bad', !!msg);
+  }
+  function chips(containerId, options, values) {
+    var c = $(containerId); c.innerHTML = '';
+    options.forEach(function (o, i) {
+      var val = values ? values[i] : o;
+      var l = document.createElement('label'); l.className = 'chip';
+      var inp = document.createElement('input'); inp.type = 'checkbox'; inp.value = val;
+      var sp = document.createElement('span'); sp.textContent = o;
+      l.appendChild(inp); l.appendChild(sp); c.appendChild(l);
+    });
+  }
+  function checked(containerId) {
+    return Array.prototype.map.call($(containerId).querySelectorAll('input:checked'), function (i) { return i.value; });
+  }
+  function cleanPhone(raw) {
+    var d = String(raw).replace(/\D/g, '');
+    if (d.length === 12 && d.indexOf('91') === 0) d = d.slice(2);
+    if (d.length === 11 && d.charAt(0) === '0') d = d.slice(1);
+    return d;
+  }
+  function currentCat() {
+    var id = Number($('category').value);
+    var row = categories.filter(function (c) { return c.id === id; })[0];
+    return row ? { row: row, cfg: CATS[row.slug] || { unit: 'per_unit', price: 'Starting price', spec: [], licence: { label: 'Licence no. (if any)' } } } : null;
+  }
+
+  /* ---------- sq.ft / sq.m ---------- */
+  function priceToSqft(v) { return areaUnit === 'sqft' ? v : v / FT_PER_M; }   // rate per sq.m -> rate per sq.ft
+  function areaToSqft(v) { return areaUnit === 'sqft' ? v : v * FT_PER_M; }
+
+  function updateConv(id, kind) {
+    var v = num(id), out = $('c-' + id);
+    if (!out) return;
+    if (isNaN(v)) { out.textContent = ''; return; }
+    if (kind === 'price') {
+      out.textContent = areaUnit === 'sqft' ? '= ₹' + fmt(v * FT_PER_M) + ' per sq.m' : '= ₹' + fmt(v / FT_PER_M) + ' per sq.ft';
+    } else {
+      out.textContent = areaUnit === 'sqft' ? '= ' + fmt(v * M_PER_FT) + ' sq.m' : '= ' + fmt(v * FT_PER_M) + ' sq.ft';
+    }
+  }
+  function updateAllConv() { updateConv('pmin', 'price'); updateConv('pmax', 'price'); updateConv('minsize', 'area'); updateConv('maxsize', 'area'); }
+
+  function applyUnitLabels() {
+    var c = currentCat(); if (!c || c.cfg.unit !== AREA) return;
+    var per = areaUnit === 'sqft' ? 'per sq.ft' : 'per sq.m', a = areaUnit === 'sqft' ? 'sq.ft' : 'sq.m';
+    $('lblPmin').textContent = c.cfg.price + ' - lowest (₹ ' + per + ')';
+    $('lblPmax').textContent = c.cfg.price + ' - highest (₹ ' + per + ')';
+    $('lblMinsize').textContent = 'Smallest project you take (' + a + ')';
+    $('lblMaxsize').textContent = 'Largest project you completed (' + a + ')';
+    document.querySelectorAll('#areaUnitBar .seg').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-u') === areaUnit); });
+    updateAllConv();
+  }
+
+  document.querySelectorAll('#areaUnitBar .seg').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var to = b.getAttribute('data-u'); if (to === areaUnit) return;
+      // convert what is already typed so the numbers stay the same in real terms
+      ['pmin', 'pmax', 'rt_grey', 'rt_full', 'rt_labour', 'rt_reno', 'rt_comm', 'rt_fin', 'cr_kit', 'cr_ward', 'cr_pol'].forEach(function (id) { var v = num(id); if (!isNaN(v)) $(id).value = round4(to === 'sqm' ? v * FT_PER_M : v / FT_PER_M); });
+      ['minsize', 'maxsize'].forEach(function (id) { var v = num(id); if (!isNaN(v)) $(id).value = round4(to === 'sqm' ? v * M_PER_FT : v * FT_PER_M); });
+      areaUnit = to; applyUnitLabels();
+    });
+  });
+  ['pmin', 'pmax'].forEach(function (id) { $(id).addEventListener('input', function () { updateConv(id, 'price'); }); });
+  ['minsize', 'maxsize'].forEach(function (id) { $(id).addEventListener('input', function () { updateConv(id, 'area'); }); });
+
+  // Stand-alone converter
+  $('rf').addEventListener('input', function () { var v = num('rf'); $('rm').value = isNaN(v) ? '' : round2(v * M_PER_FT); });
+  $('rm').addEventListener('input', function () { var v = num('rm'); $('rf').value = isNaN(v) ? '' : round2(v * FT_PER_M); });
+
+  /* ---------- category changes the form ---------- */
+  function onCategory() {
+    var c = currentCat();
+    setErr('category', '');
+    if (c && c.row.slug === 'interior-designer') { location.href = 'interior-register.html'; return; }
+    if (!c) {
+      $('contrCard').style.display = 'none'; $('carpCard').style.display = 'none'; $('elevCard').style.display = 'none';
+      chips('specChips', []); $('specChips').innerHTML = '<span class="hint">Choose a category first.</span>';
+      ['areaUnitBar', 'priceBox', 'sizeBox', 'matBox'].forEach(function (i) { $(i).style.display = 'none'; });
+      $('priceIntro').textContent = 'Choose a service category above to see the right pricing fields.';
+      return;
+    }
+    chips('specChips', c.cfg.spec);
+    $('contrCard').style.display = c.row.slug === 'contractor' ? 'block' : 'none';
+    $('carpCard').style.display = c.row.slug === 'carpenter' ? 'block' : 'none';
+    $('elevCard').style.display = c.row.slug === 'elevator' ? 'block' : 'none';
+    var lic = c.cfg.licence || {};
+    $('lblLicence').textContent = lic.label || 'Licence / registration no. (if any)';
+    $('lblLicence').className = lic.required ? 'req' : '';
+    var u = c.cfg.unit;
+    $('areaUnitBar').style.display = u === AREA ? 'flex' : 'none';
+    $('priceBox').style.display = (u === 'min_order') ? 'none' : 'block';
+    $('sizeBox').style.display = u === AREA ? 'block' : 'none';
+    $('matBox').style.display = u === 'min_order' ? 'block' : 'none';
+    if (u === AREA) {
+      $('priceIntro').textContent = 'Give your usual rate range. Customers see rates in both sq.ft and sq.m.';
+      applyUnitLabels();
+    } else if (u === 'per_kw') {
+      $('priceIntro').textContent = 'Give your usual installed price range per kilowatt (kW).';
+      $('lblPmin').textContent = c.cfg.price + ' - lowest (₹ per kW)';
+      $('lblPmax').textContent = c.cfg.price + ' - highest (₹ per kW)';
+      $('c-pmin').textContent = ''; $('c-pmax').textContent = '';
+    } else if (u === 'per_unit') {
+      $('priceIntro').textContent = 'Give your usual price range so customers know what to expect.';
+      $('lblPmin').textContent = c.cfg.price + ' - lowest (₹)';
+      $('lblPmax').textContent = c.cfg.price + ' - highest (₹)';
+      $('c-pmin').textContent = ''; $('c-pmax').textContent = '';
+    } else {
+      $('priceIntro').textContent = 'Tell customers your minimum order and whether you deliver.';
+    }
+    $('lblPmin').className = 'req'; $('lblPmax').className = 'req';
+  }
+  $('category').addEventListener('change', onCategory);
+
+  $('gstExempt').addEventListener('change', function () {
+    $('gst').disabled = $('gstExempt').checked;
+    if ($('gstExempt').checked) { $('gst').value = ''; setErr('gst', ''); }
+  });
+  $('district').addEventListener('change', function () {
+    var box = $('areaChips').querySelector('input[value="' + $('district').value + '"]');
+    if (box) box.checked = true;
+  });
+
+  /* ---------- validation ---------- */
+  function validate() {
+    ['bname', 'btype', 'regid', 'gst', 'licence', 'yearEst', 'team', 'category', 'spec', 'seg', 'about', 'exp', 'done', 'running',
+      'pmin', 'pmax', 'minsize', 'maxsize', 'minorder', 'delivery', 'district', 'pincode', 'address', 'areas', 'cname', 'phone', 'wa', 'web', 'hours', 'warranty', 'declare'
+    ].forEach(function (k) { setErr(k, ''); });
+    var errors = [];
+    function bad(k, m) { errors.push(k); setErr(k, m); }
+    var c = currentCat();
+
+    var bname = $('bname').value.trim();
+    if (bname.length < 3) bad('bname', 'Please enter your business name.');
+    if (!$('btype').value) bad('btype', 'Select your type of business.');
+    var NONE = ['NA','N/A','NIL','NONE','-','--'];
+    var regid = $('regid').value.trim().toUpperCase(); if (NONE.indexOf(regid) !== -1) regid = '';
+    if (regid && regid.length < 5) bad('regid', 'Registration ID must be at least 5 characters, or leave it empty.');
+    var gst = $('gst').value.trim().toUpperCase(); if (NONE.indexOf(gst) !== -1) gst = ''; var exempt = $('gstExempt').checked;
+    if (!exempt && gst && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(gst)) bad('gst', 'Enter a valid 15-character GST number, or leave it empty.');
+    var licence = $('licence').value.trim();
+    if (c && c.cfg.licence && c.cfg.licence.required && licence.length < 3) bad('licence', 'This registration number is required for your category.');
+    var yr = num('yearEst'), nowYear = new Date().getFullYear();
+    if (!isNaN(yr) && (yr < 1950 || yr > nowYear)) bad('yearEst', 'Enter a year between 1950 and ' + nowYear + '.');
+    var team = num('team');
+    if (!isNaN(team) && (team < 1 || team % 1 !== 0)) bad('team', 'Team size must be a whole number of 1 or more.');
+
+    if (!c) bad('category', 'Select your main service category.');
+    var spec = checked('specChips'), other = $('specOther').value.trim();
+    if (other) spec.push(other);
+    if (c && spec.length === 0) bad('spec', 'Choose at least one specialization.');
+    var seg = checked('segChips');
+    if (seg.length === 0) bad('seg', 'Choose at least one type of work.');
+    var about = $('about').value.trim();
+    if (about.length < 30) bad('about', 'Please write at least 30 characters about your business.');
+
+    var exp = num('exp'), done = num('done_n'), running = num('running');
+    if (!isNaN(exp) && (exp < 0 || exp > 80 || exp % 1 !== 0)) bad('exp', 'Enter whole years (0 to 80) or leave empty.');
+    if (!isNaN(done) && (done < 0 || done % 1 !== 0)) bad('done', 'Enter a whole number (0 or more) or leave empty.');
+    if (!isNaN(running) && (running < 0 || running % 1 !== 0)) bad('running', 'Enter a whole number (0 or more) or leave empty.');
+
+    var pmin = num('pmin'), pmax = num('pmax'), minsize = num('minsize'), maxsize = num('maxsize');
+    var unit = c ? c.cfg.unit : null;
+    if (unit && unit !== 'min_order') {
+      if (isNaN(pmin) || pmin <= 0) bad('pmin', 'Enter your lowest rate.');
+      if (isNaN(pmax) || pmax <= 0) bad('pmax', 'Enter your highest rate.');
+      if (!isNaN(pmin) && !isNaN(pmax) && pmax < pmin) bad('pmax', 'Highest rate cannot be lower than the lowest rate.');
+    }
+    if (unit === AREA) {
+      if (!isNaN(minsize) && minsize < 0) bad('minsize', 'Enter a valid area.');
+      if (!isNaN(maxsize) && maxsize < 0) bad('maxsize', 'Enter a valid area.');
+      if (!isNaN(minsize) && !isNaN(maxsize) && maxsize < minsize) bad('maxsize', 'Largest project cannot be smaller than the smallest.');
+    }
+    if (unit === 'min_order' && !$('delivery').value) bad('delivery', 'Tell us whether you deliver.');
+
+    if (!$('district').value) bad('district', 'Select your main office district.');
+    var pin = $('pincode').value.trim();
+    if (!/^[1-9][0-9]{5}$/.test(pin)) bad('pincode', 'Enter a valid 6-digit pincode.');
+    if ($('address').value.trim().length < 8) bad('address', 'Enter your full office or shop address.');
+    var areas = checked('areaChips');
+    if (areas.length === 0) bad('areas', 'Choose at least one district where you work.');
+
+    var cname = $('cname').value.trim();
+    if (cname.length < 2) bad('cname', 'Enter the contact person name.');
+    var phone = cleanPhone($('phone').value);
+    if (!/^[6-9]\d{9}$/.test(phone)) bad('phone', 'Enter a valid 10-digit Indian mobile number.');
+    var wa = $('wa').value.trim() ? cleanPhone($('wa').value) : '';
+    if (wa && !/^[6-9]\d{9}$/.test(wa)) bad('wa', 'Enter a valid 10-digit number or leave empty.');
+    var web = $('web').value.trim();
+    if (web && !/^https?:\/\/[^\s.]+\.[^\s]{2,}$/i.test(web)) bad('web', 'Start the address with http:// or https://');
+    var warranty = num('warranty');
+    if (!isNaN(warranty) && (warranty < 0 || warranty > 50 || warranty % 1 !== 0)) bad('warranty', 'Enter whole years (0 to 50).');
+    if (!$('declare').checked) bad('declare', 'Please confirm the declaration to continue.');
+
+    if (errors.length) return { errors: errors };
+
+    var row = {
+      business_name: bname, category_id: c.row.id, district_id: Number($('district').value),
+      description: about, experience_years: isNaN(exp) ? null : exp,
+      contact_name: cname, business_type: $('btype').value,
+      year_established: isNaN(yr) ? null : yr, team_size: isNaN(team) ? null : team,
+      projects_completed: isNaN(done) ? null : done, projects_running: isNaN(running) ? null : running,
+      specializations: spec, work_segments: seg, service_district_ids: areas.map(Number),
+      pincode: pin, website: web || null,
+      pricing_unit: unit, price_min: null, price_max: null, min_project_sqft: null, max_project_sqft: null,
+      min_order_value: null, delivery_available: null,
+      warranty_years: isNaN(warranty) ? null : warranty,
+      languages: checked('langChips'), payment_methods: checked('payChips'),
+      accepting_new_projects: $('accepting').checked, working_hours: $('hours').value.trim() || null,
+      status: 'pending'
+    };
+    if (unit === AREA) {
+      row.price_min = round2(priceToSqft(pmin)); row.price_max = round2(priceToSqft(pmax));
+      if (!isNaN(minsize)) row.min_project_sqft = round2(areaToSqft(minsize));
+      if (!isNaN(maxsize)) row.max_project_sqft = round2(areaToSqft(maxsize));
+    } else if (unit === 'min_order') {
+      var mo = num('minorder'); row.min_order_value = isNaN(mo) ? null : mo;
+      row.delivery_available = $('delivery').value === 'yes';
+    } else {
+      row.price_min = pmin; row.price_max = pmax;
+    }
+    if (c.row.slug === 'contractor') {
+      var ints = ['wfEng', 'wfSup', 'wfSkill', 'wfLab', 'capProj'], bads = false;
+      ints.forEach(function (id) { var n = num(id); if (!isNaN(n) && (n < 0 || n % 1 !== 0)) bads = true; });
+      ['capVal', 'rt_grey', 'rt_full', 'rt_labour', 'rt_reno', 'rt_comm', 'rt_fin'].forEach(function (id) { var n = num(id); if (!isNaN(n) && n < 0) bads = true; });
+      if (bads) { alert('In the Contractor details, numbers must be zero or more (whole numbers for people and sites). Fix them or leave them empty.'); return { errors: ['contr'] }; }
+      var eq = checked('eqChips'); if ($('eqOther').value.trim()) eq.push($('eqOther').value.trim());
+      var ex = { contract_types: checked('ctChips'), equipment: eq, quality: checked('qsChips'), facilities: checked('faChips'), rates: {} };
+      [['engineers', 'wfEng'], ['supervisors', 'wfSup'], ['skilled', 'wfSkill'], ['labour', 'wfLab'], ['max_sites', 'capProj'], ['max_project_lakh', 'capVal']].forEach(function (p) { var n = num(p[1]); if (!isNaN(n)) ex[p[0]] = n; });
+      [['grey_structure', 'rt_grey'], ['complete_house', 'rt_full'], ['labour_only', 'rt_labour'], ['renovation', 'rt_reno'], ['commercial', 'rt_comm'], ['finishing', 'rt_fin']].forEach(function (p) { var n = num(p[1]); if (!isNaN(n) && n > 0) ex.rates[p[0]] = round2(priceToSqft(n)); });
+      if ($('ctNote').value.trim()) ex.time_note = $('ctNote').value.trim();
+      row.contractor_extra = ex;
+    }
+    if (c.row.slug === 'carpenter') {
+      var cn = ['cpTeam', 'cpSkilled', 'cr_item', 'cr_kit', 'cr_ward', 'cr_door', 'cr_rep', 'cr_pol', 'cr_day', 'cr_min', 'cr_visit', 'cr_trans'], badc = false;
+      cn.forEach(function (id) { var n = num(id); if (!isNaN(n) && (n < 0 || ((id === 'cpTeam' || id === 'cpSkilled') && n % 1 !== 0))) badc = true; });
+      if (badc) { alert('In the Carpenter details, numbers must be zero or more (whole numbers for people). Fix them or leave them empty.'); return { errors: ['carp'] }; }
+      var cx = { materials: checked('cpMat'), tools: checked('cpTools'), facilities: checked('cpFac'), availability: checked('cpAvail'), quote_modes: checked('cpQuote'), rates: {}, charges: {} };
+      if ($('cpType').value) cx.carpenter_type = $('cpType').value;
+      if ($('cpWeb').value.trim()) cx.website = $('cpWeb').value.trim();
+      if (!isNaN(num('cpTeam'))) cx.team = num('cpTeam'); if (!isNaN(num('cpSkilled'))) cx.skilled = num('cpSkilled');
+      [['daily_capacity', 'cpDaily'], ['min_project', 'cpMin'], ['max_project', 'cpMax'], ['achievements', 'cpAch'], ['more_info', 'cpInfo']].forEach(function (p) { if ($(p[1]).value.trim()) cx[p[0]] = $(p[1]).value.trim(); });
+      [['furniture_item', 'cr_item', 0], ['kitchen', 'cr_kit', 1], ['wardrobe', 'cr_ward', 1], ['door_install', 'cr_door', 0], ['repair_item', 'cr_rep', 0], ['polish', 'cr_pol', 1], ['labour_day', 'cr_day', 0]].forEach(function (p) { var n = num(p[1]); if (!isNaN(n) && n > 0) cx.rates[p[0]] = p[2] ? round2(priceToSqft(n)) : n; });
+      [['minimum', 'cr_min'], ['site_visit', 'cr_visit'], ['transport', 'cr_trans']].forEach(function (p) { var n = num(p[1]); if (!isNaN(n) && n > 0) cx.charges[p[0]] = n; });
+      if ($('cpOwn').value) cx.equipment_ownership = $('cpOwn').value;
+      if ($('cpMode').value) cx.material_mode = $('cpMode').value;
+      cx.hide_rates = $('cpShow').value === 'hide';
+      row.carpenter_extra = cx;
+    }
+    if (c.row.slug === 'elevator') {
+      var ev = { business_kinds: checked('evType') };
+      [['brand', 'evBrand'], ['website', 'evWeb']].forEach(function (a) { if ($(a[1]).value.trim()) ev[a[0]] = $(a[1]).value.trim(); });
+      [['authorized_dealer', 'evDealer'], ['manufacturing_unit', 'evMfg'], ['installation_team', 'evInst'], ['after_sales', 'evAfter']].forEach(function (a) { if ($(a[1]).value) ev[a[0]] = $(a[1]).value === 'Yes'; });
+      row.elevator_extra = ev;
+    }
+    var kyc = { registration_id: regid || null, gst_number: (exempt || !gst) ? null : gst, gst_exempt: exempt, licence_no: licence || null, verified: false };
+    return { errors: [], row: row, kyc: kyc, category: c.row, contacts: { phone: phone, whatsapp: wa || null, address: $('address').value.trim() } };
+  }
+
+  function friendly(message) {
+    var m = String(message || '').toLowerCase();
+    if (m.indexOf('one_per_user') !== -1 || m.indexOf('duplicate key') !== -1) return 'You already have a listing on this account.';
+    if (m.indexOf('row-level security') !== -1) return 'You are not allowed to change this listing right now.';
+    if (m.indexOf('kyc_gst_chk') !== -1) return 'The GST number format is not valid.';
+    if (m.indexOf('pp_pincode_chk') !== -1) return 'The pincode is not valid.';
+    if (m.indexOf('failed to fetch') !== -1 || m.indexOf('network') !== -1) return 'Could not connect. Please check your internet and try again.';
+    return 'Something went wrong: ' + message;
+  }
+
+  $('form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    $('formError').style.display = 'none';
+    var v = validate();
+    if (v.errors.length) {
+      var first = document.querySelector('.f.bad');
+      if (first) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return;
+    }
+    var sb = getClient();
+    var btn = $('submit');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    try {
+      var row = v.row; row.user_id = session.user.id;
+      var id = existingId;
+      async function saveRow() {
+        if (id) { var up = await sb.from('provider_profiles').update(row).eq('id', id); return up; }
+        var ins = await sb.from('provider_profiles').insert(row).select('id').single();
+        if (!ins.error) { id = ins.data.id; existingId = id; }
+        return ins;
+      }
+      var sv = await saveRow();
+      if (sv.error && /contractor_extra|carpenter_extra|elevator_extra/.test(String(sv.error.message))) { delete row.contractor_extra; delete row.carpenter_extra; delete row.elevator_extra; sv = await saveRow(); }  // contractor.sql not run yet: still save the normal listing
+      if (sv.error) throw sv.error;
+      var kycRow = v.kyc; kycRow.provider_id = id;
+      var k = await sb.from('provider_kyc').upsert(kycRow, { onConflict: 'provider_id' });
+      if (k.error) throw k.error;
+      var ct = v.contacts; ct.provider_id = id; ct.email = (session.user && session.user.email) || null;
+      var cr = await sb.from('provider_contacts').upsert(ct, { onConflict: 'provider_id' });
+      if (cr.error) throw cr.error;
+
+      // make the account role match (best effort, does not block the listing)
+      if (profile && profile.role === 'customer') {
+        try { await sb.from('profiles').update({ role: v.category.slug === 'materials' ? 'supplier' : 'provider' }).eq('id', session.user.id); } catch (x) { }
+      }
+      show('done');
+    } catch (err) {
+      $('formError').textContent = friendly(err.message);
+      $('formError').style.display = 'block';
+      $('formError').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    } finally {
+      btn.disabled = false; btn.textContent = 'Submit for approval';
+    }
+  });
+
+  // clear a field's red message as soon as the person edits it
+  document.getElementById('form').addEventListener('input', function (e) {
+    var f = e.target.closest && e.target.closest('.f'); if (!f || !f.classList.contains('bad')) return;
+    f.classList.remove('bad'); var m = f.querySelector('.err'); if (m) m.textContent = '';
+  });
+
+  /* ---------- start up ---------- */
+  var STATUS_TEXT = {
+    pending: ['Your listing is under review', 'Thank you. We are checking your details and will contact you on your phone number if we need anything.', '⏳'],
+    approved: ['Your business is live', 'Customers can now find your business on NIRMAZA.', '✓'],
+    rejected: ['Your listing needs changes', 'We could not approve your listing yet. Please contact NIRMAZA support to fix the details.', '!'],
+    suspended: ['Your listing is paused', 'Your listing is currently paused. Please contact NIRMAZA support.', '!']
+  };
+
+  async function init() {
+    var sb = getClient();
+    if (!sb) { show('gate'); $('gate').querySelector('.sub').textContent = 'The site is not fully set up yet (missing database key). Please tell the site owner.'; return; }
+    var s = await sb.auth.getSession();
+    session = s.data && s.data.session;
+    if (!session) { show('gate'); return; }
+
+    var res = await Promise.all([
+      sb.from('categories').select('id,name,slug').eq('active', true).order('sort_order'),
+      sb.from('districts').select('id,name').eq('active', true).order('name'),
+      sb.from('profiles').select('full_name,phone,role').eq('id', session.user.id).maybeSingle(),
+      sb.from('provider_profiles').select('id,status').eq('user_id', session.user.id).maybeSingle()
+    ]);
+    categories = res[0].data || []; districts = res[1].data || [];
+    profile = res[2].data; var existing = res[3].data;
+
+    if (existing) {
+      var kycRes = await sb.from('provider_kyc').select('provider_id').eq('provider_id', existing.id).maybeSingle();
+      if (kycRes.data) {
+        var t = STATUS_TEXT[existing.status] || STATUS_TEXT.pending;
+        $('statusTitle').textContent = t[0]; $('statusText').textContent = t[1]; $('statusTick').textContent = t[2];
+        show('status'); return;
+      }
+      existingId = existing.id; $('resumeNote').style.display = 'block';
+    }
+
+    var cat = $('category'); cat.innerHTML = '<option value="">Select category</option>';
+    categories.forEach(function (c) { var o = document.createElement('option'); o.value = c.id; o.textContent = c.name; cat.appendChild(o); });
+    var d = $('district'); d.innerHTML = '<option value="">Select district</option>';
+    districts.forEach(function (x) { var o = document.createElement('option'); o.value = x.id; o.textContent = x.name; d.appendChild(o); });
+    chips('areaChips', districts.map(function (x) { return x.name; }), districts.map(function (x) { return x.id; }));
+    chips('evType', ['Elevator Manufacturer', 'Authorized Elevator Dealer', 'Elevator Supplier', 'Elevator Installation Company', 'Elevator Maintenance Company', 'Elevator Modernization Company', 'Independent Elevator Service Provider']); chips('segChips', SEGMENTS); chips('cpAvail', CP_AVAIL); chips('cpMat', CP_MAT); chips('cpQuote', CP_QUOTE); chips('cpTools', CP_TOOLS); chips('cpFac', CP_FAC); CP_TYPES.forEach(function (t) { var o = document.createElement('option'); o.textContent = t; $('cpType').appendChild(o); }); chips('ctChips', CONTRACT_TYPES); chips('eqChips', EQUIP); chips('qsChips', QUALITY); chips('faChips', FACIL); chips('langChips', LANGS); chips('payChips', PAYS);
+
+    if (profile) { if (profile.full_name) $('cname').value = profile.full_name; if (profile.phone) $('phone').value = profile.phone; }
+    var want = new URLSearchParams(location.search).get('category');
+    if (want) { var m = categories.filter(function (c) { return c.slug === want; })[0]; if (m) { cat.value = m.id; onCategory(); } }
+    show('form');
+  }
+
+  init().catch(function (err) {
+    show('gate');
+    $('gate').querySelector('.sub').textContent = 'Something went wrong while loading: ' + (err && err.message ? err.message : err);
+  });
+})();
+</script>
+</body>
+</html>

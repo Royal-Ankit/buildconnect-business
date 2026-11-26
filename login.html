@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in - NIRMAZA</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script>
+<style>
+  :root { --primary:#1769AA; --dark:#103B63; --light:#F4F7FA; --success:#20A477; --accent:#F5A623; --text:#1b2a3a; --muted:#5d6b7a; --line:#dde5ee; --danger:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, Roboto, "Segoe UI", Arial, sans-serif; background: var(--light); color: var(--text); }
+  a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  header { background:#fff; border-bottom:1px solid var(--line); }
+  .bar { max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; }
+  .logo { font-weight:800; font-size:26px; color:var(--primary); letter-spacing:-.5px; }
+  .logo span { color:var(--accent); }
+
+  .wrap { max-width:1000px; margin:30px auto; padding:0 20px; display:grid; grid-template-columns: 1fr 1.1fr; gap:28px; align-items:start; }
+  .side { background: linear-gradient(130deg,#103B63,#1769AA); color:#fff; border-radius:20px; padding:34px; }
+  .side h1 { margin:0 0 10px; font-size:28px; line-height:1.2; }
+  .side p { margin:0 0 20px; opacity:.9; }
+  .side ul { padding:0; margin:0; }
+  .side li { margin:12px 0; list-style:none; padding-left:30px; position:relative; }
+  .side li::before { content:"\2713"; position:absolute; left:0; top:0; width:22px; height:22px; border-radius:50%; background:var(--accent); color:#3d2a00; display:grid; place-items:center; font-weight:800; font-size:13px; }
+
+  .card { background:#fff; border:1px solid var(--line); border-radius:20px; padding:30px; box-shadow:0 2px 10px rgba(16,59,99,.06); }
+  .card h2 { margin:0 0 4px; color:var(--dark); font-size:24px; }
+  .sub { margin:0 0 18px; color:var(--muted); font-size:14px; }
+  label.lbl { display:block; font-weight:600; font-size:14px; margin:14px 0 6px; color:var(--dark); }
+  .field { position:relative; }
+  input[type=email], input[type=password], input[type=text] { width:100%; padding:12px 14px; border:1px solid #c8d3df; border-radius:10px; font-size:16px; background:#fff; }
+  input:focus { outline:2px solid var(--primary); border-color:var(--primary); }
+  input.bad { border-color:var(--danger); }
+  .eye { position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--primary); font-weight:600; cursor:pointer; font-size:13px; padding:6px; }
+  .err { color:var(--danger); font-size:13px; margin-top:5px; }
+  .row { display:flex; justify-content:flex-end; margin-top:10px; font-size:14px; }
+  .btn { width:100%; margin-top:20px; border:none; background:var(--primary); color:#fff; font-size:17px; font-weight:700; padding:14px; border-radius:12px; cursor:pointer; }
+  .btn:disabled { opacity:.6; cursor:wait; }
+  .box { margin-top:16px; padding:12px 14px; border-radius:10px; font-size:14px; display:none; background:#fdecea; color:#8a1c13; }
+  .line { text-align:center; margin-top:18px; font-size:14px; color:var(--muted); }
+
+  .done { display:none; text-align:center; padding:20px 6px; }
+  .done .tick { width:70px; height:70px; border-radius:50%; background:#e6f6f0; color:var(--success); font-size:38px; display:grid; place-items:center; margin:0 auto 14px; }
+  .done p { color:var(--muted); }
+  .btn-link { display:inline-block; margin-top:14px; background:var(--primary); color:#fff; padding:12px 22px; border-radius:10px; }
+
+  #toast { position:fixed; left:50%; bottom:30px; transform:translateX(-50%) translateY(30px); background:#111; color:#fff; padding:12px 20px; border-radius:10px; opacity:0; transition:.25s; font-size:14px; pointer-events:none; }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width: 820px) {
+    .wrap { grid-template-columns:1fr; margin:16px auto; }
+    .side { padding:22px; }
+    .side h1 { font-size:22px; }
+    .card { padding:22px; }
+  }
+</style>
+</head>
+<body>
+
+<header><div class="bar">
+  <a class="logo" href="index.html">NIR<span>MAZA</span></a>
+  <a href="index.html">&larr; Back to home</a>
+</div></header>
+
+<div class="wrap">
+  <aside class="side">
+    <h1>Welcome back</h1>
+    <p>Log in to continue with your projects and enquiries.</p>
+    <ul>
+      <li>Compare quotes from nearby professionals</li>
+      <li>Track your enquiries and orders</li>
+      <li>Manage your business listing</li>
+    </ul>
+  </aside>
+
+  <section class="card">
+    <form id="form" novalidate>
+      <h2>Log in</h2>
+      <p class="sub">Use the email and password you signed up with.</p>
+
+      <label class="lbl" for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+      <div class="err" id="e-email"></div>
+
+      <label class="lbl" for="pw">Password</label>
+      <div class="field"><input id="pw" type="password" autocomplete="current-password" placeholder="Your password"><button type="button" class="eye" id="eye">Show</button></div>
+      <div class="err" id="e-pw"></div>
+
+      <div class="row"><a href="#" id="forgot">Forgot password?</a></div>
+
+      <button class="btn" id="submit" type="submit">Log in</button>
+      <div class="box" id="formError"></div>
+      <div class="line">New to NIRMAZA? <a href="signup.html" id="toSignup">Create an account</a></div>
+    </form>
+
+    <div class="done" id="done">
+      <div class="tick">&#10003;</div>
+      <h2>You are logged in</h2>
+      <p id="doneText">Taking you to the home page...</p>
+      <a class="btn-link" href="index.html">Go to home page</a>
+    </div>
+  </section>
+</div>
+
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  var cfg = window.BUILDCONNECT_CONFIG || {};
+  var client = null;
+  var $ = function (id) { return document.getElementById(id); };
+  function nextUrl() { var n = new URLSearchParams(location.search).get('next'); return n && /^[a-z0-9_-]+\.html(\?[A-Za-z0-9_=&%.-]*)?$/i.test(n) ? n : 'index.html'; }
+
+  function getClient() {
+    if (client) return client;
+    var ready = cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && String(cfg.SUPABASE_ANON_KEY).indexOf('PASTE') !== 0;
+    if (!ready || !window.supabase) return null;
+    client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    return client;
+  }
+
+  function toast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 2400);
+  }
+
+  $('eye').addEventListener('click', function () {
+    var show = $('pw').type === 'password';
+    $('pw').type = show ? 'text' : 'password';
+    $('eye').textContent = show ? 'Hide' : 'Show';
+  });
+
+  $('forgot').addEventListener('click', function (e) {
+    e.preventDefault();
+    toast('Password reset is coming in a later step');
+  });
+
+  function setErr(field, msg) {
+    $('e-' + field).textContent = msg || '';
+    $(field).classList.toggle('bad', !!msg);
+  }
+
+  function friendly(message) {
+    var m = String(message || '').toLowerCase();
+    if (m.indexOf('invalid login') !== -1 || m.indexOf('invalid credentials') !== -1) return 'Email or password is not correct. Please try again.';
+    if (m.indexOf('not confirmed') !== -1) return 'Please confirm your email first. Check your inbox for the confirmation link.';
+    if (m.indexOf('rate limit') !== -1) return 'Too many attempts. Please wait a few minutes and try again.';
+    if (m.indexOf('failed to fetch') !== -1 || m.indexOf('network') !== -1) return 'Could not connect. Please check your internet and try again.';
+    return 'Something went wrong: ' + message;
+  }
+
+  (function () { var n = new URLSearchParams(location.search).get('next'); if (n) $('toSignup').href = 'signup.html?next=' + encodeURIComponent(n); })();
+
+  // If the person is already logged in, skip the form
+  var existing = getClient();
+  if (existing) {
+    existing.auth.getSession().then(function (r) {
+      if (r.data && r.data.session) {
+        $('form').style.display = 'none';
+        $('done').style.display = 'block';
+        $('doneText').textContent = 'You are already logged in.';
+        document.querySelector('#done .btn-link').href = BC.url(nextUrl());
+      }
+    });
+  }
+
+  $('form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    $('formError').style.display = 'none';
+    var email = $('email').value.trim();
+    var pw = $('pw').value;
+
+    var ok = true;
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setErr('email', emailOk ? '' : 'Enter the email you signed up with.'); if (!emailOk) ok = false;
+    setErr('pw', pw ? '' : 'Enter your password.'); if (!pw) ok = false;
+    if (!ok) return;
+
+    var sb = getClient();
+    if (!sb) {
+      $('formError').textContent = 'The site is not fully set up yet (missing database key). Please tell the site owner.';
+      $('formError').style.display = 'block';
+      return;
+    }
+
+    var btn = $('submit');
+    btn.disabled = true; btn.textContent = 'Logging in...';
+    try {
+      var result = await sb.auth.signInWithPassword({ email: email, password: pw });
+      if (result.error) throw result.error;
+      $('form').style.display = 'none';
+      $('done').style.display = 'block';
+      var hasNext = new URLSearchParams(location.search).get('next');
+      var dest = BC.url(nextUrl());
+      if (!hasNext) { try { var u = result.data && result.data.user; var pr = u ? await sb.from('profiles').select('role').eq('id', u.id).maybeSingle() : null; dest = BC.home(pr && pr.data && pr.data.role); } catch (z) { } }
+      setTimeout(function () { location.href = dest; }, 900);
+    } catch (err) {
+      $('formError').textContent = friendly(err.message);
+      $('formError').style.display = 'block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Log in';
+    }
+  });
+})();
+</script>
+</body>
+</html>

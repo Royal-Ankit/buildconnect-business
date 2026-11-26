@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Elevator Products - NIRMAZA</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script>
+<link rel="stylesheet" href="plumbing.css">
+<link rel="stylesheet" href="elevator.css">
+</head>
+<body>
+<header><div class="bar"><a class="logo" href="index.html">NIR<span>MAZA</span></a><a href="dashboard.html">&larr; Business panel</a></div></header>
+<main>
+  <section class="hero"><h1>List Your Elevator Products</h1><p>Add every lift model you sell, with specifications, prices, photos, installation and AMC details. New products are shown to customers after admin approval.</p></section>
+  <div class="card state" id="msg"><div class="center"><h3 id="msgTitle"></h3><p class="sub" id="msgText"></p><div id="msgActs"></div></div></div>
+  <div id="app" class="state">
+    <div id="statusNote"></div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-t="products">My Elevator Products</button><button class="tab" data-t="form" id="tabForm">+ Add New Product</button><button class="tab" data-t="pricing">Manage Pricing</button>
+      <button class="tab" data-t="amc">AMC &amp; Maintenance</button><button class="tab" data-t="enq">Enquiries &amp; Installation Requests</button><button class="tab" data-t="verify">Business Verification</button>
+      <button class="tab" data-t="profile">Business Profile</button><button class="tab" data-t="reviews">Reviews &amp; Ratings</button><button class="tab" data-t="acct">Account Settings</button>
+    </div>
+    <div id="p-products"></div>
+    <div id="p-form" class="hide"></div>
+    <div id="p-pricing" class="hide"></div>
+    <div id="p-amc" class="hide"></div>
+    <div id="p-enq" class="hide"></div>
+    <div id="p-verify" class="hide"></div>
+    <div id="p-profile" class="hide"></div>
+    <div id="p-reviews" class="hide"></div>
+    <div id="p-acct" class="hide"></div>
+  </div>
+</main>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="elevator-common.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); }, esc = EL.esc, num = EL.num;
+  var sb, session, biz, products = [], editing = null, state = { images: [], brochure: null, docs: [] }, verifiedBiz = false;
+
+  function showMsg(t, m, a) { $('app').style.display = 'none'; $('msg').style.display = 'block'; $('msgTitle').textContent = t; $('msgText').textContent = m; $('msgActs').innerHTML = a || ''; }
+  function friendly(m) {
+    m = String(m || ''); var l = m.toLowerCase();
+    if (l.indexOf('elevator_products') !== -1 && (l.indexOf('does not exist') !== -1 || l.indexOf('schema cache') !== -1)) return 'The Elevator database part is not installed yet. The site owner must run elevator.sql in Supabase.';
+    if (l.indexOf('violates check') !== -1) return 'One of the numbers is outside the allowed range. Check capacity, stops, speed and prices.';
+    if (l.indexOf('row-level security') !== -1) return 'You do not have permission to do that. Please log in again.';
+    return m;
+  }
+  function chipset(id, list, sel, disabledNote) {
+    sel = sel || [];
+    return '<div class="chips" id="' + id + '">' + list.map(function (x) { return '<label class="chip"><input type="checkbox" value="' + esc(x) + '"' + (sel.indexOf(x) !== -1 ? ' checked' : '') + '><span>' + esc(x) + '</span></label>'; }).join('') + '</div>';
+  }
+  function checked(id) { return Array.prototype.map.call(document.querySelectorAll('#' + id + ' input:checked'), function (i) { return i.value; }); }
+  function sel(id, list, val, blank) { return '<select id="' + id + '"><option value="">' + (blank || 'Select (optional)') + '</option>' + list.map(function (x) { return '<option' + (x === val ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '</select>'; }
+  function inp(id, label, val, attrs) { return '<div class="f"><label for="' + id + '">' + label + '</label><input id="' + id + '" ' + (attrs || 'type="text"') + ' value="' + esc(val == null ? '' : val) + '"></div>'; }
+  function v(id) { var e = $(id); return e ? e.value.trim() : ''; }
+
+  /* ---------- tabs ---------- */
+  $('tabs').addEventListener('click', function (e) { var b = e.target.closest('.tab'); if (!b) return; if (b.getAttribute('data-t') === 'form') { editing = null; openForm(null); } else show(b.getAttribute('data-t')); });
+  function show(t) {
+    document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-t') === t); });
+    ['products', 'form', 'pricing', 'amc', 'enq', 'verify', 'profile', 'reviews', 'acct'].forEach(function (k) { $('p-' + k).classList.toggle('hide', k !== t); });
+    ({ products: drawProducts, pricing: drawPricing, amc: drawAmc, enq: drawEnq, verify: drawVerify, profile: drawProfile, reviews: drawReviews, acct: drawAcct })[t] && ({ products: drawProducts, pricing: drawPricing, amc: drawAmc, enq: drawEnq, verify: drawVerify, profile: drawProfile, reviews: drawReviews, acct: drawAcct })[t]();
+    window.scrollTo(0, 0);
+  }
+  function badge(p) {
+    if (p.status === 'rejected') return '<span class="pill no">Rejected</span>';
+    if (p.status === 'pending') return '<span class="pill warn">Waiting for admin approval</span>';
+    return p.active ? '<span class="pill ok">Active</span>' : '<span class="pill">Inactive (hidden)</span>';
+  }
+
+  /* ---------- my products ---------- */
+  function drawProducts() {
+    var h = '<div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><div><h3>My Elevator Products</h3><p class="sub">' + products.length + ' product' + (products.length === 1 ? '' : 's') + '</p></div><button class="btn" id="addTop">+ Add Another Product</button></div></div>';
+    if (!products.length) h += '<div class="card center"><h3>No products yet</h3><p class="sub">Add your first lift model so customers can find and compare it.</p></div>';
+    else h += '<div class="grid">' + products.map(function (p) {
+      var line = [p.persons ? p.persons + ' Persons' : (p.load_kg ? p.load_kg + ' kg' : ''), p.stops ? p.stops + ' Stops' : '', (p.install_types[0] || '').split(' (')[0]].filter(Boolean).join(' · ');
+      return '<div class="pcard"><div class="ph"' + (p.images[0] ? ' style="background-image:url(\'' + esc(EL.imgUrl(p.images[0])) + '\')"' : '') + '>' + (p.images[0] ? '' : '🛗') + '</div><div class="bd"><h4>' + esc(p.name) + '</h4><div class="co">' + esc(p.category || 'Elevator') + (p.model_no ? ' · ' + esc(p.model_no) : '') + '</div>' +
+        '<div>' + badge(p) + '</div>' + (p.status === 'rejected' && p.admin_note ? '<div class="note" style="margin:0">Admin note: ' + esc(p.admin_note) + '. Edit and save to send it for review again.</div>' : '') +
+        '<div class="co">' + esc(line) + '</div><div class="price">' + esc(EL.priceText(p)) + '</div><div class="acts"><button data-ed="' + p.id + '" class="main">Edit</button>' +
+        (p.status === 'approved' ? '<button data-tg="' + p.id + '">' + (p.active ? 'Deactivate' : 'Activate') + '</button>' : '') + '<button data-del="' + p.id + '">Delete</button></div></div></div>';
+    }).join('') + '</div>';
+    $('p-products').innerHTML = h;
+    $('addTop').onclick = function () { editing = null; openForm(null); };
+    $('p-products').querySelectorAll('[data-ed]').forEach(function (b) { b.onclick = function () { editing = products.filter(function (x) { return x.id === b.getAttribute('data-ed'); })[0]; openForm(editing); }; });
+    $('p-products').querySelectorAll('[data-tg]').forEach(function (b) { b.onclick = async function () { var p = products.filter(function (x) { return x.id === b.getAttribute('data-tg'); })[0]; var r = await sb.from('elevator_products').update({ active: !p.active }).eq('id', p.id); if (r.error) return alert(friendly(r.error.message)); p.active = !p.active; drawProducts(); }; });
+    $('p-products').querySelectorAll('[data-del]').forEach(function (b) { b.onclick = async function () { if (!confirm('Delete this product? This cannot be undone.')) return; var id = b.getAttribute('data-del'); var r = await sb.from('elevator_products').delete().eq('id', id); if (r.error) return alert(friendly(r.error.message)); products = products.filter(function (x) { return x.id !== id; }); drawProducts(); }; });
+  }
+
+  /* ---------- add / edit form ---------- */
+  function openForm(p) {
+    p = p || {}; var s = p.specs || {}, c = p.compat || {}, pr = p.pricing || {}, si = p.service_info || {}, am = p.amc || {}, sf = p.safety || {}, cb = p.cabin || {};
+    state = { images: (p.images || []).slice(), brochure: p.brochure_path || null, docs: (sf.docs || []).slice() };
+    var h = '<form id="pf" novalidate>';
+    h += '<div class="card sec"><h3>' + (p.id ? 'Edit product' : 'Add Elevator Product') + '</h3><p class="sub">Only the product name is required. Fill in what you know.</p>' +
+      '<div class="two">' + inp('fName', '<span class="req">Product / model name</span>', p.name, 'type="text" maxlength="120"') + inp('fModel', 'Product code / model number', p.model_no, 'type="text" maxlength="60"') + '</div>' +
+      '<div class="two"><div class="f"><label for="fCat">Elevator category</label>' + sel('fCat', EL.CAT_NAMES, p.category) + '</div>' + inp('fBrand', 'Brand name', p.brand || (biz.elevator_extra || {}).brand, 'type="text" maxlength="80"') + '</div>' +
+      '<div class="f"><label for="fDesc">Product description</label><textarea id="fDesc" maxlength="1500">' + esc(p.description || '') + '</textarea></div>' +
+      '<div class="two"><div class="f"><label for="fAvail">Product availability</label>' + sel('fAvail', ['Available', 'Made to Order', 'Discontinued'], p.availability) + '</div>' + inp('fVideo', 'Product video link (optional)', p.video_url, 'type="text" maxlength="300" placeholder="e.g. a YouTube link"') + '</div>' +
+      '<div class="f"><label>Product images (up to 8)</label><input id="fImg" type="file" accept="image/*" multiple><div class="thumbs" id="imgThumbs"></div></div>' +
+      '<div class="f"><label>Product brochure (PDF, up to 5 MB)</label><input id="fBro" type="file" accept="application/pdf"><div class="hint" id="broInfo"></div></div></div>';
+    h += '<div class="card sec"><h3>Technical specifications</h3><div class="three">' +
+      '<div class="f"><label for="sType">Elevator type</label>' + sel('sType', EL.TYPES, s.type) + '</div>' + inp('sPers', 'Passenger capacity (persons)', p.persons, 'type="number" min="1" max="100"') + inp('sLoad', 'Load capacity (kg)', p.load_kg, 'type="number" min="1" max="20000"') + '</div><div class="three">' +
+      inp('sFloors', 'Maximum floors supported', p.max_floors, 'type="number" min="1" max="120"') + inp('sStops', 'Number of stops', p.stops, 'type="number" min="2" max="120"') + inp('sTravel', 'Travel height (metres)', s.travel_m, 'type="number" min="0" step="any"') + '</div><div class="three">' +
+      inp('sSpeed', 'Speed (m/s)', p.speed, 'type="number" min="0.05" max="15" step="any"') + '<div class="f"><label for="sDoor">Door type</label>' + sel('sDoor', ['Automatic', 'Manual'], s.door_type) + '</div><div class="f"><label for="sOpen">Door opening</label>' + sel('sOpen', ['Centre', 'Side'], s.door_open) + '</div></div><div class="three">' +
+      '<div class="f"><label for="sCabin">Cabin type</label>' + sel('sCabin', ['SS', 'Glass', 'Custom'], s.cabin_type) + '</div><div class="f"><label for="sDrive">Drive type</label>' + sel('sDrive', EL.DRIVES, s.drive) + '</div><div class="f"><label for="sPower">Power supply</label>' + sel('sPower', ['Single Phase', 'Three Phase'], s.power) + '</div></div>' +
+      inp('sVolt', 'Operating voltage', s.voltage, 'type="text" maxlength="40" placeholder="e.g. 415 V"') + '</div>';
+    h += '<div class="card sec"><h3>Installation type</h3><p class="sub" id="instNote">Only technically compatible options are shown. Choose the category and drive type above first.</p><div id="instBox"></div></div>';
+    h += '<div class="card sec"><h3>Building compatibility</h3>' + chipset('bBuild', EL.BUILDINGS, p.buildings) +
+      '<div class="chips" style="margin-top:12px"><label class="chip"><input type="checkbox" id="bNew"' + (c.new_construction ? ' checked' : '') + '><span>Suitable for new construction</span></label><label class="chip"><input type="checkbox" id="bOld"' + (c.existing ? ' checked' : '') + '><span>Suitable for existing buildings</span></label></div>' +
+      '<div class="three">' + inp('bShaftW', 'Minimum shaft width (mm)', c.shaft_w, 'type="number" min="0"') + inp('bShaftD', 'Minimum shaft depth (mm)', c.shaft_d, 'type="number" min="0"') + inp('bPit', 'Minimum pit depth (mm)', c.pit, 'type="number" min="0"') + '</div><div class="three">' +
+      inp('bHead', 'Minimum headroom (mm)', c.headroom, 'type="number" min="0"') + '<div class="f"><label for="bMach">Machine room</label>' + sel('bMach', ['Not required', 'Required', 'Optional'], c.machine_room) + '</div></div></div>';
+    h += '<div class="card sec"><h3>Product pricing</h3><div class="three">' + inp('pMin', 'Starting price (₹)', p.price_min, 'type="number" min="0"') + inp('pMax', 'Maximum price (₹)', p.price_max, 'type="number" min="0"') +
+      '<div class="f"><label for="pType">Price type</label>' + sel('pType', ['Fixed', 'Starting From', 'Custom Quote'], pr.type) + '</div></div><div class="three">' +
+      '<div class="f"><label for="pInst">Installation charges</label>' + sel('pInst', ['Included', 'Extra'], pr.install_mode) + '</div>' + inp('pInstAmt', 'Installation amount if extra (₹)', pr.install_amt, 'type="number" min="0"') + '<div class="f"><label for="pGst">GST</label>' + sel('pGst', ['Included', 'Extra'], pr.gst_mode) + '</div></div><div class="three">' +
+      '<div class="f"><label for="pCivil">Civil work</label>' + sel('pCivil', ['Included', 'Excluded'], pr.civil_mode) + '</div>' + inp('pCivilAmt', 'Civil work estimate (₹, optional)', pr.civil_amt, 'type="number" min="0"') + '<div class="f"><label for="pTrans">Transportation</label>' + sel('pTrans', ['Included', 'Extra'], pr.transport_mode) + '</div></div><div class="three">' +
+      inp('pTransAmt', 'Transport amount if extra (₹)', pr.transport_amt, 'type="number" min="0"') + inp('pCust', 'Customisation charges (₹, optional)', pr.custom_amt, 'type="number" min="0"') + '</div>' +
+      '<label class="inline"><input type="checkbox" id="pHide"' + (p.hide_price ? ' checked' : '') + '> Hide product price – customers will see "Contact for quotation"</label></div>';
+    h += '<div class="card sec"><h3>Installation &amp; commissioning services</h3>' + chipset('iServ', EL.COMMISSION, p.services) + '<div class="two">' + inp('iTime', 'Installation timeline', si.timeline, 'type="text" maxlength="80" placeholder="e.g. 30–45 days after shaft is ready"') + inp('iWar', 'Installation warranty', si.warranty, 'type="text" maxlength="80" placeholder="e.g. 1 year"') + '</div></div>';
+    h += '<div class="card sec"><h3>Maintenance &amp; after-sales</h3>' + chipset('mServ', EL.AMC_SERVICES, am.services) + '<div class="three">' + inp('mFree', 'Free service period', am.free_service, 'type="text" maxlength="60" placeholder="e.g. 12 months"') + inp('mWar', 'Warranty duration', am.warranty, 'type="text" maxlength="60"') + inp('mAmc', 'AMC starting price (₹ per year)', am.amc_price, 'type="number" min="0"') + '</div><div class="three">' +
+      inp('mResp', 'Service response time', am.response, 'type="text" maxlength="60" placeholder="e.g. within 4 hours"') + inp('mLoc', 'Service centre locations', am.locations, 'type="text" maxlength="160"') + inp('mTech', 'Number of maintenance technicians', am.technicians, 'type="number" min="0"') + '</div></div>';
+    h += '<div class="card sec"><h3>Cabin customisation (optional)</h3><p class="sub">What can the customer choose?</p>' + ['finishes', 'flooring', 'ceiling', 'lighting', 'handrails', 'panels'].map(function (k) { return '<div class="f"><label>' + ({ finishes: 'Cabin finishes', flooring: 'Flooring', ceiling: 'Ceiling', lighting: 'Lighting', handrails: 'Handrails', panels: 'Control panels' })[k] + '</label>' + chipset('cb_' + k, EL.CABIN[k], cb[k]) + '</div>'; }).join('') + '</div>';
+    h += '<div class="card sec"><h3>Safety &amp; compliance</h3><p class="sub">Safety features are shown to customers as stated by you. <b>Standards, licences and certificates are shown as "Verified" only after an admin checks your documents.</b></p>' +
+      '<div class="f"><label>Safety features</label>' + chipset('sfFeat', EL.SAFETY, sf.features) + '</div>' + inp('sfStd', 'Applicable BIS / IS standards', sf.standards, 'type="text" maxlength="160" placeholder="e.g. IS 14665"') + inp('sfLic', 'Applicable lift licence / approval details', sf.licence, 'type="text" maxlength="160"') +
+      '<div class="f"><label>Compliance you claim</label>' + chipset('sfClaims', EL.CLAIMS, sf.claims) + '</div>' +
+      '<div class="f"><label>Upload certificates / approvals (PDF or image, up to 5 MB each, kept private)</label><div class="two"><div>' + sel('docKind', EL.CLAIMS, '', 'Which document is this?') + '</div><div><input id="docFile" type="file" accept="application/pdf,image/*" multiple></div></div><div id="docList" class="thumbs"></div>' +
+      '<div class="hint">Only you and the NIRMAZA admin can open these files.</div></div></div>';
+    h += '<div class="card"><button class="btn" id="saveBtn" type="submit">' + (p.id ? 'Save changes' : 'Submit product for approval') + '</button> <button class="btn ghost" id="cancelBtn" type="button">Cancel</button><div class="box" id="fErr"></div></div></form>';
+    $('p-form').innerHTML = h;
+    show('form'); document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-t') === 'form'); });
+    $('tabForm').textContent = p.id ? 'Edit Product' : '+ Add New Product';
+    drawInst(p.install_types || []); drawThumbs(); drawDocs();
+    $('fCat').onchange = $('sDrive').onchange = function () { drawInst(checked('instBox')); };
+    $('cancelBtn').onclick = function () { show('products'); };
+    $('fImg').onchange = onImages; $('fBro').onchange = onBrochure; $('docFile').onchange = onDocs;
+    $('pf').onsubmit = save;
+  }
+  function drawInst(keep) {
+    var cat = v('fCat'), drv = v('sDrive'), list = EL.compatibleInstall(cat, drv);
+    $('instBox').innerHTML = chipset('instBox_c', list, (keep || []).filter(function (x) { return list.indexOf(x) !== -1; }));
+    $('instBox').firstChild.id = 'instBox2';
+    $('instNote').textContent = (cat || drv) ? 'Showing only installation types that fit ' + [cat, drv && (drv + ' drive')].filter(Boolean).join(' with ') + '.' : 'Showing all types. Choose the elevator category and drive type to see only compatible options.';
+  }
+  function checkedInst() { return Array.prototype.map.call(document.querySelectorAll('#instBox input:checked'), function (i) { return i.value; }); }
+  function drawThumbs() {
+    $('imgThumbs').innerHTML = state.images.map(function (p, i) { return '<div class="th" style="background-image:url(\'' + esc(p.indexOf('blob:') === 0 ? p : EL.imgUrl(p)) + '\')"><button type="button" data-ri="' + i + '" title="Remove">&times;</button></div>'; }).join('');
+    $('imgThumbs').querySelectorAll('[data-ri]').forEach(function (b) { b.onclick = function () { state.images.splice(Number(b.getAttribute('data-ri')), 1); drawThumbs(); }; });
+    $('broInfo').innerHTML = state.brochure ? 'Brochure attached. <a href="#" id="broDel">Remove</a>' : '';
+    if ($('broDel')) $('broDel').onclick = function (e) { e.preventDefault(); state.brochure = null; $('broInfo').textContent = ''; };
+  }
+  function drawDocs() {
+    $('docList').innerHTML = state.docs.map(function (d, i) { return '<span class="pill">' + esc(d.claim || 'Document') + ': ' + esc(d.name) + ' <a href="#" data-rd="' + i + '">remove</a></span>'; }).join('');
+    $('docList').querySelectorAll('[data-rd]').forEach(function (b) { b.onclick = function (e) { e.preventDefault(); state.docs.splice(Number(b.getAttribute('data-rd')), 1); drawDocs(); }; });
+  }
+  var pendingImgs = [], pendingBro = null, pendingDocs = [];
+  function onImages() {
+    var files = Array.prototype.slice.call($('fImg').files);
+    files.forEach(function (f) { if (state.images.length >= 8) return; var u = URL.createObjectURL(f); pendingImgs.push({ url: u, file: f }); state.images.push(u); });
+    $('fImg').value = ''; drawThumbs();
+  }
+  function onBrochure() { var f = $('fBro').files[0]; if (!f) return; if (f.size > 5 * 1024 * 1024 || f.type !== 'application/pdf') { alert('The brochure must be a PDF of 5 MB or less.'); $('fBro').value = ''; return; } pendingBro = f; state.brochure = 'pending'; $('broInfo').innerHTML = 'Selected: ' + esc(f.name); }
+  function onDocs() {
+    var kind = v('docKind'); var files = Array.prototype.slice.call($('docFile').files);
+    if (files.length && !kind) { alert('First choose which document this is.'); $('docFile').value = ''; return; }
+    files.forEach(function (f) { if (f.size > 5 * 1024 * 1024) { alert(f.name + ' is bigger than 5 MB.'); return; } pendingDocs.push({ claim: kind, file: f }); state.docs.push({ claim: kind, name: f.name, path: null, _p: true }); });
+    $('docFile').value = ''; drawDocs();
+  }
+  function compress(file, max) {
+    return new Promise(function (res, rej) { var img = new Image(), u = URL.createObjectURL(file); img.onload = function () { var r = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = Math.round(img.width * r); c.height = Math.round(img.height * r); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); c.toBlob(function (b) { URL.revokeObjectURL(u); b ? res(b) : rej(new Error('image')); }, 'image/jpeg', 0.82); }; img.onerror = function () { rej(new Error('Could not read the image')); }; img.src = u; });
+  }
+  function err(m) { $('fErr').textContent = m; $('fErr').style.display = 'block'; $('fErr').scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+  async function save(e) {
+    e.preventDefault(); $('fErr').style.display = 'none';
+    var name = v('fName'); if (name.length < 3) return err('Please enter the product / model name (at least 3 characters).');
+    var persons = num(v('sPers')), load = num(v('sLoad')), floors = num(v('sFloors')), stops = num(v('sStops')), speed = num(v('sSpeed')), pmin = num(v('pMin')), pmax = num(v('pMax'));
+    var allNums = ['sPers', 'sLoad', 'sFloors', 'sStops', 'sTravel', 'sSpeed', 'bShaftW', 'bShaftD', 'bPit', 'bHead', 'pMin', 'pMax', 'pInstAmt', 'pCivilAmt', 'pTransAmt', 'pCust', 'mAmc', 'mTech'];
+    for (var i = 0; i < allNums.length; i++) { var n = num(v(allNums[i])); if (n != null && n < 0) return err('Numbers cannot be negative.'); }
+    [['sPers', persons], ['sLoad', load], ['sFloors', floors], ['sStops', stops]].forEach(function (a) { if (a[1] != null && a[1] % 1) err('Use whole numbers for persons, load, floors and stops.'); });
+    if ($('fErr').style.display === 'block') return;
+    if (persons != null && (persons < 1 || persons > 100)) return err('Passenger capacity must be between 1 and 100.');
+    if (stops != null && stops < 2) return err('A lift needs at least 2 stops.');
+    if (floors != null && stops != null && stops > floors + 1) return err('Number of stops (' + stops + ') cannot be more than the floors supported (' + floors + ') plus one.');
+    if (persons != null && load != null && load < persons * 68) return err('Load capacity looks too low for ' + persons + ' persons (about 68 kg per person is the minimum). Please check.');
+    if (speed != null && (speed < 0.05 || speed > 15)) return err('Speed must be between 0.05 and 15 m/s.');
+    if (pmin != null && pmax != null && pmax < pmin) return err('Maximum price cannot be lower than the starting price.');
+    var vid = v('fVideo'); if (vid && !/^https?:\/\//i.test(vid)) return err('The video link must start with http:// or https://');
+    var btn = $('saveBtn'); btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      var uid = session.user.id, ts = Date.now(), images = [];
+      var k = 0;
+      for (var j = 0; j < state.images.length; j++) {
+        var cur = state.images[j];
+        if (cur.indexOf('blob:') === 0) {
+          var pi = pendingImgs.filter(function (x) { return x.url === cur; })[0]; if (!pi) continue;
+          var blob = await compress(pi.file, 1400), path = uid + '/elev-' + ts + '-' + (k++) + '.jpg';
+          var up = await sb.storage.from('portfolio').upload(path, blob, { contentType: 'image/jpeg' }); if (up.error) throw up.error; images.push(path);
+        } else images.push(cur);
+      }
+      var bro = state.brochure;
+      if (bro === 'pending' && pendingBro) { var bp = uid + '/elev-brochure-' + ts + '.pdf'; var ub = await sb.storage.from('portfolio').upload(bp, pendingBro, { contentType: 'application/pdf' }); if (ub.error) throw ub.error; bro = bp; } else if (bro === 'pending') bro = null;
+      var docs = [], dk = 0;
+      for (var d = 0; d < state.docs.length; d++) {
+        var dd = state.docs[d];
+        if (dd._p) { var pf = pendingDocs.filter(function (x) { return x.file.name === dd.name && x.claim === dd.claim; })[0]; if (!pf) continue; var ext = (pf.file.name.split('.').pop() || 'pdf').toLowerCase().replace(/[^a-z0-9]/g, ''), dp = uid + '/doc-' + ts + '-' + (dk++) + '.' + ext; var ud = await sb.storage.from('elevator-docs').upload(dp, pf.file, { contentType: pf.file.type || 'application/octet-stream' }); if (ud.error) throw ud.error; docs.push({ claim: dd.claim, name: dd.name, path: dp }); }
+        else docs.push({ claim: dd.claim, name: dd.name, path: dd.path });
+      }
+      var row = {
+        provider_id: biz.id, name: name, model_no: v('fModel') || null, brand: v('fBrand') || null, category: v('fCat') || null, description: v('fDesc') || null, availability: v('fAvail') || null,
+        persons: persons, load_kg: load, stops: stops, max_floors: floors, speed: speed, price_min: pmin, price_max: pmax, hide_price: $('pHide').checked,
+        install_types: checkedInst(), buildings: checked('bBuild'),
+        specs: clean({ type: v('sType'), travel_m: num(v('sTravel')), door_type: v('sDoor'), door_open: v('sOpen'), cabin_type: v('sCabin'), drive: v('sDrive'), power: v('sPower'), voltage: v('sVolt') }),
+        compat: clean({ new_construction: $('bNew').checked || null, existing: $('bOld').checked || null, shaft_w: num(v('bShaftW')), shaft_d: num(v('bShaftD')), pit: num(v('bPit')), headroom: num(v('bHead')), machine_room: v('bMach') }),
+        pricing: clean({ type: v('pType'), install_mode: v('pInst'), install_amt: num(v('pInstAmt')), gst_mode: v('pGst'), civil_mode: v('pCivil'), civil_amt: num(v('pCivilAmt')), transport_mode: v('pTrans'), transport_amt: num(v('pTransAmt')), custom_amt: num(v('pCust')) }),
+        services: checked('iServ'), service_info: clean({ timeline: v('iTime'), warranty: v('iWar') }),
+        amc: clean({ services: checked('mServ'), free_service: v('mFree'), warranty: v('mWar'), amc_price: num(v('mAmc')), response: v('mResp'), locations: v('mLoc'), technicians: num(v('mTech')) }),
+        cabin: { finishes: checked('cb_finishes'), flooring: checked('cb_flooring'), ceiling: checked('cb_ceiling'), lighting: checked('cb_lighting'), handrails: checked('cb_handrails'), panels: checked('cb_panels') },
+        safety: { features: checked('sfFeat'), standards: v('sfStd'), licence: v('sfLic'), claims: checked('sfClaims'), docs: docs },
+        images: images, brochure_path: bro, video_url: vid || null
+      };
+      var r = editing ? await sb.from('elevator_products').update(row).eq('id', editing.id).select().single() : await sb.from('elevator_products').insert(row).select().single();
+      if (r.error) throw r.error;
+      pendingImgs = []; pendingBro = null; pendingDocs = [];
+      await loadProducts(); editing = null; show('products');
+      $('p-products').insertAdjacentHTML('afterbegin', '<div class="card" style="background:#e6f6f0;border-color:#bfe8d8">Saved. ' + (r.data.status === 'approved' ? 'Your changes are live.' : 'The product will appear for customers after admin approval.') + '</div>');
+    } catch (ex) { err(friendly(ex.message || String(ex))); }
+    finally { btn.disabled = false; btn.textContent = editing ? 'Save changes' : 'Submit product for approval'; }
+  }
+  function clean(o) { var r = {}; Object.keys(o).forEach(function (k) { var x = o[k]; if (x !== '' && x != null && !(Array.isArray(x) && !x.length)) r[k] = x; }); return r; }
+
+  /* ---------- other tabs ---------- */
+  function drawPricing() {
+    var h = '<div class="card"><h3>Manage Product Pricing</h3><p class="sub">Quick price changes. For installation, GST and other charges, use Edit on the product.</p>';
+    if (!products.length) h += '<p class="sub">Add a product first.</p>';
+    else h += '<table class="t"><tr><th>Product</th><th>Starting ₹</th><th>Maximum ₹</th><th>Hide price</th><th></th></tr>' + products.map(function (p) { return '<tr><td><b>' + esc(p.name) + '</b><br><small>' + esc(EL.priceText(p)) + '</small></td><td><input type="number" min="0" data-k="min" data-id="' + p.id + '" value="' + (p.price_min == null ? '' : p.price_min) + '"></td><td><input type="number" min="0" data-k="max" data-id="' + p.id + '" value="' + (p.price_max == null ? '' : p.price_max) + '"></td><td><input type="checkbox" data-k="hide" data-id="' + p.id + '"' + (p.hide_price ? ' checked' : '') + '></td><td><button class="btn sm" data-sv="' + p.id + '">Save</button></td></tr>'; }).join('') + '</table><div class="err" id="prErr"></div>';
+    $('p-pricing').innerHTML = h + '</div>';
+    $('p-pricing').querySelectorAll('[data-sv]').forEach(function (b) { b.onclick = async function () {
+      var id = b.getAttribute('data-sv'), g = function (k) { return document.querySelector('[data-id="' + id + '"][data-k="' + k + '"]'); };
+      var mn = num(g('min').value), mx = num(g('max').value); if ((mn != null && mn < 0) || (mx != null && mx < 0) || (mn != null && mx != null && mx < mn)) { $('prErr').textContent = 'Check the prices: the maximum cannot be lower than the starting price.'; return; }
+      var r = await sb.from('elevator_products').update({ price_min: mn, price_max: mx, hide_price: g('hide').checked }).eq('id', id); if (r.error) { $('prErr').textContent = friendly(r.error.message); return; }
+      $('prErr').textContent = ''; var p = products.filter(function (x) { return x.id === id; })[0]; p.price_min = mn; p.price_max = mx; p.hide_price = g('hide').checked; b.textContent = 'Saved ✓'; setTimeout(function () { b.textContent = 'Save'; }, 1500); }; });
+  }
+  function drawAmc() {
+    var h = '<div class="card"><h3>AMC &amp; Maintenance Services</h3><p class="sub">How customers see your maintenance offer for each product. Edit a product to change it.</p>';
+    h += !products.length ? '<p class="sub">Add a product first.</p>' : '<table class="t"><tr><th>Product</th><th>Services</th><th>Free service / warranty</th><th>AMC from</th><th>Response</th><th>Technicians</th></tr>' + products.map(function (p) { var a = p.amc || {}; return '<tr><td><b>' + esc(p.name) + '</b></td><td>' + esc((a.services || []).join(', ') || '-') + '</td><td>' + esc([a.free_service, a.warranty].filter(Boolean).join(' / ') || '-') + '</td><td>' + (a.amc_price ? EL.inr(a.amc_price) + '/yr' : '-') + '</td><td>' + esc(a.response || '-') + '</td><td>' + esc(a.technicians != null ? a.technicians : '-') + '</td></tr>'; }).join('') + '</table>';
+    $('p-amc').innerHTML = h + '</div>';
+  }
+  function drawEnq() { $('p-enq').innerHTML = '<div class="card"><h3>Customer Enquiries &amp; Installation Requests</h3><p class="sub">Quotation requests for your lifts arrive in your business panel, where you can <b>Accept</b> or <b>Reject</b> them or ask for more details. A customer’s phone number is shared only after you accept.</p><a class="btn-link" href="dashboard.html">Open my enquiries</a></div>'; }
+  function drawReviews() { $('p-reviews').innerHTML = '<div class="card"><h3>Reviews &amp; Ratings</h3><p class="sub">No reviews yet. Customer reviews will appear here once reviews are switched on for NIRMAZA.</p></div>'; }
+  function drawAcct() { $('p-acct').innerHTML = '<div class="card"><h3>Account Settings</h3><p class="sub">Change your contact details, working hours and accepting-projects switch in your business panel.</p><a class="btn-link" href="dashboard.html">Open business panel</a></div>'; }
+  function drawVerify() {
+    var h = '<div class="card"><h3>Business Verification</h3><p class="sub">Business: ' + (verifiedBiz ? '<span class="pill ok">✓ Verified by NIRMAZA</span>' : '<span class="pill warn">Not verified yet</span>') + ' &nbsp; Listing: <span class="pill">' + esc(biz.status) + '</span></p>' +
+      '<p class="sub">Compliance claims on your products (BIS/IS standards, lift licence, test certificates, manufacturer authorisation) are shown to customers only after an admin checks your uploaded documents.</p>';
+    h += !products.length ? '' : '<table class="t"><tr><th>Product</th><th>Claimed</th><th>Verified by admin</th></tr>' + products.map(function (p) { var sf = p.safety || {}; return '<tr><td><b>' + esc(p.name) + '</b></td><td>' + esc((sf.claims || []).join(', ') || '-') + '<br><small>' + ((sf.docs || []).length) + ' file(s) uploaded</small></td><td>' + ((p.verified_claims || []).length ? EL.chipsHtml(p.verified_claims).replace(/class="pill"/g, 'class="pill ok"') : '<small>None yet</small>') + '</td></tr>'; }).join('') + '</table>';
+    $('p-verify').innerHTML = h + '</div>';
+  }
+  function drawProfile() {
+    var x = biz.elevator_extra || {};
+    var yn = function (k) { return x[k] === true ? 'Yes' : x[k] === false ? 'No' : ''; };
+    $('p-profile').innerHTML = '<div class="card"><h3>Business Profile</h3><p class="sub">Company details shown on your profile. Use the business panel for contact details and working hours.</p><form id="bpf">' +
+      '<div class="f"><label>Kind of elevator business</label>' + chipset('evKinds', ['Elevator Manufacturer', 'Authorized Elevator Dealer', 'Elevator Supplier', 'Elevator Installation Company', 'Elevator Maintenance Company', 'Elevator Modernization Company', 'Independent Elevator Service Provider'], x.business_kinds) + '</div>' +
+      '<div class="two">' + inp('evBrand', 'Brand / manufacturer', x.brand, 'type="text" maxlength="80"') + inp('evWeb', 'Website', x.website, 'type="text" maxlength="200"') + '</div><div class="two">' +
+      '<div class="f"><label>Authorised dealer</label>' + sel('evDealer', ['Yes', 'No'], yn('authorized_dealer')) + '</div><div class="f"><label>Own manufacturing unit</label>' + sel('evMfg', ['Yes', 'No'], yn('manufacturing_unit')) + '</div><div class="f"><label>Own installation team</label>' + sel('evInst', ['Yes', 'No'], yn('installation_team')) + '</div><div class="f"><label>After-sales service</label>' + sel('evAfter', ['Yes', 'No'], yn('after_sales')) + '</div></div>' +
+      '<div class="f"><label>Company profile (PDF, up to 5 MB)</label><input type="file" id="evPdf" accept="application/pdf">' + (x.profile_pdf ? '<div class="hint">A company profile is attached. Choosing a new file replaces it.</div>' : '') + '</div>' +
+      '<button class="btn" type="submit" id="bpSave">Save profile</button><div class="box" id="bpErr"></div></form></div>';
+    $('bpf').onsubmit = async function (e) {
+      e.preventDefault(); $('bpErr').style.display = 'none'; var b = $('bpSave'); b.disabled = true;
+      try {
+        var ev = { business_kinds: checked('evKinds'), profile_pdf: x.profile_pdf };
+        [['brand', 'evBrand'], ['website', 'evWeb']].forEach(function (a) { if (v(a[1])) ev[a[0]] = v(a[1]); });
+        [['authorized_dealer', 'evDealer'], ['manufacturing_unit', 'evMfg'], ['installation_team', 'evInst'], ['after_sales', 'evAfter']].forEach(function (a) { if (v(a[1])) ev[a[0]] = v(a[1]) === 'Yes'; });
+        var f = $('evPdf').files[0]; if (f) { if (f.type !== 'application/pdf' || f.size > 5 * 1024 * 1024) throw new Error('The company profile must be a PDF of 5 MB or less.'); var path = session.user.id + '/company-profile-' + Date.now() + '.pdf'; var u = await sb.storage.from('portfolio').upload(path, f, { contentType: 'application/pdf' }); if (u.error) throw u.error; ev.profile_pdf = path; }
+        if (!ev.profile_pdf) delete ev.profile_pdf;
+        var r = await sb.from('provider_profiles').update({ elevator_extra: ev }).eq('id', biz.id); if (r.error) throw r.error;
+        biz.elevator_extra = ev; b.textContent = 'Saved ✓'; setTimeout(function () { b.textContent = 'Save profile'; }, 1500);
+      } catch (ex) { $('bpErr').textContent = /elevator_extra/.test(ex.message || '') ? 'The Elevator database part is not installed yet. The site owner must run elevator.sql.' : (ex.message || String(ex)); $('bpErr').style.display = 'block'; }
+      b.disabled = false;
+    };
+  }
+
+  async function loadProducts() {
+    var r = await sb.from('elevator_products').select('*').eq('provider_id', biz.id).order('created_at', { ascending: false });
+    if (r.error) throw r.error; products = r.data || [];
+  }
+  async function init() {
+    sb = EL.getClient(); if (!sb) return showMsg('Site not fully set up', 'Missing database key. Please tell the site owner.');
+    var s = await sb.auth.getSession(); session = s.data && s.data.session;
+    if (!session) return showMsg('Please log in first', 'Log in with the account you used to register your elevator business.', '<a class="btn-link" href="login.html?next=elevator-products.html">Log in</a>');
+    var cr = await sb.from('categories').select('id,slug').eq('slug', 'elevator').maybeSingle(); var cat = cr.data;
+    if (!cat) return showMsg('Elevator is not set up yet', 'Please tell the site owner.');
+    var br = await sb.from('provider_profiles').select('*').eq('user_id', session.user.id).eq('category_id', cat.id).limit(1);
+    biz = (br.data || [])[0];
+    if (!biz) return showMsg('Register your elevator business first', 'You need an elevator business listing before you can add products. It takes a few minutes and everything except the basics is optional.', '<a class="btn-link" href="business.html?category=elevator">+ Register Your Elevator Business</a>');
+    try { var vr = await sb.rpc('verified_providers'); verifiedBiz = !vr.error && (vr.data || []).indexOf(biz.id) !== -1; } catch (e) { }
+    try { await loadProducts(); } catch (e) { return showMsg('Could not load your products', friendly(e.message)); }
+    $('statusNote').innerHTML = biz.status === 'approved' ? '' : '<div class="note" style="margin:0 0 14px">Your business listing is <b>' + esc(biz.status) + '</b>. You can prepare products now. Customers see them only after your business and each product are approved.</div>';
+    $('app').style.display = 'block'; drawProducts();
+  }
+  init().catch(function (e) { showMsg('Something went wrong', e && e.message ? e.message : String(e)); });
+})();
+</script>
+</body>
+</html>
