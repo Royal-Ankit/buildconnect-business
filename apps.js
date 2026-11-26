@@ -2,8 +2,8 @@
    AFTER you create both websites on Vercel, paste their addresses below (see the guide). Leave them empty until then. */
 window.BC_APPS = {
   me: 'business',                       // this website: 'customer' or 'business' (already set for you)
-  customer: '',                       // example: 'https://buildconnect.vercel.app'
-  business: ''                        // example: 'https://buildconnect-business.vercel.app'
+  customer: 'https://buildconnect-site.vercel.app',
+  business: 'https://buildconnect-business.vercel.app'
 };
 (function () {
   'use strict';
