@@ -1,8 +1,8 @@
-/* NIRMAZA themes: "sand" (warm, default) and "aurora" (colourful glass). The visitor chooses with the Theme button; the choice is remembered on this device. */
+/* NIRMAZA themes: "fresh" (clean light, default) and "sand" (warm). The visitor chooses with the Theme button; the choice is remembered on this device. */
 (function () {
   'use strict';
-  var KEY = 'nz_theme', DEF = 'sand', cur = DEF;
-  try { var v = localStorage.getItem(KEY); if (v === 'sand' || v === 'aurora') cur = v; } catch (e) { }
+  var KEY = 'nz_theme', DEF = 'fresh', cur = DEF;
+  try { var v = localStorage.getItem(KEY); if (v === 'sand' || v === 'fresh') cur = v; } catch (e) { }
   document.documentElement.setAttribute('data-theme', cur);
 
   var css = '' +
@@ -16,17 +16,18 @@
   'html[data-theme="sand"] .cat{background:#fff!important;color:#7c2d12!important;border:2px solid #e9dcc7;border-radius:26px 26px 26px 8px;box-shadow:0 6px 16px rgba(124,45,18,.08)}' +
   'html[data-theme="sand"] .cat::after{background:#fde7d3}' +
   'html[data-theme="sand"] .cat .ico{background:#fde7d3}html[data-theme="sand"] .cat .go{background:#c2410c;color:#fff}' +
-  /* ---------- C: aurora glass ---------- */
-  'html[data-theme="aurora"]{--primary:#4f46e5;--dark:#312e81;--light:transparent;--accent:#f472b6;--text:#1e1b4b;--muted:#5b5b8a;--line:rgba(255,255,255,.55)}' +
-  'html[data-theme="aurora"] body{background:radial-gradient(circle at 15% 8%,#a78bfa,transparent 45%),radial-gradient(circle at 90% 35%,#38bdf8,transparent 45%),radial-gradient(circle at 25% 100%,#f472b6,transparent 50%),#4338ca;background-attachment:fixed;min-height:100vh}' +
-  'html[data-theme="aurora"] header{background:rgba(255,255,255,.28);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.45)}' +
-  'html[data-theme="aurora"] header a:not(.btn){color:#fff}html[data-theme="aurora"] main>.sub,html[data-theme="aurora"] main>p{color:#fff}' +
-  'html[data-theme="aurora"] .logo,html[data-theme="aurora"] .logo span{color:#fff}' +
-  'html[data-theme="aurora"] .hero{background:rgba(255,255,255,.18)!important;border:1px solid rgba(255,255,255,.5);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:28px}' +
-  'html[data-theme="aurora"] .card,html[data-theme="aurora"] .tile,html[data-theme="aurora"] .biz,html[data-theme="aurora"] .pcard,html[data-theme="aurora"] .mtile,html[data-theme="aurora"] .stat,html[data-theme="aurora"] .req-item,html[data-theme="aurora"] .steps div{background:rgba(255,255,255,.86)!important;border:1px solid rgba(255,255,255,.7)!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:24px;box-shadow:0 10px 30px rgba(30,27,75,.18)}' +
-  'html[data-theme="aurora"] .btn:not(.ghost):not(.alt){background:linear-gradient(135deg,#6366f1,#ec4899)}' +
-  'html[data-theme="aurora"] .cat{background:rgba(255,255,255,.2)!important;border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}' +
-  'html[data-theme="aurora"] .cat::after{background:rgba(255,255,255,.25)}' +
+  /* ---------- Fresh: clean light, navy and green ---------- */
+  'html[data-theme="fresh"]{--primary:#16a34a;--dark:#0f1b3d;--light:#f3f5fa;--accent:#16a34a;--text:#0f1b3d;--muted:#6b7694;--line:#e6eaf3;--success:#16a34a}' +
+  'html[data-theme="fresh"] header{background:#fff;border-bottom:0;box-shadow:0 4px 18px rgba(15,27,61,.06)}' +
+  'html[data-theme="fresh"] .logo{color:#0f1b3d}html[data-theme="fresh"] .logo span{color:#16a34a}' +
+  'html[data-theme="fresh"] .hero{background:linear-gradient(135deg,#0b1a3c,#1d3b8b)!important;border-radius:28px;box-shadow:0 14px 34px rgba(15,27,61,.25)}' +
+  'html[data-theme="fresh"] .card,html[data-theme="fresh"] .tile,html[data-theme="fresh"] .biz,html[data-theme="fresh"] .pcard,html[data-theme="fresh"] .mtile,html[data-theme="fresh"] .stat,html[data-theme="fresh"] .req-item,html[data-theme="fresh"] .steps div{border:1px solid #edf0f7!important;border-radius:22px;box-shadow:0 8px 24px rgba(15,27,61,.07)}' +
+  'html[data-theme="fresh"] .btn:not(.ghost):not(.alt){background:#16a34a;color:#fff;border-radius:14px}' +
+  'html[data-theme="fresh"] .btn.ghost{background:#e8f8ee;color:#15803d}' +
+  'html[data-theme="fresh"] .cat{background:#fff!important;color:#0f1b3d!important;border:1px solid #edf0f7;border-radius:24px;box-shadow:0 8px 24px rgba(15,27,61,.08)}' +
+  'html[data-theme="fresh"] .cat::after{background:color-mix(in srgb,var(--c1) 14%,#fff)}' +
+  'html[data-theme="fresh"] .cat .ico{background:color-mix(in srgb,var(--c1) 16%,#fff)}' +
+  'html[data-theme="fresh"] .cat .go{background:#e8f8ee;color:#15803d}' +
   /* theme button */
   '#nzTheme{position:fixed;right:14px;bottom:76px;z-index:9999;font-family:inherit}' +
   '#nzTheme>button{border:0;border-radius:999px;padding:10px 14px;font-weight:800;font-size:14px;cursor:pointer;background:#1c1f26;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3)}' +
@@ -42,8 +43,8 @@
     if (document.getElementById('nzTheme')) return;
     box = document.createElement('div'); box.id = 'nzTheme';
     box.innerHTML = '<div class="pop">' +
-      '<button class="opt" data-t="sand"><span class="sw" style="background:linear-gradient(135deg,#f6efe4,#c2410c)"></span>Warm Sand<br></button>' +
-      '<button class="opt" data-t="aurora"><span class="sw" style="background:linear-gradient(135deg,#a78bfa,#38bdf8,#f472b6)"></span>Aurora Glass</button></div>' +
+      '<button class="opt" data-t="fresh"><span class="sw" style="background:linear-gradient(135deg,#0f1b3d,#16a34a)"></span>Fresh Light</button>' +
+      '<button class="opt" data-t="sand"><span class="sw" style="background:linear-gradient(135deg,#f6efe4,#c2410c)"></span>Warm Sand</button></div>' +
       '<button type="button" id="nzThemeBtn">🎨 Theme</button>';
     document.body.appendChild(box);
     box.querySelector('#nzThemeBtn').onclick = function () { box.classList.toggle('open'); };
