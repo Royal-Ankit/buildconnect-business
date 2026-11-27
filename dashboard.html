@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Business panel - NIRMAZA</title>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script><script src="theme.js"></script>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e785a"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="apps.js"></script><script src="theme.js"></script><script src="nz-ui.js"></script>
 <style>
   :root { --primary:#1769AA; --dark:#103B63; --light:#F4F7FA; --success:#20A477; --accent:#F5A623; --text:#1b2a3a; --muted:#5d6b7a; --line:#dde5ee; --danger:#b3261e; }
   * { box-sizing: border-box; }
@@ -92,6 +92,7 @@
         <div class="stat" data-go="requests"><b id="sNew">0</b><small>Quote requests open</small></div>
         <div class="stat" data-go="quotes"><b id="sWait">0</b><small>Quotes waiting</small></div>
       </div>
+      <div class="card" id="nzStrength"></div>
       <div class="card"><h3>How to win more projects</h3>
         <ul style="margin:6px 0 0;padding-left:20px;font-size:14px;line-height:1.7">
           <li>Reply quickly. Accept or reject new requirements as soon as you can.</li>
@@ -577,6 +578,7 @@
     }
     $('msg').style.display = 'none'; $('app').style.display = 'block'; tab('overview');
     await reload();
+    try { if (window.NZ) NZ.renderStrength($('nzStrength'), biz, portfolio.length, (isInterior() && window.INT) ? INT.completion(biz, portfolio).pct : null); } catch (e) { }
     if (new URLSearchParams(location.search).get('tab')) tab(new URLSearchParams(location.search).get('tab'));
   }
   init().catch(function (e) { showMsg('Something went wrong', e && e.message ? e.message : String(e)); });
