@@ -21,6 +21,122 @@
   .cat .ico { font-size:34px; line-height:1; background:rgba(255,255,255,.22); width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; }
   .cat .nm { font-size:18px; font-weight:800; margin-top:6px; } .cat .ds { font-size:13px; opacity:.92; flex:1; }
   .cat .go { font-size:13px; font-weight:700; background:rgba(255,255,255,.22); align-self:flex-start; padding:6px 12px; border-radius:999px; }
+
+  /* ---------- Hero (animated: spark to dream home) ---------- */
+  .hp { position:relative; overflow:hidden; border-radius:28px; background:linear-gradient(135deg,#fffdf9 0%,#f7f2e9 55%,#efe6d6 100%); color:#23262b; border:1px solid #eadfca; box-shadow:0 14px 40px rgba(35,38,43,.10);
+        display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:18px; align-items:center; padding:38px 38px 30px; }
+  .hp-eyebrow { font-weight:700; letter-spacing:1.6px; text-transform:uppercase; font-size:12px; color:#a8791c; margin-bottom:12px; }
+  .hp h1 { margin:0 0 14px; font-size:clamp(30px,4.2vw,48px); line-height:1.07; letter-spacing:-.02em; font-weight:800; color:#23262b; }
+  .hp h1 em { font-style:normal; color:#b8841f; }
+  .hp-sub { margin:0 0 24px; font-size:16.5px; line-height:1.55; color:#5a5e66; max-width:520px; }
+  .hp-cta { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .hp-btn { display:inline-block; text-decoration:none; font-weight:700; font-size:15px; padding:14px 24px; border-radius:14px; cursor:pointer; border:2px solid transparent; font-family:inherit; transition:transform .15s, box-shadow .15s, background .15s; }
+  .hp-btn.p { background:linear-gradient(135deg,#dcae45,#c28a1f); color:#1b1d21; box-shadow:0 8px 20px rgba(194,138,31,.35); }
+  .hp-btn.s { background:transparent; color:#23262b; border-color:#23262b; }
+  .hp-btn:hover,.hp-btn:focus { transform:translateY(-2px); } .hp-btn.s:hover { background:#23262b; color:#fff; }
+  .hp-quote { display:inline-block; margin-top:14px; font-size:14px; font-weight:600; color:#6b6f77; text-decoration:underline; text-underline-offset:3px; }
+  .hp-scene { position:relative; min-width:0; }
+  .hp-svg { width:100%; height:auto; display:block; }
+  .hp-steps { list-style:none; margin:10px 0 0; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .hp-steps li { display:flex; gap:8px; align-items:center; border:1px solid #e3d8c2; border-radius:12px; padding:7px 9px; font-size:12.5px; font-weight:700; background:rgba(255,255,255,.75); color:#5a5e66; }
+  .hp-steps b { width:20px; height:20px; border-radius:50%; background:#23262b; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; flex:none; }
+  .hp-steps small { display:block; font-weight:500; font-size:10.5px; opacity:.85; }
+  .hp .an { opacity:0; }
+    .hp .a_star{animation:k_star 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_glow{animation:k_glow 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_bp{animation:k_bp 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_wA{animation:k_wA 12.0s linear infinite;}
+  .hp .a_wB{animation:k_wB 12.0s linear infinite;}
+  .hp .a_wC{animation:k_wC 12.0s linear infinite;}
+  .hp .a_dim{animation:k_dim 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_tool{animation:k_tool 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_found{animation:k_found 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:bottom;}
+  .hp .a_crane{animation:k_crane 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_wallL{animation:k_wallL 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:bottom;}
+  .hp .a_wallU{animation:k_wallU 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:bottom;}
+  .hp .a_roofL{animation:k_roofL 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_roofU{animation:k_roofU 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_win{animation:k_win 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_plaster{animation:k_plaster 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_ceil{animation:k_ceil 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_kit{animation:k_kit 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_sofa{animation:k_sofa 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_deco{animation:k_deco 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_int{animation:k_int 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_p0{animation:k_p0 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_p1{animation:k_p1 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_p2{animation:k_p2 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_p3{animation:k_p3 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_p4{animation:k_p4 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_p5{animation:k_p5 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_p6{animation:k_p6 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_p7{animation:k_p7 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_sun{animation:k_sun 12.0s cubic-bezier(.4,0,.2,1) infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_en{animation:k_en 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .a_dash{animation:k_dash 3s linear infinite;}
+  .hp .a_rays{animation:k_rays 12s linear infinite;transform-box:fill-box;transform-origin:center;}
+  .hp .a_hook{animation:k_hook 12s ease-in-out infinite;}
+  .hp .a_shadow{animation:k_shadow 12.0s cubic-bezier(.4,0,.2,1) infinite;}
+  .hp .hpc0{animation:k_c0 12.0s ease infinite;}
+  .hp .hpc1{animation:k_c1 12.0s ease infinite;}
+  .hp .hpc2{animation:k_c2 12.0s ease infinite;}
+  .hp .hpc3{animation:k_c3 12.0s ease infinite;}
+    @keyframes k_star{0.0%{opacity:0;transform:scale(.2) rotate(-40deg)}0.0%{opacity:0;transform:scale(.2) rotate(-40deg)}5.833%{opacity:1;transform:scale(1) rotate(0)}8.333%{opacity:1;transform:scale(1) rotate(0)}14.167%{opacity:0;transform:scale(2.6) rotate(20deg)}}
+  @keyframes k_glow{0.0%{opacity:0;transform:scale(.3)}0.0%{opacity:0;transform:scale(.3)}6.667%{opacity:1;transform:scale(1)}8.333%{opacity:1;transform:scale(1)}15.0%{opacity:0;transform:scale(2.2)}}
+  @keyframes k_bp{0.0%{opacity:0;transform:scale(.04)}7.5%{opacity:0;transform:scale(.04)}14.167%{opacity:1;transform:scale(1)}23.333%{opacity:1;transform:scale(1)}30.0%{opacity:0;transform:scale(1)}}
+  @keyframes k_wA{0.0%{opacity:0;stroke-dashoffset:1}12.5%{opacity:1;stroke-dashoffset:1}20.833%{opacity:1;stroke-dashoffset:0}50.0%{opacity:1;stroke-dashoffset:0}56.667%{opacity:0;stroke-dashoffset:0}100.0%{opacity:0;stroke-dashoffset:1}}
+  @keyframes k_wB{0.0%{opacity:0;stroke-dashoffset:1}17.5%{opacity:1;stroke-dashoffset:1}23.333%{opacity:1;stroke-dashoffset:0}50.0%{opacity:1;stroke-dashoffset:0}56.667%{opacity:0;stroke-dashoffset:0}100.0%{opacity:0;stroke-dashoffset:1}}
+  @keyframes k_wC{0.0%{opacity:0;stroke-dashoffset:1}20.0%{opacity:1;stroke-dashoffset:1}25.833%{opacity:1;stroke-dashoffset:0}50.0%{opacity:1;stroke-dashoffset:0}56.667%{opacity:0;stroke-dashoffset:0}100.0%{opacity:0;stroke-dashoffset:1}}
+  @keyframes k_dim{0.0%{opacity:0;}19.167%{opacity:0;}25.0%{opacity:1;}23.333%{opacity:1;}30.0%{opacity:0;}}
+  @keyframes k_tool{0.0%{opacity:0;transform:translateY(8px)}14.167%{opacity:0;transform:translateY(8px)}20.0%{opacity:1;transform:translateY(0)}23.333%{opacity:1;transform:translateY(0)}30.0%{opacity:0;transform:translateY(0)}}
+  @keyframes k_found{0.0%{opacity:0;transform:translateY(10px)}23.333%{opacity:0;transform:translateY(10px)}29.167%{opacity:1;transform:translateY(0)}95.0%{opacity:1;transform:translateY(0)}100.0%{opacity:0;transform:translateY(0)}}
+  @keyframes k_crane{0.0%{opacity:0;}24.167%{opacity:0;}30.833%{opacity:1;}50.0%{opacity:1;}57.5%{opacity:0;}}
+  @keyframes k_wallL{0.0%{opacity:0;transform:scaleY(.02)}28.333%{opacity:0;transform:scaleY(.02)}31.667%{opacity:1}40.0%{opacity:1;transform:scaleY(1)}95.0%{opacity:1;transform:scaleY(1)}100.0%{opacity:0;transform:scaleY(1)}}
+  @keyframes k_wallU{0.0%{opacity:0;transform:scaleY(.02)}38.333%{opacity:0;transform:scaleY(.02)}40.833%{opacity:1}45.0%{opacity:1;transform:scaleY(1)}95.0%{opacity:1;transform:scaleY(1)}100.0%{opacity:0;transform:scaleY(1)}}
+  @keyframes k_roofL{0.0%{opacity:0;transform:translateY(-18px)}43.333%{opacity:0;transform:translateY(-18px)}45.833%{opacity:1}49.167%{opacity:1;transform:translateY(0)}95.0%{opacity:1;transform:translateY(0)}100.0%{opacity:0;transform:translateY(0)}}
+  @keyframes k_roofU{0.0%{opacity:0;transform:translateY(-18px)}46.667%{opacity:0;transform:translateY(-18px)}49.167%{opacity:1}51.667%{opacity:1;transform:translateY(0)}95.0%{opacity:1;transform:translateY(0)}100.0%{opacity:0;transform:translateY(0)}}
+  @keyframes k_win{0.0%{opacity:0;}41.667%{opacity:0;}48.333%{opacity:1;}95.0%{opacity:1;}100.0%{opacity:0;}}
+  @keyframes k_plaster{0.0%{opacity:0;}51.667%{opacity:0;}57.5%{opacity:1;}95.0%{opacity:1;}100.0%{opacity:0;}}
+  @keyframes k_ceil{0.0%{opacity:0;transform:translateY(-8px)}57.5%{opacity:0;transform:translateY(-8px)}61.667%{opacity:1;transform:translateY(0)}95.0%{opacity:1;transform:translateY(0)}100.0%{opacity:0;transform:translateY(0)}}
+  @keyframes k_kit{0.0%{opacity:0;transform:translateX(14px)}60.833%{opacity:0;transform:translateX(14px)}65.833%{opacity:1;transform:translateX(0)}95.0%{opacity:1;transform:translateX(0)}100.0%{opacity:0;transform:translateX(0)}}
+  @keyframes k_sofa{0.0%{opacity:0;transform:translateX(-14px)}64.167%{opacity:0;transform:translateX(-14px)}69.167%{opacity:1;transform:translateX(0)}95.0%{opacity:1;transform:translateX(0)}100.0%{opacity:0;transform:translateX(0)}}
+  @keyframes k_deco{0.0%{opacity:0;transform:translateY(6px)}67.5%{opacity:0;transform:translateY(6px)}72.5%{opacity:1;transform:translateY(0)}95.0%{opacity:1;transform:translateY(0)}100.0%{opacity:0;transform:translateY(0)}}
+  @keyframes k_int{0.0%{opacity:0;}57.5%{opacity:0;}60.833%{opacity:1;}95.0%{opacity:1;}100.0%{opacity:0;}}
+  @keyframes k_p0{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}74.167%{opacity:0;transform:translateY(-10px) scale(.9)}77.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_p1{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}75.167%{opacity:0;transform:translateY(-10px) scale(.9)}78.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_p2{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}76.167%{opacity:0;transform:translateY(-10px) scale(.9)}79.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_p3{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}77.167%{opacity:0;transform:translateY(-10px) scale(.9)}80.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_p4{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}78.167%{opacity:0;transform:translateY(-10px) scale(.9)}81.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_p5{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}79.167%{opacity:0;transform:translateY(-10px) scale(.9)}82.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_p6{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}80.167%{opacity:0;transform:translateY(-10px) scale(.9)}83.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_p7{0.0%{opacity:0;transform:translateY(-10px) scale(.9)}81.167%{opacity:0;transform:translateY(-10px) scale(.9)}84.917%{opacity:1;transform:translateY(0) scale(1)}95.0%{opacity:1;transform:translateY(0) scale(1)}100.0%{opacity:0;transform:translateY(0) scale(1)}}
+  @keyframes k_sun{0.0%{opacity:0;transform:scale(.4)}79.167%{opacity:0;transform:scale(.4)}86.667%{opacity:1;transform:scale(1)}95.0%{opacity:1;transform:scale(1)}100.0%{opacity:0;transform:scale(1)}}
+  @keyframes k_en{0.0%{opacity:0;}82.5%{opacity:0;}87.5%{opacity:1;}93.333%{opacity:1;}98.333%{opacity:0;}}
+  @keyframes k_dash{0.0%{stroke-dashoffset:0}100.0%{stroke-dashoffset:-60}}
+  @keyframes k_rays{0.0%{transform:rotate(0)}100.0%{transform:rotate(60deg)}}
+  @keyframes k_hook{0.0%{transform:translateY(0)}25.0%{transform:translateY(10px)}50.0%{transform:translateY(0)}75.0%{transform:translateY(10px)}100.0%{transform:translateY(0)}}
+  @keyframes k_shadow{0.0%{opacity:0;}23.333%{opacity:0;}30.0%{opacity:1;}95.0%{opacity:1;}100.0%{opacity:0;}}
+  @keyframes k_c0{0.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}6.667%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}9.167%{background:#c9992f;color:#1b1d21;border-color:#c9992f}24.167%{background:#c9992f;color:#1b1d21;border-color:#c9992f}26.667%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}95.833%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}99.167%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}100.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}}
+  @keyframes k_c1{0.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}24.167%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}26.667%{background:#c9992f;color:#1b1d21;border-color:#c9992f}57.5%{background:#c9992f;color:#1b1d21;border-color:#c9992f}60.0%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}95.833%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}99.167%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}100.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}}
+  @keyframes k_c2{0.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}57.5%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}60.0%{background:#c9992f;color:#1b1d21;border-color:#c9992f}74.167%{background:#c9992f;color:#1b1d21;border-color:#c9992f}76.667%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}95.833%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}99.167%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}100.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}}
+  @keyframes k_c3{0.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}74.167%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}76.667%{background:#c9992f;color:#1b1d21;border-color:#c9992f}90.0%{background:#c9992f;color:#1b1d21;border-color:#c9992f}92.5%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}95.833%{background:#f3e8cc;color:#5b4a1c;border-color:#e2cf9b}99.167%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}100.0%{background:rgba(255,255,255,.75);color:#5a5e66;border-color:#e3d8c2}}
+  .hp { margin-bottom:18px; }
+  .nzi { width:46px; height:46px; display:block; } .tile .ic .nzi { width:46px; height:46px; } .promo .emoji .nzi.big { width:88px; height:88px; }
+  @media (max-width:640px) { .tile .ic .nzi { width:36px; height:36px; } .promo .emoji .nzi.big { width:64px; height:64px; } }
+  .hp-paused * { animation-play-state:paused !important; }
+  @media (max-width:820px) {
+    .hp { grid-template-columns:1fr; padding:26px 18px 20px; border-radius:22px; }
+    .hp .desk { display:none; }
+    .hp-steps { grid-template-columns:1fr 1fr; }
+    .hp-sub { font-size:15px; } .hp-btn { padding:13px 20px; flex:1 1 auto; text-align:center; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .hp *, .hp-steps li { animation:none !important; }
+    .hp .an.fin { opacity:1 !important; transform:none !important; }
+    .hp .tmp { display:none; }
+  }
+
+  .cat .ico .nzi{width:42px;height:42px}
 </style>
 </head>
 <body>
@@ -29,12 +145,103 @@
   <div class="top"><span id="hello" class="acct"></span><a id="loginLink" href="login.html">Login</a><a id="logoutLink" class="acct" href="#">Logout</a></div>
 </div></header>
 <main>
-  <section class="hero">
-    <div style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-size:13px;opacity:.9;margin-bottom:6px">NIRMAZA Business &middot; Building Better Living</div>
-    <h1>Grow your business with NIRMAZA</h1>
-    <p>Get customer requirements from your district. Show your real projects, set your own prices, and share contact details only after you accept a requirement.</p>
-    <div id="guest"><a class="btn" href="signup.html?role=provider" style="background:#f59e0b;color:#222">List my business free</a><a class="btn alt" href="login.html?next=dashboard.html">I already have an account</a></div>
+  <section class="hp" id="hp">
+    <div class="hp-text">
+      <div class="hp-eyebrow">NIRMAZA Business &middot; Building Better Living</div>
+      <h1>Grow Your Business, <em>All in One Place.</em></h1>
+      <p class="hp-sub">Get customer requirements from your district. Show your real projects, set your own prices, and share contact details only after you accept a requirement.</p>
+      <div class="hp-cta" id="guest"><a class="hp-btn p" href="signup.html?role=provider">List my business free</a><a class="hp-btn s" href="login.html?next=dashboard.html">I already have an account</a></div>
+      <div class="hp-cta" id="memberCta" style="display:none"><a class="hp-btn p" href="dashboard.html">Open dashboard</a><a class="hp-btn s" href="business.html">My business details</a></div>
+    </div>
+    <div class="hp-scene">
+<svg class="hp-svg" viewBox="0 0 640 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animation: a spark becomes a blueprint, then a house is built, furnished and fitted with solar panels.">
+<defs>
+<linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e1d2"/><stop offset="1" stop-color="#f6f1e8"/></linearGradient>
+<linearGradient id="gBrick" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c47f55"/><stop offset="1" stop-color="#a95f3a"/></linearGradient>
+<pattern id="pBrick" width="36" height="14" patternUnits="userSpaceOnUse"><rect width="36" height="14" fill="url(#gBrick)"/><path d="M0 .5H36M0 7.5H36M0 14H36M18 .5V7.5M0 7.5V14M36 7.5V14" stroke="#ead9c4" stroke-width="1.2" fill="none" opacity=".85"/></pattern>
+<linearGradient id="gPlaster" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8f4ec"/><stop offset="1" stop-color="#e9e1d3"/></linearGradient>
+<linearGradient id="gSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d8cfbf"/><stop offset="1" stop-color="#bfb5a3"/></linearGradient>
+<linearGradient id="gGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dfe7ee"/><stop offset="1" stop-color="#9fb2c2"/></linearGradient>
+<linearGradient id="gWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a8723f"/><stop offset="1" stop-color="#8a5a30"/></linearGradient>
+<linearGradient id="gPanel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b4a73"/><stop offset="1" stop-color="#162a47"/></linearGradient>
+<linearGradient id="gRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9dcdf"/><stop offset="1" stop-color="#bfc3c8"/></linearGradient>
+<radialGradient id="gGlow"><stop offset="0" stop-color="#f5c76a" stop-opacity=".55"/><stop offset="1" stop-color="#f5c76a" stop-opacity="0"/></radialGradient>
+<radialGradient id="gSun"><stop offset="0" stop-color="#f9c25a"/><stop offset="1" stop-color="#ef8d27"/></radialGradient>
+<radialGradient id="gSunGlow"><stop offset="0" stop-color="#f7b64a" stop-opacity=".35"/><stop offset="1" stop-color="#f7b64a" stop-opacity="0"/></radialGradient>
+<pattern id="pGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#fff" stroke-opacity=".09" stroke-width="1"/></pattern>
+<clipPath id="cWin"><rect x="130" y="255" width="170" height="75" rx="2"/></clipPath>
+</defs>
+
+<!-- ground -->
+<rect x="0" y="350" width="640" height="90" fill="url(#gGround)"/>
+<rect x="0" y="349" width="640" height="2" fill="#d9c08a" opacity=".8"/>
+<ellipse class="an a_shadow fin" cx="300" cy="356" rx="200" ry="9" fill="#23262b" opacity=".16"/>
+
+<!-- sun and energy (solar) -->
+<g class="an a_sun fin"><circle cx="545" cy="95" r="70" fill="url(#gSunGlow)"/><g class="a_rays desk"><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(0 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(30 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(60 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(90 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(120 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(150 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(180 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(210 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(240 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(270 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(300 545 95)"/><line x1="545" y1="58" x2="545" y2="46" stroke="#d9a441" stroke-width="1.5" stroke-linecap="round" opacity=".55" transform="rotate(330 545 95)"/></g><circle cx="545" cy="95" r="26" fill="url(#gSun)"/></g>
+
+<!-- crane (contractor) -->
+<g class="an a_crane tmp desk" stroke="#3a3e45" stroke-width="2.2" fill="none" stroke-linecap="round">
+<path d="M545 350V150M560 350V150M545 170L560 190M545 190L560 210M545 210L560 230M545 230L560 250M545 250L560 270M545 270L560 290M545 290L560 310M545 310L560 330" stroke-width="1.4"/>
+<path d="M300 150H590M300 150L552 118M590 150L552 118" stroke-width="1.6"/><rect x="576" y="150" width="20" height="14" fill="#3a3e45"/>
+<g class="a_hook"><path d="M330 150V196" stroke-width="1"/><rect x="322" y="196" width="16" height="10" fill="#c9992f" stroke="none"/></g></g>
+
+<!-- construction -->
+<g class="an a_found fin"><polygon points="96,350 416,350 476,310 156,310" fill="#b9bcc0"/><rect x="96" y="350" width="320" height="8" fill="#8f949a"/><polygon points="416,350 476,310 476,318 416,358" fill="#767b82"/></g>
+<g class="an a_wallL fin"><rect x="110" y="235" width="290" height="115" fill="url(#pBrick)"/><polygon points="400,235 460,195 460,310 400,350" fill="url(#pBrick)"/><polygon points="400,235 460,195 460,310 400,350" fill="#000" opacity=".22"/></g>
+<g class="an a_roofL fin"><polygon points="106,227 406,227 466,187 166,187" fill="url(#gRoof)"/><rect x="106" y="227" width="300" height="8" fill="#2b2e34"/><polygon points="406,227 466,187 466,195 406,235" fill="#1d1f24"/></g>
+<g class="an a_wallU fin"><rect x="125" y="165" width="110" height="62" fill="url(#pBrick)"/><polygon points="235,165 295,125 295,187 235,227" fill="url(#pBrick)"/><polygon points="235,165 295,125 295,187 235,227" fill="#000" opacity=".22"/></g>
+<g class="an a_roofU fin"><polygon points="121,157 239,157 299,117 181,117" fill="url(#gRoof)"/><rect x="121" y="157" width="118" height="8" fill="#2b2e34"/><polygon points="239,157 299,117 299,125 239,165" fill="#1d1f24"/></g>
+
+<!-- finishing -->
+<g class="an a_plaster fin"><rect x="110" y="235" width="290" height="115" fill="url(#gPlaster)"/><polygon points="400,235 460,195 460,310 400,350" fill="url(#gSide)"/><rect x="318" y="235" width="82" height="115" fill="#3a3e45"/><rect x="125" y="165" width="110" height="62" fill="url(#gPlaster)"/><polygon points="235,165 295,125 295,187 235,227" fill="url(#gSide)"/><rect x="125" y="226" width="110" height="1.5" fill="#c9992f"/></g>
+
+<!-- windows and door -->
+<g class="an a_win fin">
+<rect x="130" y="255" width="170" height="75" rx="2" fill="url(#gGlass)"/><path d="M130 330L190 255H215L155 330Z" fill="#fff" opacity=".22"/>
+<rect x="139" y="177" width="84" height="34" rx="2" fill="url(#gGlass)"/><path d="M139 211L168 177H182L153 211Z" fill="#fff" opacity=".22"/>
+<polygon points="418,247 446,228 446,283 418,302" fill="#4d5a66"/>
+<rect x="334" y="262" width="52" height="88" rx="2" fill="url(#gWood)"/><rect x="340" y="270" width="8" height="52" fill="#d9e3ea" opacity=".85"/><rect x="374" y="304" width="3" height="22" rx="1.5" fill="#d9a441"/>
+</g>
+
+<!-- interior (interior designer) -->
+<g class="an a_int fin" clip-path="url(#cWin)">
+<rect x="130" y="255" width="170" height="75" fill="#f3e8d6"/>
+<rect x="130" y="316" width="170" height="14" fill="#b98a58"/>
+<ellipse cx="172" cy="324" rx="40" ry="4" fill="#e9dcc4"/>
+<g class="an a_ceil fin"><rect x="130" y="255" width="170" height="11" fill="#fbf8f2"/><rect x="130" y="266" width="170" height="2" fill="#f2b34a"/><rect x="130" y="268" width="170" height="5" fill="#f2b34a" opacity=".18"/>
+<circle cx="148" cy="260" r="1.8" fill="#f2b34a"/><circle cx="190" cy="260" r="1.8" fill="#f2b34a"/><circle cx="232" cy="260" r="1.8" fill="#f2b34a"/><circle cx="274" cy="260" r="1.8" fill="#f2b34a"/></g>
+<g class="an a_deco fin"><path d="M186 268V277" stroke="#2b2e34" stroke-width="1"/><path d="M178 285Q186 273 194 285Z" fill="#d9a441"/><circle cx="186" cy="286" r="6" fill="#f6c76a" opacity=".35"/>
+<rect x="207" y="308" width="8" height="9" rx="1" fill="#3a3e45"/><path d="M211 308Q202 296 206 289Q212 296 211 308ZM211 308Q220 298 218 290Q211 298 211 308Z" fill="#5d7d57"/></g>
+<g class="an a_sofa fin"><rect x="137" y="294" width="62" height="10" rx="3" fill="#2f3339"/><rect x="134" y="302" width="68" height="14" rx="4" fill="#3a3f47"/><rect x="141" y="297" width="16" height="9" rx="2" fill="#e0873a"/><rect x="178" y="297" width="16" height="9" rx="2" fill="#d9a441"/></g>
+<g class="an a_kit fin"><rect x="226" y="271" width="72" height="18" rx="1" fill="#f6f3ee" stroke="#d9d3c8" stroke-width=".6"/><rect x="226" y="289" width="72" height="9" fill="#e6dfd2"/><rect x="226" y="298" width="72" height="3" fill="#cfc8bb"/><rect x="226" y="301" width="72" height="16" fill="#2c3036"/>
+<path d="M250 271V289M274 271V289M250 301V317M274 301V317" stroke="#d9d3c8" stroke-width=".6"/><g fill="#d9a441"><rect x="246" y="283" width="2.5" height="5"/><rect x="270" y="283" width="2.5" height="5"/><rect x="246" y="303" width="2.5" height="5"/><rect x="270" y="303" width="2.5" height="5"/></g></g>
+</g>
+<rect class="an a_int fin" x="130" y="255" width="170" height="75" rx="2" fill="none" stroke="#2b2e34" stroke-width="3"/>
+
+<!-- solar panels -->
+<g class="an a_p0 fin"><polygon points="260.0,223.0 292.5,223.0 314.7,208.2 282.2,208.2" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M276.2,223.0 L298.4,208.2" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g><g class="an a_p1 fin"><polygon points="296.5,223.0 329.0,223.0 351.2,208.2 318.7,208.2" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M312.8,223.0 L334.9,208.2" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g><g class="an a_p2 fin"><polygon points="333.0,223.0 365.5,223.0 387.7,208.2 355.2,208.2" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M349.2,223.0 L371.4,208.2" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g><g class="an a_p3 fin"><polygon points="369.5,223.0 402.0,223.0 424.2,208.2 391.7,208.2" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M385.8,223.0 L407.9,208.2" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g><g class="an a_p4 fin"><polygon points="285.8,205.8 318.3,205.8 340.5,191.0 308.0,191.0" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M302.1,205.8 L324.2,191.0" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g><g class="an a_p5 fin"><polygon points="322.3,205.8 354.8,205.8 377.0,191.0 344.5,191.0" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M338.6,205.8 L360.8,191.0" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g><g class="an a_p6 fin"><polygon points="358.8,205.8 391.3,205.8 413.5,191.0 381.0,191.0" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M375.1,205.8 L397.2,191.0" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g><g class="an a_p7 fin"><polygon points="395.3,205.8 427.8,205.8 450.0,191.0 417.5,191.0" fill="url(#gPanel)" stroke="#9fb3c8" stroke-width="0.8"/><path d="M411.6,205.8 L433.8,191.0" stroke="#9fb3c8" stroke-width=".5" opacity=".7"/></g>
+<g class="an a_en tmp desk"><path class="a_dash" d="M456 206C486 228 492 276 462 306" fill="none" stroke="#d9a441" stroke-width="2" stroke-dasharray="6 8" stroke-linecap="round"/><polygon points="466,296 458,311 464,311 460,322 472,305 466,305" fill="#f2b34a"/></g>
+
+<!-- blueprint (architect) -->
+<g class="an a_bp tmp"><rect x="64" y="56" width="500" height="316" rx="14" fill="#23262b"/><rect x="64" y="56" width="500" height="316" rx="14" fill="url(#pGrid)"/>
+<g class="an a_dim desk" stroke="#d9a441" stroke-width="1" fill="#d9a441" font-family="Inter,Arial,sans-serif" font-size="11" opacity=".9"><path d="M110 362H400M110 357V367M400 357V367" fill="none"/><text x="255" y="356" text-anchor="middle" stroke="none">12.0 m</text><path d="M86 235V350M81 235H91M81 350H91" fill="none"/><text x="82" y="296" text-anchor="middle" stroke="none" transform="rotate(-90 82 296)">3.6 m</text></g>
+<g class="an a_tool desk" fill="none" stroke="#d9a441" stroke-width="1.2"><path d="M500 340L552 340L500 292Z"/><path d="M508 332V326M516 332V322"/><rect x="84" y="76" width="130" height="12" rx="1"/><path d="M96 76v6M108 76v8M120 76v6M132 76v8M144 76v6M156 76v8M168 76v6M180 76v8M192 76v6M204 76v8"/></g></g>
+<g class="tmp" fill="none" stroke="#d9a441" stroke-width="1.4" stroke-linejoin="round">
+<g class="an a_wA"><rect pathLength="1" stroke-dasharray="1" x="110" y="235" width="290" height="115"/><polygon points="400,235 460,195 460,310 400,350" pathLength="1" stroke-dasharray="1"/><polygon points="106,227 406,227 466,187 166,187" pathLength="1" stroke-dasharray="1"/></g>
+<g class="an a_wB"><polygon points="125,165 235,165 235,227 125,227" pathLength="1" stroke-dasharray="1"/><polygon points="235,165 295,125 295,187 235,227" pathLength="1" stroke-dasharray="1"/><polygon points="121,157 239,157 299,117 181,117" pathLength="1" stroke-dasharray="1"/></g>
+<g class="an a_wC"><rect pathLength="1" stroke-dasharray="1" x="130" y="255" width="170" height="75"/><rect pathLength="1" stroke-dasharray="1" x="334" y="262" width="52" height="88"/><rect pathLength="1" stroke-dasharray="1" x="139" y="177" width="84" height="34"/></g></g>
+
+<!-- spark / star -->
+<g class="tmp"><circle class="an a_glow" cx="320" cy="215" r="70" fill="url(#gGlow)"/><path class="an a_star" d="M320 191Q323 212 344 215Q323 218 320 239Q317 218 296 215Q317 212 320 191Z" fill="#f5c76a" stroke="#fff3cf" stroke-width="1"/></g>
+</svg>
+      <ul class="hp-steps" aria-label="Services"><li class="hpc0"><b>1</b><span>Architect<small>Blueprint &amp; design</small></span></li><li class="hpc1"><b>2</b><span>Contractor<small>Foundation to roof</small></span></li><li class="hpc2"><b>3</b><span>Interior Designer<small>Kitchen, lights, decor</small></span></li><li class="hpc3"><b>4</b><span>Solar<small>Rooftop clean energy</small></span></li></ul>
+    </div>
   </section>
+  <script>
+  (function () { var h = document.getElementById('hp'); if (!h || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (e) { h.classList.toggle('hp-paused', !e[0].isIntersecting); }, { threshold: 0.05 }).observe(h); })();
+  </script>
 
   <div class="grid">
     <div class="tile"><h3>My dashboard</h3><p>See new requirements, accept or reject them, send quotes and track your work.</p><a class="btn" href="dashboard.html">Open dashboard</a></div>
@@ -43,7 +250,7 @@
     <div class="tile"><h3>Elevator products</h3><p>Add your lifts and models with specifications for customers to compare.</p><a class="btn ghost" href="elevator-products.html">My elevator products</a></div>
   </div>
 
-  <section class="card"><h3>Choose your business type</h3><p class="sub">Tap what you do. Every field is optional and you can add more later.</p><div class="cats"><a class="cat" href="business.html?category=architect" style="--c1:#2563eb;--c2:#60a5fa"><span class="ico">🏛️</span><span class="nm">Architect</span><span class="ds">Plans, drawings and approvals</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=contractor" style="--c1:#ea580c;--c2:#fb923c"><span class="ico">🏗️</span><span class="nm">Contractor</span><span class="ds">Construction and civil work</span><span class="go">Set up profile →</span></a><a class="cat" href="interior-register.html" style="--c1:#db2777;--c2:#f472b6"><span class="ico">🛋️</span><span class="nm">Interior Designer</span><span class="ds">Homes, offices and modular kitchens</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=carpenter" style="--c1:#92400e;--c2:#d97706"><span class="ico">🪚</span><span class="nm">Carpenter</span><span class="ds">Furniture, doors and woodwork</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=elevator" style="--c1:#475569;--c2:#94a3b8"><span class="ico">🛗</span><span class="nm">Elevator / Lift</span><span class="ds">Lifts, models and AMC</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=painter" style="--c1:#7c3aed;--c2:#a78bfa"><span class="ico">🎨</span><span class="nm">Painter</span><span class="ds">Paint, polish and finishing</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=solar" style="--c1:#d97706;--c2:#fbbf24"><span class="ico">☀️</span><span class="nm">Solar</span><span class="ds">Rooftop and solar systems</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=wind-power" style="--c1:#0891b2;--c2:#22d3ee"><span class="ico">🌬️</span><span class="nm">Wind Power</span><span class="ds">Wind and clean energy</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=materials" style="--c1:#b45309;--c2:#f59e0b"><span class="ico">🧱</span><span class="nm">Material Supplier</span><span class="ds">Cement, steel, tiles and more</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=electrician" style="--c1:#ca8a04;--c2:#facc15"><span class="ico">💡</span><span class="nm">Electrician</span><span class="ds">Wiring, fittings and repairs</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html" style="--c1:#059669;--c2:#34d399"><span class="ico">✨</span><span class="nm">Other / All</span><span class="ds">Any other construction service</span><span class="go">Set up profile →</span></a></div></section>
+  <section class="card"><h3>Choose your business type</h3><p class="sub">Tap what you do. Every field is optional and you can add more later.</p><div class="cats"><a class="cat" href="business.html?category=architect" style="--c1:#2563eb;--c2:#60a5fa"><span class="ico">🏛️</span><span class="nm">Architect</span><span class="ds">Plans, drawings and approvals</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=contractor" style="--c1:#ea580c;--c2:#fb923c"><span class="ico">🏗️</span><span class="nm">Contractor</span><span class="ds">Construction and civil work</span><span class="go">Set up profile →</span></a><a class="cat" href="interior-register.html" style="--c1:#db2777;--c2:#f472b6"><span class="ico">🛋️</span><span class="nm">Interior Designer</span><span class="ds">Homes, offices and modular kitchens</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=carpenter" style="--c1:#92400e;--c2:#d97706"><span class="ico">🪚</span><span class="nm">Carpenter</span><span class="ds">Furniture, doors and woodwork</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=elevator" style="--c1:#475569;--c2:#94a3b8"><span class="ico">🛗</span><span class="nm">Elevator / Lift</span><span class="ds">Lifts, models and AMC</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=painter" style="--c1:#7c3aed;--c2:#a78bfa"><span class="ico"><svg viewBox="0 0 48 48" class="nzi" aria-hidden="true"><rect x="3" y="6" width="42" height="30" rx="4" fill="#f4efe6" stroke="#d8cfbf"/><path d="M7 6H26Q30 11 26 16Q30 21 26 26Q30 31 26 36H7A4 4 0 0 1 3 32V10A4 4 0 0 1 7 6Z" fill="#8b5cf6"/><path d="M7 6H16V36H7A4 4 0 0 1 3 32V10A4 4 0 0 1 7 6Z" fill="#a78bfa"/><path d="M16 6H21V36H16Z" fill="#ec4899" opacity=".85"/><rect x="21" y="10" width="21" height="9" rx="3" fill="#f97316"/><path d="M42 14.5H45V25H33V30" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="30.5" y="30" width="5" height="13" rx="2" fill="#475569"/></svg></span><span class="nm">Painter</span><span class="ds">Paint, polish and finishing</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=solar" style="--c1:#d97706;--c2:#fbbf24"><span class="ico"><svg viewBox="0 0 48 48" class="nzi" aria-hidden="true"><circle cx="10" cy="9" r="4.5" fill="#f59e0b"/><g stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round"><path d="M10 1.5V3M10 15V16.5M2.5 9H4M16 9H17.5M4.7 3.7L5.8 4.8M14.2 13.2L15.3 14.3M15.3 3.7L14.2 4.8M4.7 14.3L5.8 13.2"/></g><polygon points="14,17 45,17 40,35 6,35" fill="#1d4ed8" stroke="#bfdbfe" stroke-width="1"/><path d="M12.7 23H43M11.2 29H41.6M24 17L21 35M34.5 17L31.2 35" stroke="#bfdbfe" stroke-width=".9" fill="none"/><polygon points="14,17 45,17 43.8,21 12.7,21" fill="#fff" opacity=".18"/><path d="M23 35V43M32 35V43M17 43H38" stroke="#64748b" stroke-width="2.2" stroke-linecap="round"/></svg></span><span class="nm">Solar</span><span class="ds">Rooftop and solar systems</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=wind-power" style="--c1:#0891b2;--c2:#22d3ee"><span class="ico"><svg viewBox="0 0 48 48" class="nzi" aria-hidden="true"><path d="M22.6 23.5H25.4L26.8 44H21.2Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width=".8"/><g fill="#fff" stroke="#64748b" stroke-width="1" stroke-linejoin="round"><path d="M24 22L22.4 4.5Q24 2.5 25.6 4.5Z"/><path d="M24 22L22.4 4.5Q24 2.5 25.6 4.5Z" transform="rotate(120 24 22)"/><path d="M24 22L22.4 4.5Q24 2.5 25.6 4.5Z" transform="rotate(240 24 22)"/></g><circle cx="24" cy="22" r="2.8" fill="#0ea5e9" stroke="#fff" stroke-width="1"/><path d="M4 40Q9 37 14 40M34 14Q40 11 45 14" fill="none" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round"/></svg></span><span class="nm">Wind Power</span><span class="ds">Wind and clean energy</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=materials" style="--c1:#b45309;--c2:#f59e0b"><span class="ico">🧱</span><span class="nm">Material Supplier</span><span class="ds">Cement, steel, tiles and more</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html?category=electrician" style="--c1:#ca8a04;--c2:#facc15"><span class="ico">💡</span><span class="nm">Electrician</span><span class="ds">Wiring, fittings and repairs</span><span class="go">Set up profile →</span></a><a class="cat" href="business.html" style="--c1:#059669;--c2:#34d399"><span class="ico">✨</span><span class="nm">Other / All</span><span class="ds">Any other construction service</span><span class="go">Set up profile →</span></a></div></section>
   <section class="card"><h3>How it works</h3>
     <div class="steps">
       <div><b>1. List your business</b>Create a free account and add what you do. Add more details whenever you like.</div>
@@ -64,7 +271,7 @@
   var sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   function show(session) {
     var u = session && session.user;
-    $('guest').style.display = u ? 'none' : ''; $('loginLink').style.display = u ? 'none' : ''; $('logoutLink').style.display = u ? '' : 'none'; $('hello').style.display = u ? '' : 'none';
+    $('guest').style.display = u ? 'none' : ''; $('memberCta').style.display = u ? '' : 'none'; $('loginLink').style.display = u ? 'none' : ''; $('logoutLink').style.display = u ? '' : 'none'; $('hello').style.display = u ? '' : 'none';
     if (u) $('hello').textContent = 'Hi, ' + (((u.user_metadata && u.user_metadata.full_name) || u.email || '').split(' ')[0]);
   }
   sb.auth.getSession().then(function (r) { show(r.data.session); });
