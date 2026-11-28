@@ -276,7 +276,7 @@
   var sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   function show(session) {
     var u = session && session.user;
-    $('guest').style.display = u ? 'none' : ''; $('memberCta').style.display = u ? '' : 'none'; $('loginLink').style.display = u ? 'none' : ''; $('logoutLink').style.display = u ? '' : 'none'; $('hello').style.display = u ? '' : 'none';
+    $('guest').style.display = u ? 'none' : ''; $('memberCta').style.display = u ? '' : 'none'; $('loginLink').style.display = u ? 'none' : ''; $('logoutLink').style.display = u ? 'inline-block' : 'none'; $('hello').style.display = u ? 'inline-block' : 'none';
     if (u) $('hello').textContent = 'Hi, ' + (((u.user_metadata && u.user_metadata.full_name) || u.email || '').split(' ')[0]);
   }
   sb.auth.getSession().then(function (r) { show(r.data.session); });
